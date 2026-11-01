@@ -12,6 +12,7 @@ public struct Room: Equatable, Sendable {
     public let height: Int
     let spawn: CellPoint
     let cells: [CellKind]
+    let ascent: Ascent
 
     private init(spec: RoomSpec) {
         id = spec.id
@@ -19,6 +20,7 @@ public struct Room: Equatable, Sendable {
         height = spec.grid.height
         spawn = spec.spawn
         cells = spec.grid.cells
+        ascent = spec.ascent
     }
 
     static func make(_ spec: RoomSpec) -> Result<Room, Rejection> {

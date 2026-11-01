@@ -15,8 +15,18 @@ import Testing
     }
     watch = watch.advance(human: .idle)
     #expect(watch.state.progress.expedition == .climbing)
+    #expect(watch.state.room.ascent == .second)
     watch = climb(watch)
     #expect(watch.state.progress.expedition == .summited)
+    #expect(watch.state.room.ascent == .second)
+}
+
+@Test func theSecondSummitReturnsToTheFirstRoom() {
+    var watch = rest(climb(Watch.begin(in: FirstAscent.make())))
+    #expect(watch.state.room.ascent == .second)
+    watch = rest(climb(watch))
+    #expect(watch.state.room.ascent == .first)
+    #expect(watch.state.progress.expedition == .climbing)
 }
 
 @Test func aBlockedGuideStartsAgain() {
@@ -71,6 +81,16 @@ import Testing
     #expect(watch.state.portrait().x > Watch.begin(in: room).state.portrait().x)
 }
 
+private func rest(_ watch: Watch) -> Watch {
+    var watch = watch
+    var tick = 0
+    while tick < Watch.pause {
+        watch = watch.advance(human: .idle)
+        tick += 1
+    }
+    return watch
+}
+
 private func climb(_ watch: Watch) -> Watch {
     var watch = watch
     var tick = 0
@@ -95,7 +115,7 @@ private func deadEnd() -> Room {
     switch RoomId.make(value: "dead-end") {
     case .success(let id):
         let grid = RoomGrid(width: width, height: height, cells: cells)
-        switch Room.make(RoomSpec(id: id, spawn: CellPoint(x: 1, y: 1), grid: grid)) {
+        switch Room.make(RoomSpec(id: id, spawn: CellPoint(x: 1, y: 1), grid: grid, ascent: .aside)) {
         case .success(let room):
             return room
         case .failure:

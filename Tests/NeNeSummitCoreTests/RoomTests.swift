@@ -77,7 +77,7 @@ private func sampleRoom(
     switch RoomId.make(value: "first-ascent") {
     case .success(let id):
         let grid = RoomGrid(width: width, height: height, cells: cells)
-        return Room.make(RoomSpec(id: id, spawn: spawn, grid: grid))
+        return Room.make(RoomSpec(id: id, spawn: spawn, grid: grid, ascent: .aside))
     case .failure:
         preconditionFailure("テストの部屋名が空")
     }

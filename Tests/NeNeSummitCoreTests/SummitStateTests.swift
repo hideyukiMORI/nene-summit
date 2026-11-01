@@ -40,7 +40,7 @@ private func openedRoom() -> Room {
     switch RoomId.make(value: "first-ascent") {
     case .success(let id):
         let grid = RoomGrid(width: 3, height: 2, cells: cells)
-        switch Room.make(RoomSpec(id: id, spawn: CellPoint(x: 1, y: 1), grid: grid)) {
+        switch Room.make(RoomSpec(id: id, spawn: CellPoint(x: 1, y: 1), grid: grid, ascent: .aside)) {
         case .success(let room):
             return room
         case .failure:
