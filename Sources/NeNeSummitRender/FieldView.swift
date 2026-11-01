@@ -20,8 +20,10 @@ enum FieldView {
             var x = 0
             while x < state.room.width {
                 let deck = state.room.moving(x: x, y: y, tick: state.elapsed())
-                if deck && (here.x != x || here.y != y) {
-                    stamp(&sheet, origin: origin, x: x, y: y)
+                let crush = state.room.crushing(x: x, y: y, tick: state.elapsed())
+                if (deck || crush) && (here.x != x || here.y != y) {
+                    let mark = crush ? crusher : snow
+                    blot(&sheet, origin: origin, at: CellPoint(x: x, y: y), mark: mark)
                 }
                 x += 1
             }
@@ -29,14 +31,16 @@ enum FieldView {
         }
     }
 
-    static func stamp(_ sheet: inout Sheet, origin: CellPoint, x: Int, y: Int) {
-        let viewX = x - origin.x
-        let viewY = origin.y + Stage.fieldCellsY - 1 - y
+    static let snow = CellStamp(text: CellMark.stone(capped: true), tone: .stone)
+    static let crusher = CellStamp(text: CellMark.crusher, tone: .hazard)
+
+    static func blot(_ sheet: inout Sheet, origin: CellPoint, at: CellPoint, mark: CellStamp) {
+        let viewX = at.x - origin.x
+        let viewY = origin.y + Stage.fieldCellsY - 1 - at.y
         if viewX < 0 || viewX >= Stage.fieldCellsX || viewY < 0 || viewY >= Stage.fieldCellsY {
             return
         }
-        let stamp = CellStamp(text: CellMark.stone(capped: true), tone: .stone)
-        block(&sheet, row: Stage.fieldRow + viewY, viewX: viewX, stamp: stamp)
+        block(&sheet, row: Stage.fieldRow + viewY, viewX: viewX, stamp: mark)
     }
 
     static func paintRow(_ sheet: inout Sheet, state: SummitState, origin: CellPoint, viewY: Int) {
@@ -66,8 +70,15 @@ enum FieldView {
 
     static func face(_ state: SummitState, x: Int, y: Int) -> CellStamp {
         switch state.room.kind(x: x, y: y) {
-        case .open:
-            return CellStamp(text: CellMark.sky, tone: .sky)
+        case .open, .solid, .spike, .checkpoint, .summit:
+            return ground(state, x: x, y: y)
+        case .spring, .gleam, .coin, .crumble, .refill:
+            return prize(state, x: x, y: y)
+        }
+    }
+
+    static func ground(_ state: SummitState, x: Int, y: Int) -> CellStamp {
+        switch state.room.kind(x: x, y: y) {
         case .solid:
             return CellStamp(text: CellMark.stone(capped: capped(state, x: x, y: y)), tone: .stone)
         case .spike:
@@ -76,13 +87,33 @@ enum FieldView {
             return CellStamp(text: CellMark.flag, tone: .flag)
         case .summit:
             return CellStamp(text: crest(state, x: x, y: y), tone: .crest)
+        default:
+            return CellStamp(text: CellMark.sky, tone: .sky)
+        }
+    }
+
+    static func prize(_ state: SummitState, x: Int, y: Int) -> CellStamp {
+        switch state.room.kind(x: x, y: y) {
         case .spring:
             return CellStamp(text: CellMark.spring, tone: .spring)
         case .gleam:
             return CellStamp(text: CellMark.berry, tone: .gleam)
         case .coin:
             return CellStamp(text: CellMark.coin, tone: .coin)
+        case .crumble:
+            return shelf(state, x: x, y: y)
+        case .refill:
+            return CellStamp(text: CellMark.refill, tone: .flag)
+        default:
+            return CellStamp(text: CellMark.sky, tone: .sky)
         }
+    }
+
+    static func shelf(_ state: SummitState, x: Int, y: Int) -> CellStamp {
+        if state.room.firm(x: x, y: y, tick: state.elapsed()) {
+            return CellStamp(text: CellMark.crumble, tone: .mist)
+        }
+        return CellStamp(text: CellMark.sky, tone: .sky)
     }
 
     static func crest(_ state: SummitState, x: Int, y: Int) -> String {

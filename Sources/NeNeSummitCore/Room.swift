@@ -45,6 +45,13 @@ public struct Room: Equatable, Sendable {
     }
 
     public func title() -> String {
+        if let early = earlyTitle(ascent) {
+            return early
+        }
+        return lateTitle(ascent)
+    }
+
+    private func earlyTitle(_ ascent: Ascent) -> String? {
         switch ascent {
         case .first:
             return "RIDGE"
@@ -54,13 +61,26 @@ public struct Room: Equatable, Sendable {
             return "SPRING"
         case .raft:
             return "RAFT"
+        default:
+            return nil
+        }
+    }
+
+    private func lateTitle(_ ascent: Ascent) -> String {
+        switch ascent {
         case .lift:
             return "LIFT"
         case .well:
             return "WELL"
         case .slot:
             return "SLOT"
+        case .fall:
+            return "FALL"
+        case .rift:
+            return "RIFT"
         case .aside:
+            return "PITCH"
+        default:
             return "PITCH"
         }
     }
@@ -76,6 +96,14 @@ public struct Room: Equatable, Sendable {
         DeckField.covers(self, x: x, y: y, tick: tick)
     }
 
+    public func crushing(x: Int, y: Int, tick: Int) -> Bool {
+        DeckField.crushes(self, x: x, y: y, tick: tick)
+    }
+
+    public func firm(x: Int, y: Int, tick: Int) -> Bool {
+        kind(x: x, y: y) == .crumble && Crumble.holds(tick)
+    }
+
     private static func contains(_ point: CellPoint, width: Int, height: Int) -> Bool {
         point.x >= 0 && point.x < width && point.y >= 0 && point.y < height
     }
@@ -83,9 +111,9 @@ public struct Room: Equatable, Sendable {
     private static func blocked(_ spec: RoomSpec) -> Bool {
         let kind = spec.grid.cells[spec.spawn.y * spec.grid.width + spec.spawn.x]
         switch kind {
-        case .open, .checkpoint, .spring, .gleam, .coin:
+        case .open, .checkpoint, .spring, .gleam, .coin, .refill:
             return false
-        case .solid, .spike, .summit:
+        case .solid, .spike, .summit, .crumble:
             return true
         }
     }

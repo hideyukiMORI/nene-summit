@@ -22,4 +22,7 @@ enum MotionPolicy {
     static let deckReach = 8
     static let deckTravel = 40
     static let deckDwell = 40
+    static let dropReach = 4
+    static let crumbleOn = 48
+    static let crumbleOff = 24
 }

@@ -20,6 +20,8 @@ enum Settlement {
             return gatherBerry(resting(slide, action: action, progress: progress, events: wish.events), cell: cell)
         case .coin(let cell):
             return gatherCoin(resting(slide, action: action, progress: progress, events: wish.events), cell: cell)
+        case .refill:
+            return recharge(slide, action: action, progress: progress, events: wish.events)
         case .checkpoint(let cell):
             let marked = progress.withCheckpoint(cell)
             return Resolved(kinematics: slide.kinematics, action: action, progress: marked, events: wish.events)
@@ -67,6 +69,12 @@ enum Settlement {
 
     static func gatherCoin(_ resting: Resolved, cell: CellPoint) -> Resolved {
         keep(resting, next: resting.progress.gatheringCoin(cell))
+    }
+
+    static func recharge(_ slide: Slide, action: Action, progress: Progress, events: [StepEvent]) -> Resolved {
+        let charged = Action(
+            facing: action.facing, phase: action.phase, dashTicks: action.dashTicks, charges: .full)
+        return Resolved(kinematics: slide.kinematics, action: charged, progress: progress, events: events)
     }
 
     static func keep(_ resting: Resolved, next: Progress) -> Resolved {

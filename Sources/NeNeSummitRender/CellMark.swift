@@ -8,6 +8,9 @@ enum CellMark {
     static let spring = "\\/"
     static let berry = "*'"
     static let coin = "(o"
+    static let crusher = "[]"
+    static let crumble = ".:"
+    static let refill = "<>"
     static let cloud = "~~"
     static let spark = ". "
 

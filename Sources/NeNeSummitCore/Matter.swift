@@ -6,6 +6,17 @@ struct Matter: Equatable, Sendable {
         if DeckField.covers(room, x: x, y: y, tick: tick) {
             return .solid
         }
-        return room.kind(x: x, y: y)
+        let kind = room.kind(x: x, y: y)
+        if kind == .crumble {
+            if Crumble.holds(tick) {
+                return .solid
+            }
+            return .open
+        }
+        return kind
+    }
+
+    func crushes(x: Int, y: Int) -> Bool {
+        DeckField.crushes(room, x: x, y: y, tick: tick)
     }
 }

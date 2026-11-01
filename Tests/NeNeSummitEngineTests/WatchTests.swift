@@ -51,8 +51,20 @@ import Testing
     #expect(watch.state.progress.expedition == .climbing)
 }
 
-@Test func theSlotReturnsToTheFirstRoom() {
+@Test func theSlotOpensTheFall() {
     let watch = rest(climb(Watch.begin(in: SlotPitch.make())))
+    #expect(watch.state.room.ascent == .fall)
+    #expect(watch.state.progress.expedition == .climbing)
+}
+
+@Test func theFallOpensTheRift() {
+    let watch = rest(climb(Watch.begin(in: FallPitch.make())))
+    #expect(watch.state.room.ascent == .rift)
+    #expect(watch.state.progress.expedition == .climbing)
+}
+
+@Test func theRiftReturnsToTheFirstRoom() {
+    let watch = rest(climb(Watch.begin(in: RiftPitch.make())))
     #expect(watch.state.room.ascent == .first)
     #expect(watch.state.progress.expedition == .climbing)
 }
@@ -68,6 +80,10 @@ import Testing
     #expect(well.state.progress.expedition == .summited)
     let slot = climb(Watch.begin(in: SlotPitch.make()))
     #expect(slot.state.progress.expedition == .summited)
+    let fall = climb(Watch.begin(in: FallPitch.make()))
+    #expect(fall.state.progress.expedition == .summited)
+    let rift = climb(Watch.begin(in: RiftPitch.make()))
+    #expect(rift.state.progress.expedition == .summited)
 }
 
 @Test func theSlotIsCrossedByADash() {

@@ -11,6 +11,7 @@ enum Probe {
         var spring = false
         var gleam: CellPoint?
         var coin: CellPoint?
+        var refill = false
         var checkpoint: CellPoint?
     }
 
@@ -51,7 +52,7 @@ enum Probe {
         while y <= span.y1 {
             var x = span.x0
             while x <= span.x1 {
-                if note(matter.kind(x: x, y: y), x: x, y: y, found: &found) {
+                if matter.crushes(x: x, y: y) || note(matter.kind(x: x, y: y), x: x, y: y, found: &found) {
                     return .spike
                 }
                 x += 1
@@ -73,6 +74,9 @@ enum Probe {
         }
         if let cell = found.coin {
             return .coin(cell)
+        }
+        if found.refill {
+            return .refill
         }
         if let cell = found.checkpoint {
             return .checkpoint(cell)
@@ -102,7 +106,9 @@ enum Probe {
             found.gleam = CellPoint(x: x, y: y)
         case .coin:
             found.coin = CellPoint(x: x, y: y)
-        case .open, .solid:
+        case .refill:
+            found.refill = true
+        case .crumble, .open, .solid:
             break
         }
         return false

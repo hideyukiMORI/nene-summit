@@ -29,6 +29,7 @@
 | [0025](0025-line-marks.md) | accepted | 山は罫で描き、拾うものに字形を付ける。雪山の絵は 0026 |
 | [0026](0026-ice-vista.md) | accepted | 奥は雲と稜線、手前は雪。旗一本は 0027 |
 | [0027](0027-one-pennant.md) | accepted | 頂は一本の旗、奥の雲は輪郭 |
+| [0028](0028-falling-traps.md) | accepted | 落ちる塊と崩れる床と結晶を足す |
 
 [テンプレート](0000-template.md) を複製し、連番と内容を表す名前を付ける。
 状態: proposed / accepted / superseded。accepted は記録した技術判断の採用であり、施主の発言を意味しない。
