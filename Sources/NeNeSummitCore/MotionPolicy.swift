@@ -6,8 +6,9 @@ enum MotionPolicy {
     static let maxFall = 480
     static let runSpeed = 64
     static let groundAccel = 32
-    static let airAccel = runSpeed
     static let jumpSpeed = 224
+    static let leapSpeed = jumpSpeed
+    static let airAccel = leapSpeed
     static let jumpCut = 64
     static let wallJumpX = 96
     static let dashSpeed = 200

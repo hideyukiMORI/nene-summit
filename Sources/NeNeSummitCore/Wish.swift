@@ -100,7 +100,7 @@ enum Wish {
         if horizontal == .none {
             return vx
         }
-        return targetSpeed(horizontal)
+        return directed(MotionPolicy.leapSpeed, horizontal: horizontal)
     }
 
     static func dashRequested(_ input: Input, charges: DashCharges, dashTicks: Int) -> Bool {
@@ -140,17 +140,22 @@ enum Wish {
     }
 
     static func coast(_ velocity: Velocity, phase: Phase, input: Input) -> Velocity {
-        let target = targetSpeed(input.horizontal)
+        let target = coastTarget(input.horizontal, phase: phase)
         let accel = phase == .grounded ? MotionPolicy.groundAccel : MotionPolicy.airAccel
         return Velocity(x: approach(velocity.x, target: target, accel: accel), y: falling(velocity.y, phase: phase))
     }
 
-    static func targetSpeed(_ horizontal: Horizontal) -> Int {
+    static func coastTarget(_ horizontal: Horizontal, phase: Phase) -> Int {
+        let speed = phase == .grounded ? MotionPolicy.runSpeed : MotionPolicy.leapSpeed
+        return directed(speed, horizontal: horizontal)
+    }
+
+    static func directed(_ speed: Int, horizontal: Horizontal) -> Int {
         switch horizontal {
         case .left:
-            return -MotionPolicy.runSpeed
+            return -speed
         case .right:
-            return MotionPolicy.runSpeed
+            return speed
         case .none:
             return 0
         }
