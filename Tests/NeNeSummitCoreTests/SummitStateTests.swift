@@ -2,51 +2,45 @@ import Testing
 
 @testable import NeNeSummitCore
 
-@Test func beginsAtTheSpawnFacingUp() {
+@Test func beginsOnTheSpawnFacingRight() {
     let state = SummitState.begin(in: openedRoom())
-    #expect(state.position == CellPoint(x: 1, y: 0))
-    #expect(state.facing == .up)
-    #expect(state.tick == .zero)
+    #expect(state.foot == CellPoint(x: 1, y: 1))
+    #expect(state.action.facing == .right)
+    #expect(state.progress.tick == .zero)
+    #expect(state.action.charges == .full)
 }
 
-@Test func advancesOneTickWithoutMoving() {
+@Test func idleStaysOnTheFloor() {
     let start = SummitState.begin(in: openedRoom())
     let outcome = start.advance(input: .idle)
-    #expect(outcome.state.tick.count == 1)
-    #expect(outcome.state.position == start.position)
-    #expect(outcome.state.facing == .up)
+    #expect(outcome.state.progress.tick.count == 1)
+    #expect(outcome.state.kinematics.place == start.kinematics.place)
     #expect(outcome.events == [.tick])
 }
 
-@Test func faceInputRecordsTheDirectionAfterTheTick() {
-    let outcome = SummitState.begin(in: openedRoom()).advance(input: .face(.left))
-    #expect(outcome.state.facing == .left)
-    #expect(outcome.events == [.tick, .faced(.left)])
-}
-
 @Test func theSameInputsProduceTheSameStates() {
-    let inputs: [Input] = [.idle, .face(.left), .face(.left), .idle, .face(.down)]
+    let inputs = [Input](repeating: .moving(.right), count: 5)
     let room = openedRoom()
     let first = Replay.states(from: SummitState.begin(in: room), inputs: inputs)
     let second = Replay.states(from: SummitState.begin(in: room), inputs: inputs)
     #expect(first == second)
-    #expect(first.map(\.tick.count) == [0, 1, 2, 3, 4, 5])
-    #expect(first.map(\.position) == Array(repeating: room.spawn, count: first.count))
+    #expect(first.map(\.progress.tick.count) == [0, 1, 2, 3, 4, 5])
+    #expect(first.last?.kinematics.place.x ?? 0 > first[0].kinematics.place.x)
 }
 
-@Test func differentInputsDivergeByFacing() {
+@Test func differentInputsDiverge() {
     let room = openedRoom()
-    let left = Replay.states(from: SummitState.begin(in: room), inputs: [.face(.left)])
-    let right = Replay.states(from: SummitState.begin(in: room), inputs: [.face(.right)])
+    let left = Replay.states(from: SummitState.begin(in: room), inputs: [.moving(.left)])
+    let right = Replay.states(from: SummitState.begin(in: room), inputs: [.moving(.right)])
     #expect(left != right)
-    #expect(left.last?.facing == .left)
-    #expect(right.last?.facing == .right)
 }
 
 private func openedRoom() -> Room {
+    let cells = [CellKind.solid, .solid, .solid, .open, .open, .open]
     switch RoomId.make(value: "first-ascent") {
     case .success(let id):
-        switch Room.make(id: id, width: 3, height: 2, spawn: CellPoint(x: 1, y: 0)) {
+        let grid = RoomGrid(width: 3, height: 2, cells: cells)
+        switch Room.make(RoomSpec(id: id, spawn: CellPoint(x: 1, y: 1), grid: grid)) {
         case .success(let room):
             return room
         case .failure:

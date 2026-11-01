@@ -1,4 +1,4 @@
-struct StepOutcome: Equatable, Sendable {
-    let state: SummitState
+public struct StepOutcome: Equatable, Sendable {
+    public let state: SummitState
     let events: [StepEvent]
 }

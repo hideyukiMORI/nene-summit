@@ -9,15 +9,15 @@ Swift 対象は `10-swift.mdc`、文書対象は `20-docs.mdc`。どれも入口
 ## 最初に貼り付ける指示
 
 ```text
-NeNe Summit の P2 を開始してください。
+NeNe Summit は、端末で一部屋を人が登れるところまで入っています。
 まず AGENTS.md、docs/CURSOR_HANDOFF.md、docs/todo/current.md と、作業に必要な規範を読んでください。
-P1 は一部屋の初期状態と固定 tick の advance までです。判断は docs/adr/0004-one-room-step.md です。
-位置を変える経路を advance 以外に足さないでください。倍率・tick・速度は測って ADR に固定してください。
+判断は docs/adr/0005-playable-climb.md です。0004 の「位置を変えない」「初期の向きは上」は 0005 が置き換えています。
+起動は swift run nene-summit。矢印か a d で移動、w と s、space で跳ぶ、k でダッシュ、q で終了です。
+位置を変える経路を SummitState.advance 以外に足さないでください。数は MotionPolicy に置き、文書へ写さないでください。
+数は設計判断であり、施主の確定要件ではありません。
 .swift-format と .swiftlint.yml は緩めないでください。
-docs/APPROACH.md の P2 を Issue とブランチに分け、重力、走る、跳ぶ、壁蹴り、ダッシュ、棘、
-チェックポイントを Core の一つの経路にしてください。
-高速衝突、角、消費と回復、死亡復帰の不変条件を Swift Testing で確かめてください。
-P2 の成功を、端末で遊べることや AI の証明と呼ばないでください。
+次は複数の部屋か、advance だけを呼ぶ自律登山です。P2 をゼロからやり直さないでください。
+復元とリサイズは未検査です。TERM-001 を active にしないでください。
 Bolt / Swarm は設計の参考です。完成済みコード・テスト結果・施主の承認を丸ごとコピーしないでください。
 終了時は実行した検証、未実装の検査、変更した文書、次の作業を日本語で報告し、docs/todo/current.md を更新してください。
 ```
@@ -34,5 +34,5 @@ current の次の Phase と該当 Issue / PR を確認し、git status と差分
 - `make check` がコミットメッセージで落ちる: GIT-003。新しいコミットには `(#N)` が要る。初期化コミットだけが例外。
 - 整形を通すために `.swift-format` の `rules` を足したくなった: 足さない。既定規則のまま、コードを直す。
 - どの SWF が機械で守られているか: [QUALITY_GATES](QUALITY_GATES.md)。設定ファイルがあることと active は別。
-- 人の操作・テーマ数などが決まっていない: 要件表の候補。まず無入力で一部屋を登る最小構成を優先する。
+- テーマ数などが決まっていない: 要件表の候補。いま遊べるのは一部屋と一つの案内。
 - 兄弟をローカルで見つけられない: [REFERENCES](REFERENCES.md) の公開 commit を読む。

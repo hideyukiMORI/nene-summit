@@ -48,15 +48,15 @@ debug / release の build、Swift Testing を実行する。
 | GIT-003 | コミットメッセージの形 | active | eng/validate-commit-message.py / eng/test_validate_commit_message.py / .githooks/commit-msg / [証拠](quality/gate-proofs.md) |
 | GIT-004 | PR と squash merge | planned | 手順として守る。ruleset は未導入。兄弟の保護設定を転記しない |
 | GIT-005 | PR タイトル | planned | 人が GIT-003 に揃える。タイトル検査は未導入 |
-| TEST-001 | 決定性、衝突、ダッシュ、復帰、終了、不変条件 | planned | P2 / P4 |
-| TERM-001 | PTY で入力・復元・リサイズを検証 | planned | P3 |
+| TEST-001 | 決定性、衝突、ダッシュ、復帰、終了、不変条件 | planned | 衝突、ダッシュ回復、棘の復帰、壁蹴り、登頂は Swift Testing が make check で実行する。終了条件の網羅と AI は未検査 |
+| TERM-001 | PTY で入力・復元・リサイズを検証 | planned | 起動と q は eng/play_session.py。復元とリサイズは未検査 |
 | REL-001 | 配布物・checksum・インストール確認 | planned | P5 |
 
 ## make check の中身
 
 ツール版の確認 → コミットメッセージ → 文書と相対リンク → 検査器の正例と反例 → conformance → 整形 → lint →
-debug / release build → Swift Testing。
-再生と PTY は、その段階の実装と同じ変更で足す。
+debug / release build → Swift Testing → PTY で起動し q で終える。
+復元とリサイズは、検査を足すまで TERM-001 を active にしない。
 ローカルと CI は同じ `make check`。CI はその前に [`eng/install-swift.sh`](../eng/install-swift.sh) で lock のツールチェーンを入れる。
 ゲートはソースを書き換えない。
 

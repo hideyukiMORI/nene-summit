@@ -1,11 +1,12 @@
 # 開発に参加する
 
 最初に [AGENTS.md](AGENTS.md) と [開発手順](docs/DEVELOPMENT_WORKFLOW.md) を読む。
-道具の接続は P0 まで進んでいる。ゲームの状態遷移は [アプローチ](docs/APPROACH.md) の P1 から。
+いまの到達点は [現在地](docs/todo/current.md)。
 
 Git / Make / Python 3.10 以降に加え、[`.swift-version`](.swift-version) の Swift が要る。
 `make bootstrap` と `make check` を実行する。`make check` は文書、コミットメッセージ、規約、整形、lint、
-Core の debug / release build と Swift Testing を実行する。遊べる登山の検証は、その段階の実装で足す。
+debug / release の build と Swift Testing、PTY での起動と `q` を実行する。
+遊ぶときは `swift run nene-summit`。
 
 Issue に目的・受け入れ条件・検証計画を記載し、焦点を一つにした PR を提出する。
 ブランチとコミットの形は [コミット規約](docs/COMMIT_CONVENTIONS.md)、Swift の書き方は [コーディング規約](docs/CODING_RULES.md)。

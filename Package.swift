@@ -11,9 +11,34 @@ let package = Package(
             name: "NeNeSummitCore",
             swiftSettings: [.treatAllWarnings(as: .error), .enableUpcomingFeature("ExistentialAny")]
         ),
+        .target(
+            name: "NeNeSummitRender",
+            dependencies: ["NeNeSummitCore"],
+            swiftSettings: [.treatAllWarnings(as: .error), .enableUpcomingFeature("ExistentialAny")]
+        ),
+        .target(
+            name: "NeNeSummitTerminal",
+            dependencies: ["NeNeSummitRender"],
+            swiftSettings: [.treatAllWarnings(as: .error), .enableUpcomingFeature("ExistentialAny")]
+        ),
+        .executableTarget(
+            name: "nene-summit",
+            dependencies: ["NeNeSummitCore", "NeNeSummitRender", "NeNeSummitTerminal"],
+            swiftSettings: [.treatAllWarnings(as: .error), .enableUpcomingFeature("ExistentialAny")]
+        ),
         .testTarget(
             name: "NeNeSummitCoreTests",
             dependencies: ["NeNeSummitCore"],
+            swiftSettings: [.treatAllWarnings(as: .error), .enableUpcomingFeature("ExistentialAny")]
+        ),
+        .testTarget(
+            name: "NeNeSummitRenderTests",
+            dependencies: ["NeNeSummitCore", "NeNeSummitRender"],
+            swiftSettings: [.treatAllWarnings(as: .error), .enableUpcomingFeature("ExistentialAny")]
+        ),
+        .testTarget(
+            name: "NeNeSummitTerminalTests",
+            dependencies: ["NeNeSummitTerminal"],
             swiftSettings: [.treatAllWarnings(as: .error), .enableUpcomingFeature("ExistentialAny")]
         ),
     ],

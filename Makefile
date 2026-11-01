@@ -1,4 +1,4 @@
-.PHONY: bootstrap check tools commits format lint conformance build test
+.PHONY: bootstrap check tools commits format lint conformance build test play
 
 BASE ?= origin/main
 SWIFTLINT := .tools/swiftlint
@@ -20,6 +20,7 @@ check: tools commits
 	$(MAKE) lint
 	$(MAKE) build
 	$(MAKE) test
+	$(MAKE) play
 
 commits:
 	@if git rev-parse --verify "$(BASE)^{commit}" >/dev/null 2>&1; then \
@@ -45,3 +46,6 @@ build:
 test:
 	eng/swift-strict.sh swift test
 	eng/swift-strict.sh swift test -c release
+
+play:
+	python3 eng/play_session.py .build/debug/nene-summit

@@ -1,0 +1,84 @@
+enum Probe {
+    struct Span {
+        let x0: Int
+        let y0: Int
+        let x1: Int
+        let y1: Int
+    }
+
+    struct Found {
+        var summit = false
+        var checkpoint: CellPoint?
+    }
+
+    static func hitsSolid(place: Place, room: Room) -> Bool {
+        if place.x < 0 || place.y < 0 {
+            return true
+        }
+        let span = covering(place)
+        var y = span.y0
+        while y <= span.y1 {
+            var x = span.x0
+            while x <= span.x1 {
+                if room.kind(x: x, y: y) == .solid {
+                    return true
+                }
+                x += 1
+            }
+            y += 1
+        }
+        return false
+    }
+
+    static func supported(place: Place, room: Room) -> Bool {
+        hitsSolid(place: place.moved(x: 0, y: -1), room: room)
+    }
+
+    static func contact(place: Place, room: Room) -> Contact {
+        if place.x < 0 || place.y < 0 {
+            return .none
+        }
+        let span = covering(place)
+        var found = Found()
+        var y = span.y0
+        while y <= span.y1 {
+            var x = span.x0
+            while x <= span.x1 {
+                if note(room.kind(x: x, y: y), x: x, y: y, found: &found) {
+                    return .spike
+                }
+                x += 1
+            }
+            y += 1
+        }
+        if found.summit {
+            return .summit
+        }
+        if let cell = found.checkpoint {
+            return .checkpoint(cell)
+        }
+        return .none
+    }
+
+    static func covering(_ place: Place) -> Span {
+        let x0 = place.x / MotionPolicy.scale
+        let y0 = place.y / MotionPolicy.scale
+        let x1 = (place.x + MotionPolicy.bodyWidth - 1) / MotionPolicy.scale
+        let y1 = (place.y + MotionPolicy.bodyHeight - 1) / MotionPolicy.scale
+        return Span(x0: x0, y0: y0, x1: x1, y1: y1)
+    }
+
+    private static func note(_ kind: CellKind, x: Int, y: Int, found: inout Found) -> Bool {
+        switch kind {
+        case .spike:
+            return true
+        case .summit:
+            found.summit = true
+        case .checkpoint:
+            found.checkpoint = CellPoint(x: x, y: y)
+        case .open, .solid:
+            break
+        }
+        return false
+    }
+}
