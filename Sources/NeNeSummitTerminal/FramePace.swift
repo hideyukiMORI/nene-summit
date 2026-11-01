@@ -1,5 +1,5 @@
 public enum FramePace {
-    public static let milliseconds = 40
+    public static let milliseconds = 32
 
     public static func remaining(started: Int, now: Int) -> Int {
         if now < started {

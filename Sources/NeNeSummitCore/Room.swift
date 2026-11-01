@@ -58,6 +58,8 @@ public struct Room: Equatable, Sendable {
             return "LIFT"
         case .well:
             return "WELL"
+        case .slot:
+            return "SLOT"
         case .aside:
             return "PITCH"
         }
