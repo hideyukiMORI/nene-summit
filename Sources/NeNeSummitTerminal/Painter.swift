@@ -24,6 +24,8 @@ enum Painter {
             return "\u{001B}[33m"
         case .banner:
             return "\u{001B}[32m"
+        case .quiet:
+            return "\u{001B}[2m"
         }
     }
 }

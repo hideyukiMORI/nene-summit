@@ -29,7 +29,9 @@ then builds and tests in debug and release, and starts the game in a PTY until `
 Format and lint configurations stay strict.
 
 Move with the arrow keys or `a` / `d`. `w` and `s` aim up and down.
-`space` jumps, `k` dashes, `q` quits. With no keys, a guide climbs and then retries the same room.
+`space` jumps, `k` dashes, `q` quits. The jump stays low.
+With no keys, a guide climbs and then retries the same room.
+A title, a dash mark, and the keys sit under the mountain.
 Speeds live in `MotionPolicy`. The pause and the give-up live in `Watch`. Both are design choices.
 
 ## Project policies

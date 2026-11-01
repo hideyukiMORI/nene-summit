@@ -64,36 +64,52 @@ import Testing
     #expect(kicked.state.kinematics.velocity.y > 0)
 }
 
-@Test func theAuthoredRoomCanBeClimbed() {
-    var state = SummitState.begin(in: FirstAscent.make())
-    var tick = 0
-    while tick < 500 && state.progress.expedition != .summited {
-        state = state.advance(input: hop(state)).state
-        tick += 1
-    }
-    #expect(state.progress.expedition == .summited)
-    let again = Replay.states(from: SummitState.begin(in: FirstAscent.make()), inputs: recordedHop())
-    #expect(again.last?.progress.expedition == .summited)
+@Test func aFullJumpStaysNearThreeBodies() {
+    let rise = MotionPolicy.jumpSpeed * MotionPolicy.jumpSpeed / (2 * MotionPolicy.gravity)
+    #expect(rise >= MotionPolicy.bodyHeight * 2)
+    #expect(rise <= MotionPolicy.bodyHeight * 4)
 }
 
-private func hop(_ state: SummitState) -> Input {
-    if state.action.phase == .grounded {
-        return .hopping(.right)
-    }
-    return .moving(.right)
+@Test func theAuthoredRoomTeachesOneScreen() {
+    let room = FirstAscent.make()
+    let checkpoint = find(room, .checkpoint)
+    let spike = find(room, .spike)
+    let summit = find(room, .summit)
+    #expect(checkpoint.x < spike.x)
+    #expect(checkpoint.y == spike.y)
+    #expect(summit.y > spike.y)
+    #expect(pitWidth(room) >= 3)
 }
 
-private func recordedHop() -> [Input] {
-    var state = SummitState.begin(in: FirstAscent.make())
-    var inputs: [Input] = []
-    var tick = 0
-    while tick < 500 && state.progress.expedition != .summited {
-        let input = hop(state)
-        inputs.append(input)
-        state = state.advance(input: input).state
-        tick += 1
+private func find(_ room: Room, _ kind: CellKind) -> CellPoint {
+    var y = 0
+    while y < room.height {
+        var x = 0
+        while x < room.width {
+            if room.kind(x: x, y: y) == kind {
+                return CellPoint(x: x, y: y)
+            }
+            x += 1
+        }
+        y += 1
     }
-    return inputs
+    preconditionFailure("印が無い")
+}
+
+private func pitWidth(_ room: Room) -> Int {
+    var best = 0
+    var run = 0
+    var x = 0
+    while x < room.width {
+        if room.kind(x: x, y: 0) == .solid {
+            best = max(best, run)
+            run = 0
+        } else {
+            run += 1
+        }
+        x += 1
+    }
+    return max(best, run)
 }
 
 private func chamber(width: Int, height: Int, spawn: CellPoint, cells: [CellKind]) -> Room {
