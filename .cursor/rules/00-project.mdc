@@ -1,0 +1,11 @@
+---
+description: NeNe Summit の共通方針と作業開始時の読み順
+alwaysApply: true
+---
+
+最初に AGENTS.md、docs/todo/current.md、docs/CURSOR_HANDOFF.md を読む。
+要件と提案は docs/REQUIREMENTS.md で区別する。規範の正本は docs/。
+一つの意味には一つの経路。AI と人が同じ Core 入力を使い、AI 専用物理を作らない。
+ゲートを弱めない。未実装の検査を active、未実行の検証を成功と書かない。
+現在は文書だけの初期状態。製品コードを追加する変更で make check を製品用に拡張する。
+日本語で報告し、最後に変更内容・実行検証・残る課題を示す。
