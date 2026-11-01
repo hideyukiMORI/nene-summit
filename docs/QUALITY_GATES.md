@@ -48,7 +48,7 @@ debug / release の build、Swift Testing を実行する。
 | GIT-003 | コミットメッセージの形 | active | eng/validate-commit-message.py / eng/test_validate_commit_message.py / .githooks/commit-msg / [証拠](quality/gate-proofs.md) |
 | GIT-004 | PR と squash merge | planned | 手順として守る。ruleset は未導入。兄弟の保護設定を転記しない |
 | GIT-005 | PR タイトル | planned | 人が GIT-003 に揃える。タイトル検査は未導入 |
-| TEST-001 | 決定性、衝突、ダッシュ、復帰、終了、不変条件 | planned | 衝突、復帰、登頂、ジャンプの高さ、無入力のやり直しと打ち切り、押しっぱなしと同時押し、ジャンプを離した短縮、オートとマニュアルの切替、方向を押したジャンプの斜め、ボヤキの間と割り込み、枠の外を消す文字列、固定画面の色面と四人の英語、改行で送らないこと、先読みが本番状態を変えないこと、ばねと動く床、壁に沿う井戸、画面の枠の残り待ち、低い隙間のダッシュは Swift Testing が make check で実行する。実機の待ち時間は未計測。seed の到達率は未検査 |
+| TEST-001 | 決定性、衝突、ダッシュ、復帰、終了、不変条件 | planned | 衝突、復帰、登頂、ジャンプの高さ、無入力のやり直しと打ち切り、押しっぱなしと同時押し、ジャンプを離した短縮、オートとマニュアルの切替、方向を押したジャンプの斜め、ボヤキの間と割り込み、枠の外を消す文字列、固定画面の色面と四人の英語、改行で送らないこと、先読みが本番状態を変えないこと、ばねと動く床、壁に沿う井戸、画面の枠の残り待ち、低い隙間のダッシュ、色面と右の欄の項目は Swift Testing が make check で実行する。実機の待ち時間と色の感触は未計測。seed の到達率は未検査 |
 | TERM-001 | PTY で入力・復元・リサイズを検証 | planned | 起動と q は eng/play_session.py。押しっぱなしのバイト列は Swift Testing。復元とリサイズは未検査 |
 | REL-001 | 配布物・checksum・インストール確認 | planned | P5 |
 

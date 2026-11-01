@@ -18,6 +18,7 @@
 壁に沿って上る井戸は [ADR 0020](adr/0020-wall-well.md)。
 画面の刻みは [ADR 0021](adr/0021-steady-pace.md)。
 低い隙間は [ADR 0022](adr/0022-low-slot.md)。
+色面と右の欄は [ADR 0023](adr/0023-color-and-hud.md)。
 下の表は当初の区切りであり、P2 をゼロからやり直す指示ではない。
 
 | Phase | 成果 | 受け入れ条件 |
