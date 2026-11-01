@@ -43,7 +43,7 @@ let package = Package(
         ),
         .testTarget(
             name: "NeNeSummitRenderTests",
-            dependencies: ["NeNeSummitCore", "NeNeSummitRender"],
+            dependencies: ["NeNeSummitCore", "NeNeSummitEngine", "NeNeSummitRender"],
             swiftSettings: [.treatAllWarnings(as: .error), .enableUpcomingFeature("ExistentialAny")]
         ),
         .testTarget(

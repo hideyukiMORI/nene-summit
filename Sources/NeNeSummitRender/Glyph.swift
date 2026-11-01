@@ -6,6 +6,7 @@ public struct Glyph: Equatable, Sendable {
         case mark
         case climber
         case banner
+        case quiet
     }
 
     public let symbol: Character

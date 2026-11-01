@@ -1,25 +1,28 @@
 import Testing
 
 @testable import NeNeSummitCore
+@testable import NeNeSummitEngine
 @testable import NeNeSummitRender
 
 @Test func theFrameShowsTheClimberAndTheSummit() {
     let frame = Canvas.draw(SummitState.begin(in: FirstAscent.make()))
     let symbols = frame.lines.flatMap { $0.map(\.symbol) }
+    let text = String(symbols)
     #expect(symbols.contains("A"))
     #expect(symbols.contains("#"))
     #expect(symbols.contains("^"))
     #expect(symbols.contains("*"))
+    #expect(text.contains("DASH"))
+    #expect(text.contains("q quit"))
 }
 
 @Test func theSummitBannerChangesAfterTheClimb() {
-    var state = SummitState.begin(in: FirstAscent.make())
+    var watch = Watch.begin(in: FirstAscent.make())
     var tick = 0
-    while tick < 500 && state.progress.expedition != .summited {
-        let input: Input = state.action.phase == .grounded ? .hopping(.right) : .moving(.right)
-        state = state.advance(input: input).state
+    while tick < Watch.budget && watch.state.progress.expedition != .summited {
+        watch = watch.advance(human: .idle)
         tick += 1
     }
-    let title = String(Canvas.draw(state).lines[0].map(\.symbol))
-    #expect(title.contains("頂上"))
+    let text = String(Canvas.draw(watch.state).lines.flatMap { $0.map(\.symbol) })
+    #expect(text.contains("頂上"))
 }

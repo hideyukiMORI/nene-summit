@@ -7,7 +7,8 @@
 | [0003](0003-measured-toolchain.md) | accepted | Swift 6.4.1 と SwiftLint 0.65.1 をこの環境の実測で固定する |
 | [0004](0004-one-room-step.md) | accepted | 一部屋の状態は固定 tick の advance だけが進める。位置と初期の向きは 0005 が置き換えた |
 | [0005](0005-playable-climb.md) | accepted | 端末から一部屋を登り切る。数値は MotionPolicy の設計判断 |
-| [0006](0006-unattended-retry.md) | accepted | 無入力では案内が登り、頂上か打ち切りで同じ部屋をやり直す |
+| [0006](0006-unattended-retry.md) | accepted | 無入力では案内が登り、頂上か打ち切りで同じ部屋をやり直す。跳び方は 0007 が置き換えた |
+| [0007](0007-shorter-jump.md) | accepted | ジャンプを体のおよそ 3 倍に抑え、一部屋の読みと画面下の案内にする |
 
 [テンプレート](0000-template.md) を複製し、連番と内容を表す名前を付ける。
 状態: proposed / accepted / superseded。accepted は記録した技術判断の採用であり、施主の発言を意味しない。

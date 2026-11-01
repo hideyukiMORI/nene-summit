@@ -2,28 +2,34 @@ import NeNeSummitCore
 
 public enum Canvas {
     public static func draw(_ state: SummitState) -> Frame {
-        var lines = banners(state)
+        var lines: [[Glyph]] = []
         var y = state.room.height - 1
         while y >= 0 {
             lines.append(row(y, state: state))
             y -= 1
         }
+        lines.append(contentsOf: strip(state))
         return Frame(lines: lines)
     }
 
-    static func banners(_ state: SummitState) -> [[Glyph]] {
-        let title: String
-        if state.progress.expedition == .summited {
-            title = "頂上に着いた"
-        } else {
-            title = "矢印か a d で移動  space で跳ぶ  k でダッシュ  q で終了"
-        }
-        let charges = "ダッシュ \(state.action.charges.remaining)"
-        return [line(title), line(charges)]
+    static func strip(_ state: SummitState) -> [[Glyph]] {
+        [heading(state), dash(state), line("a d  move   space jump   k dash   q quit", tone: .quiet)]
     }
 
-    static func line(_ text: String) -> [Glyph] {
-        text.map { Glyph(symbol: $0, tone: .banner) }
+    static func heading(_ state: SummitState) -> [Glyph] {
+        if state.progress.expedition == .summited {
+            return line("頂上に着いた", tone: .banner)
+        }
+        return line("NENE SUMMIT", tone: .banner)
+    }
+
+    static func dash(_ state: SummitState) -> [Glyph] {
+        let pip = state.action.charges.remaining > 0 ? "*" : "-"
+        return line("DASH ", tone: .quiet) + line(String(pip), tone: .mark)
+    }
+
+    static func line(_ text: String, tone: Glyph.Tone) -> [Glyph] {
+        text.map { Glyph(symbol: $0, tone: tone) }
     }
 
     static func row(_ y: Int, state: SummitState) -> [Glyph] {

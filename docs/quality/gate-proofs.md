@@ -79,6 +79,17 @@
 | 画面 | 人、固体、棘、頂上。登頂後の案内に「頂上」 |
 | 矢印と a d w s、space、k、q | 対応する Press。未知のキーは空 |
 
+## 短いジャンプと一部屋の読み
+
+正例は `Tests/NeNeSummitCoreTests` のジャンプの範囲と部屋の順番、
+登頂は `Tests/NeNeSummitEngineTests`、画面は `Tests/NeNeSummitRenderTests`。
+
+| ケース | 期待 |
+| --- | --- |
+| 全力ジャンプの高さ | 体の 2 倍以上、4 倍以下 |
+| 著者の部屋 | チェックポイントが棘より手前の同じ高さ。頂上はそれより高い。床の隙間は 3 マス以上 |
+| 画面 | 人、固体、棘、頂上、`DASH`、`q quit`。登頂後の帯に「頂上」 |
+
 ## 無入力のやり直し
 
 正例と反例は `Tests/NeNeSummitEngineTests`。
@@ -135,4 +146,14 @@ Swift Testing は debug と release で 27 件ずつ成功。これまでの 24 
 XCTest の空スイートは 0 件で、テスト target の数だけ表示される。製品もテストも `import XCTest` はしていない。
 `eng/play_session.py` は debug の `nene-summit` を PTY で起動し、出力のあと `q` で終了コード 0 だった。
 復元とリサイズは未実行。この実行のとき変更はまだコミット前で、`origin/main..HEAD` は 0 件だった。
+CI はこの作業木では実行していない。
+
+2026-11-01、短いジャンプと画面下の案内を入れた作業木で `make check` は成功した。
+unittest 35 件、conformance 0 件、整形と lint は違反 0、debug / release の build は成功。
+Swift Testing は debug と release で 28 件ずつ成功。ジャンプの高さが体の 2 倍から 4 倍のあいだであること、
+部屋の順番、無入力の登頂、画面の `DASH` と `q quit` を含む。
+XCTest の空スイートは 0 件で、テスト target の数だけ表示される。
+`eng/play_session.py` は debug の `nene-summit` を PTY で起動し、出力のあと `q` で終了コード 0 だった。
+復元とリサイズは未実行。参照作品の地形を写した検査はしていない。
+この実行のとき変更はまだコミット前で、`origin/main..HEAD` は 0 件だった。
 CI はこの作業木では実行していない。
