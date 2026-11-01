@@ -1,29 +1,20 @@
 import Glibc
 
 public struct PlayTrace: Sendable {
+    public static let debug = false
     public static let defaultPath = "/tmp/nene-summit-trace.log"
 
     private var fd: Int32
 
-    public static func destination(_ value: String?) -> String? {
-        if value == "0" {
-            return nil
-        }
-        if value == nil || value == "" || value == "1" {
-            return defaultPath
-        }
-        return value
-    }
-
     public static func open() -> PlayTrace? {
-        guard let path = destination(value()) else {
+        guard debug else {
             return nil
         }
-        guard var trace = create(at: path) else {
+        guard var trace = create(at: defaultPath) else {
             warn("記録ファイルを開けない。記録なしで続ける。")
             return nil
         }
-        trace.write("# nene-summit trace \(path)")
+        trace.write("# nene-summit trace \(defaultPath)")
         trace.write("# ms tick bytes strokes held human mode hands from phase cell vx vy charges")
         if trace.fd < 0 {
             return nil
@@ -58,13 +49,6 @@ public struct PlayTrace: Sendable {
         }
         _ = Glibc.close(fd)
         fd = -1
-    }
-
-    private static func value() -> String? {
-        guard let raw = getenv("NENE_SUMMIT_TRACE") else {
-            return nil
-        }
-        return String(cString: raw)
     }
 
     private static func create(at path: String) -> PlayTrace? {
