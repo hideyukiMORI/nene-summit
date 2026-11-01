@@ -9,7 +9,7 @@ Swift 対象は `10-swift.mdc`、文書対象は `20-docs.mdc`。どれも入口
 ## 最初に貼り付ける指示
 
 ```text
-NeNe Summit は、端末で二部屋を人が登れ、キーを離すと案内が登り、頂上のあと次の部屋へ進むところまで入っています。
+NeNe Summit は、端末で道の上の部屋を人が登れ、キーを離すと案内が登り、頂上のあと次の部屋へ進むところまで入っています。道の順は Trail です。
 まず AGENTS.md、docs/CURSOR_HANDOFF.md、docs/todo/current.md と、作業に必要な規範を読んでください。
 判断は docs/adr/0005-playable-climb.md と docs/adr/0006-unattended-retry.md です。
 0004 の「位置を変えない」「初期の向きは上」は 0005 が置き換えています。
@@ -56,5 +56,5 @@ current の次の Phase と該当 Issue / PR を確認し、git status と差分
 - `make check` がコミットメッセージで落ちる: GIT-003。新しいコミットには `(#N)` が要る。初期化コミットだけが例外。
 - 整形を通すために `.swift-format` の `rules` を足したくなった: 足さない。既定規則のまま、コードを直す。
 - どの SWF が機械で守られているか: [QUALITY_GATES](QUALITY_GATES.md)。設定ファイルがあることと active は別。
-- テーマ数などが決まっていない: 要件表の候補。いま遊べるのは二部屋と一つの案内。
+- テーマ数などが決まっていない: 要件表の候補。道の順は Trail。道の外の部屋を解く保証はない。
 - 兄弟をローカルで見つけられない: [REFERENCES](REFERENCES.md) の公開 commit を読む。
