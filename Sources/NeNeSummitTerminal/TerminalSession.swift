@@ -50,12 +50,7 @@ public struct TerminalSession {
     }
 
     public func present(_ frame: Frame) {
-        var text = "\u{001B}[H"
-        for line in frame.lines {
-            text += Painter.paint(line)
-            text += "\u{001B}[0m\r\n"
-        }
-        TerminalSession.emit(text)
+        TerminalSession.emit(Picture.text(frame))
     }
 
     public func wait(milliseconds: Int) {

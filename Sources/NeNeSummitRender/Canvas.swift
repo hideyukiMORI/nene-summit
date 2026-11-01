@@ -1,19 +1,30 @@
 import NeNeSummitCore
 
 public enum Canvas {
-    public static func draw(_ state: SummitState, attendance: Attendance = .automatic) -> Frame {
+    public static func draw(
+        _ state: SummitState,
+        attendance: Attendance = .automatic,
+        note: String = ""
+    ) -> Frame {
         var lines: [[Glyph]] = []
         var y = state.room.height - 1
         while y >= 0 {
             lines.append(row(y, state: state))
             y -= 1
         }
-        lines.append(contentsOf: strip(state, attendance: attendance))
+        lines.append(contentsOf: strip(state, attendance: attendance, note: note))
         return Frame(lines: lines)
     }
 
-    static func strip(_ state: SummitState, attendance: Attendance) -> [[Glyph]] {
-        [heading(state), dash(state), keys(attendance)]
+    static func strip(_ state: SummitState, attendance: Attendance, note: String) -> [[Glyph]] {
+        [heading(state), dash(state), comms(note), keys(attendance)]
+    }
+
+    static func comms(_ note: String) -> [Glyph] {
+        if note.isEmpty {
+            return line("……", tone: .quiet)
+        }
+        return line(String(note.prefix(72)), tone: .quiet)
     }
 
     static func keys(_ attendance: Attendance) -> [Glyph] {
