@@ -4,7 +4,14 @@ public enum Trail {
     }
 
     public static func after(_ room: Room) -> Room {
-        switch room.ascent {
+        if let next = early(room.ascent) {
+            return next
+        }
+        return late(room.ascent, room)
+    }
+
+    static func early(_ ascent: Ascent) -> Room? {
+        switch ascent {
         case .first:
             return SecondPitch.make()
         case .second:
@@ -13,13 +20,26 @@ public enum Trail {
             return RaftPitch.make()
         case .raft:
             return LiftPitch.make()
+        default:
+            return nil
+        }
+    }
+
+    static func late(_ ascent: Ascent, _ room: Room) -> Room {
+        switch ascent {
         case .lift:
             return WellPitch.make()
         case .well:
             return SlotPitch.make()
         case .slot:
+            return FallPitch.make()
+        case .fall:
+            return RiftPitch.make()
+        case .rift:
             return FirstAscent.make()
         case .aside:
+            return room
+        default:
             return room
         }
     }

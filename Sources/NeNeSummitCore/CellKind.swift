@@ -7,4 +7,6 @@ public enum CellKind: Equatable, Sendable {
     case spring
     case gleam
     case coin
+    case crumble
+    case refill
 }

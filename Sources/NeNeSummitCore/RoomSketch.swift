@@ -71,6 +71,8 @@ enum RoomSketch {
             return Mark(cell: .gleam, spawn: false)
         case "$":
             return Mark(cell: .coin, spawn: false)
+        case "f":
+            return Mark(cell: .crumble, spawn: false)
         default:
             return nil
         }
@@ -84,8 +86,10 @@ enum RoomSketch {
             return Mark(cell: .summit, spawn: false)
         case "*":
             return Mark(cell: .spring, spawn: false)
-        case "M", "V":
+        case "M", "V", "D":
             return Mark(cell: .open, spawn: false)
+        case "R":
+            return Mark(cell: .refill, spawn: false)
         case "@":
             return Mark(cell: .open, spawn: true)
         default:
