@@ -8,6 +8,9 @@ public struct TerminalSession {
 
     private let original: termios
     private let flags: Int32
+    private var pending: [UInt8]
+    private static let enterKeys = "\u{001B}[=11u\u{001B}[?9001h\u{001B}[?25l\u{001B}[2J"
+    private static let leaveKeys = "\u{001B}[<u\u{001B}[=0u\u{001B}[?9001l\u{001B}[?25h\u{001B}[0m"
 
     public static func open() -> Result<TerminalSession, Failure> {
         if isatty(STDIN_FILENO) == 0 {
@@ -24,29 +27,25 @@ public struct TerminalSession {
         }
         let flags = fcntl(STDIN_FILENO, F_GETFL, 0)
         _ = fcntl(STDIN_FILENO, F_SETFL, flags | O_NONBLOCK)
-        emit("\u{001B}[?25l\u{001B}[2J")
-        return .success(TerminalSession(original: term, flags: flags))
+        emit(enterKeys)
+        return .success(TerminalSession(original: term, flags: flags, pending: []))
     }
 
     public func close() {
+        TerminalSession.emit(TerminalSession.leaveKeys)
         var term = original
         _ = tcsetattr(STDIN_FILENO, TCSANOW, &term)
         _ = fcntl(STDIN_FILENO, F_SETFL, flags)
-        TerminalSession.emit("\u{001B}[?25h\u{001B}[0m")
     }
 
-    public func poll() -> [Press] {
-        var buffer = [UInt8](repeating: 0, count: 64)
-        let count = buffer.withUnsafeMutableBytes { raw -> ssize_t in
-            guard let base = raw.baseAddress else {
-                return 0
-            }
-            return Glibc.read(STDIN_FILENO, base, raw.count)
+    public mutating func poll() -> [Stroke] {
+        pending.append(contentsOf: readChunk())
+        trimPending()
+        let read = StrokeParser.parse(pending)
+        if read.consumed > 0 {
+            pending.removeFirst(read.consumed)
         }
-        if count <= 0 {
-            return []
-        }
-        return PressParser.parse(Array(buffer.prefix(Int(count))))
+        return read.strokes
     }
 
     public func present(_ frame: Frame) {
@@ -69,6 +68,26 @@ public struct TerminalSession {
             Glibc.write(STDERR_FILENO, raw.baseAddress, raw.count)
         }
         exit(1)
+    }
+
+    private mutating func trimPending() {
+        if pending.count > 128 {
+            pending.removeFirst(pending.count - 128)
+        }
+    }
+
+    private func readChunk() -> [UInt8] {
+        var buffer = [UInt8](repeating: 0, count: 256)
+        let count = buffer.withUnsafeMutableBytes { raw -> ssize_t in
+            guard let base = raw.baseAddress else {
+                return 0
+            }
+            return Glibc.read(STDIN_FILENO, base, raw.count)
+        }
+        if count <= 0 {
+            return []
+        }
+        return Array(buffer.prefix(Int(count)))
     }
 
     private static func emit(_ text: String) {

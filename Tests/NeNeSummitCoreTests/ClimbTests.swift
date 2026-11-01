@@ -64,6 +64,26 @@ import Testing
     #expect(kicked.state.kinematics.velocity.y > 0)
 }
 
+@Test func releasingAJumpCutsTheRise() {
+    let room = chamber(width: 8, height: 8, spawn: CellPoint(x: 2, y: 1), cells: floorCells(width: 8, height: 8))
+    var state = SummitState.begin(in: room)
+    state = state.advance(input: .hopping(.none)).state
+    #expect(state.kinematics.velocity.y == MotionPolicy.jumpSpeed)
+    let cut = Input(horizontal: .none, vertical: .none, jump: .released, dash: .off)
+    #expect(state.advance(input: cut).state.kinematics.velocity.y == MotionPolicy.jumpCut)
+}
+
+@Test func holdingAJumpDoesNotCutOrRetrigger() {
+    let room = chamber(width: 8, height: 8, spawn: CellPoint(x: 2, y: 1), cells: floorCells(width: 8, height: 8))
+    let held = Input(horizontal: .none, vertical: .none, jump: .held, dash: .off)
+    let stayed = SummitState.begin(in: room).advance(input: held)
+    #expect(stayed.events.contains(.jumped) == false)
+    #expect(stayed.state.kinematics.velocity.y == 0)
+    let rising = SummitState.begin(in: room).advance(input: .hopping(.none)).state
+    let next = rising.advance(input: held).state.kinematics.velocity.y
+    #expect(next == MotionPolicy.jumpSpeed - MotionPolicy.gravity)
+}
+
 @Test func aFullJumpStaysNearThreeBodies() {
     let rise = MotionPolicy.jumpSpeed * MotionPolicy.jumpSpeed / (2 * MotionPolicy.gravity)
     #expect(rise >= MotionPolicy.bodyHeight * 2)

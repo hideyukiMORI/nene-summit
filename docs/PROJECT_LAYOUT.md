@@ -8,11 +8,12 @@
 | NeNeSummitCore | 地形、物理、Input、状態遷移、出来事、復帰、登頂 | なし |
 | NeNeSummitEngine | 無入力の案内、遠征のやり直し。先読みと台詞は後期 | NeNeSummitCore |
 | NeNeSummitRender | セルの枠、配色、案内 | NeNeSummitCore |
-| NeNeSummitTerminal | raw mode、入力解析、ANSI、待ち | NeNeSummitRender, Glibc |
+| NeNeSummitTerminal | raw mode、押す・離すと文字のくり返し、ANSI、待ち | NeNeSummitRender, Glibc |
 | nene-summit | キーを Input に写す、時計の方針、ループ | NeNeSummitCore, NeNeSummitEngine, NeNeSummitRender, NeNeSummitTerminal |
 
 物理の数は Core の `MotionPolicy`。判断は [ADR 0005](adr/0005-playable-climb.md)。
 無入力の間と打ち切りは Engine の `Watch`。判断は [ADR 0006](adr/0006-unattended-retry.md)。
+押しっぱなしと同時押しは [ADR 0008](adr/0008-held-keys.md)。窓は Terminal の `HeldPresses`、短縮は `MotionPolicy`。
 製品の Foundation / FoundationEssentials / Dispatch の import は禁止。
 unsafe API は termios / read / write の端末境界として Terminal にのみ隔離する。
 実行ファイルは Glibc を import しない。

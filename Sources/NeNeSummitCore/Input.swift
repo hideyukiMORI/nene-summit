@@ -2,6 +2,8 @@ public struct Input: Equatable, Sendable {
     public enum Jump: Equatable, Sendable {
         case off
         case pressed
+        case held
+        case released
     }
 
     public enum Dash: Equatable, Sendable {
