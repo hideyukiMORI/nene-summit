@@ -6,4 +6,5 @@ public enum CellKind: Equatable, Sendable {
     case summit
     case spring
     case gleam
+    case coin
 }

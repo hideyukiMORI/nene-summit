@@ -17,9 +17,9 @@ enum Settlement {
         case .spring:
             return Springboard.launch(slide, action: action, progress: progress, events: wish.events)
         case .gleam(let cell):
-            let resting = Resolved(
-                kinematics: slide.kinematics, action: action, progress: progress, events: wish.events)
-            return gather(resting, cell: cell)
+            return gatherBerry(resting(slide, action: action, progress: progress, events: wish.events), cell: cell)
+        case .coin(let cell):
+            return gatherCoin(resting(slide, action: action, progress: progress, events: wish.events), cell: cell)
         case .checkpoint(let cell):
             let marked = progress.withCheckpoint(cell)
             return Resolved(kinematics: slide.kinematics, action: action, progress: marked, events: wish.events)
@@ -57,15 +57,26 @@ enum Settlement {
         return Resolved(kinematics: kinematics, action: action, progress: progress, events: events)
     }
 
-    static func gather(_ resting: Resolved, cell: CellPoint) -> Resolved {
-        let marked = resting.progress.gathering(cell)
-        if marked == resting.progress {
+    static func resting(_ slide: Slide, action: Action, progress: Progress, events: [StepEvent]) -> Resolved {
+        Resolved(kinematics: slide.kinematics, action: action, progress: progress, events: events)
+    }
+
+    static func gatherBerry(_ resting: Resolved, cell: CellPoint) -> Resolved {
+        keep(resting, next: resting.progress.gathering(cell))
+    }
+
+    static func gatherCoin(_ resting: Resolved, cell: CellPoint) -> Resolved {
+        keep(resting, next: resting.progress.gatheringCoin(cell))
+    }
+
+    static func keep(_ resting: Resolved, next: Progress) -> Resolved {
+        if next == resting.progress {
             return resting
         }
         return Resolved(
             kinematics: resting.kinematics,
             action: resting.action,
-            progress: marked,
+            progress: next,
             events: resting.events + [.gathered]
         )
     }

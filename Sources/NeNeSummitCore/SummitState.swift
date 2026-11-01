@@ -34,6 +34,14 @@ public struct SummitState: Equatable, Sendable {
         progress.gleams.count()
     }
 
+    public func berries() -> Int {
+        progress.gleams.berryCount()
+    }
+
+    public func coins() -> Int {
+        progress.gleams.coinCount()
+    }
+
     public func gathered(x: Int, y: Int) -> Bool {
         progress.gleams.holds(x: x, y: y)
     }

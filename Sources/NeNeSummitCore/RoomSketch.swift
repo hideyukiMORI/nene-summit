@@ -69,6 +69,8 @@ enum RoomSketch {
             return Mark(cell: .spike, spawn: false)
         case "o":
             return Mark(cell: .gleam, spawn: false)
+        case "$":
+            return Mark(cell: .coin, spawn: false)
         default:
             return nil
         }

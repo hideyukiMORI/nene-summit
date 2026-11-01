@@ -15,11 +15,12 @@ enum HudPane {
         pair(&sheet, row: top + 4, label: "HOLD", value: hold(state.action.phase))
         pair(&sheet, row: top + 5, label: "ALT", value: String(state.portrait().y))
         dash(&sheet, state: state, row: top + 6)
-        pair(&sheet, row: top + 7, label: "GLEAM", value: String(state.finds()))
-        sheet.stamp(top + 9, Stage.hudColumn, "--------", .quiet)
-        sheet.stamp(top + 10, Stage.hudColumn, "COMMS", .banner)
-        speaker(&sheet, note: note, row: top + 11)
-        noteRows(&sheet, note: note, row: top + 12)
+        pair(&sheet, row: top + 7, label: "BERRY", value: String(state.berries()))
+        pair(&sheet, row: top + 8, label: "COIN", value: String(state.coins()))
+        sheet.stamp(top + 10, Stage.hudColumn, "--------", .quiet)
+        sheet.stamp(top + 11, Stage.hudColumn, "COMMS", .banner)
+        speaker(&sheet, note: note, row: top + 12)
+        noteRows(&sheet, note: note, row: top + 13)
     }
 
     static func pair(_ sheet: inout Sheet, row: Int, label: String, value: String) {
@@ -32,8 +33,7 @@ enum HudPane {
         let tone: Glyph.Tone = ready ? .crest : .stone
         let column = Stage.hudColumn
         sheet.stamp(row, column, pad("DASH"), .quiet)
-        sheet.fill(row, column + 6, tone)
-        sheet.fill(row, column + 7, tone)
+        sheet.stamp(row, column + 6, "++", tone)
         sheet.stamp(row, column + 9, ready ? "READY" : "USED", ready ? .mark : .quiet)
     }
 

@@ -17,7 +17,14 @@ public struct Progress: Equatable, Sendable {
     }
 
     func gathering(_ cell: CellPoint) -> Progress {
-        let next = gleams.taking(cell)
+        kept(gleams.taking(cell))
+    }
+
+    func gatheringCoin(_ cell: CellPoint) -> Progress {
+        kept(gleams.takingCoin(cell))
+    }
+
+    private func kept(_ next: GleamBag) -> Progress {
         if next == gleams {
             return self
         }
