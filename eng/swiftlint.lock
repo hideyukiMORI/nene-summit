@@ -1,0 +1,6 @@
+# SwiftLint の版と配布物の SHA-256。eng/install-tools.sh だけが読む。
+# 2026-11-01 に https://github.com/realm/SwiftLint/releases/download/0.65.1/swiftlint_linux_amd64.zip を取得し sha256sum した。
+# 入れる実体は zip 内の swiftlint-static。`swiftlint version` は 0.65.1。
+version=0.65.1
+asset=swiftlint_linux_amd64.zip
+sha256=caeed6f4a679c35539ffaf124f6c4ab4a8416917f7d8796279dc52b74026059d

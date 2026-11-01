@@ -33,12 +33,8 @@ class DocumentationGateTests(unittest.TestCase):
         (self.root / "README.md").write_text("[Outside](../outside.md)\n", encoding="utf-8")
         self.assertTrue(any("DOC-001:" in e and "outside-repository" in e for e in check(self.root)))
 
-    def test_swift_source_requires_product_gates(self):
+    def test_swift_source_is_not_rejected_by_the_document_gate(self):
         path = self.root / "Sources" / "NeNeSummitCore" / "State.swift"
-        path.parent.mkdir(parents=True)
+        path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text("struct State {}\n", encoding="utf-8")
-        self.assertTrue(any("DOC-002:" in e for e in check(self.root)))
-
-    def test_manifest_requires_product_gates(self):
-        (self.root / "Package.swift").write_text("// Manifest\n", encoding="utf-8")
-        self.assertTrue(any("DOC-002:" in e for e in check(self.root)))
+        self.assertEqual(check(self.root), [])

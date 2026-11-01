@@ -1,0 +1,18 @@
+---
+description: ブランチ、コミット、PR の形
+alwaysApply: true
+---
+
+正本は docs/COMMIT_CONVENTIONS.md。強制状態は docs/QUALITY_GATES.md の GIT-001〜005。
+
+ブランチは `<type>/<issue番号>-<short-kebab-summary>`。
+件名は次の形だけ。type は feat / fix / docs / refactor / test / build / ci / chore。
+scope は省略可、小文字。説明は日本語。件名は 100 文字以内。本文の前は空行。
+
+```text
+docs(rules): 記述の正本を CODING_RULES に寄せる (#1)
+```
+
+`(#N)` を省けるのは親の無い初期化コミットだけ。`!` を付けたら `BREAKING CHANGE:` を書く。
+PR タイトルも同じ形。検証は eng/validate-commit-message.py。フックを外して通したことにしない。
+main へ直接コミットしない。兄弟の ruleset を、このリポジトリの保護済みと書かない。

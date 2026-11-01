@@ -3,6 +3,8 @@
 | ADR | 状態 | 判断 |
 | --- | --- | --- |
 | [0001](0001-documentation-first.md) | accepted | 兄弟の原則を採用し、文書初期化と製品実装を分ける |
+| [0002](0002-swift-strict-subset.md) | accepted | Swift の記述・整形・lint の正本と、コミットメッセージ検査を固定する |
+| [0003](0003-measured-toolchain.md) | accepted | Swift 6.4.1 と SwiftLint 0.65.1 をこの環境の実測で固定する |
 
 [テンプレート](0000-template.md) を複製し、連番と内容を表す名前を付ける。
 状態: proposed / accepted / superseded。accepted は記録した技術判断の採用であり、施主の発言を意味しない。

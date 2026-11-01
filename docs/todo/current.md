@@ -6,17 +6,26 @@
 
 - リポジトリ初期化用の規範・要件・設計案・アプローチ・ポリシーを整備。
 - Cursor ルール、AGENTS の読み順、貼り付け用指示を用意。
-- 文書検査と検査器の正例・反例、同じ make check を呼ぶ CI を用意。
+- Swift の記述・整形・lint の正本を CODING_RULES / `.swift-format` / `.swiftlint.yml` に固定。
+- コミットメッセージの形を検証器、フック、make check で検査する。文書の入口を作業別索引に寄せた。
+- P0 の道具。Swift の版は `.swift-version`、判断は [ADR 0003](../adr/0003-measured-toolchain.md)。
+  最小 target は NeNeSummitCore。`make check` は文書、GIT-003、conformance、整形、lint、
+  debug / release build、Swift Testing を実行する。
+- 文書検査が Swift ソースを拒む制限は外し、同じ `make check` の製品ゲートへ置き換えた。
+
+実行の成否は [gate-proofs](../quality/gate-proofs.md)。この一覧は、コマンドが何を見るかを書く。
 
 ## 未着手
 
-P0〜P5 の製品実装全体。SwiftPM / Swift の版固定 / ビルド / ゲームテスト / 端末動作 / インストーラ / Release。
+P1〜P5。Core の状態遷移、一部屋、物理、端末、自律登山、配布。
+target 同士の依存グラフを表と照合する検査。
+Issue、作業ブランチ、PR。この変更はまだコミットしていない。
 
 ## 次の作業
 
-[APPROACH](../APPROACH.md) の P0 を最初の実装 Issue にする。
-受け入れ条件: Swift 版の実測、最小 target、debug / release build、Swift Testing、
-format / lint / conformance と反例、ローカルと CI の共通 make check。
-P0 までは現在の成功をゲームの品質証明と呼ばない。
+[APPROACH](../APPROACH.md) の P1。
+受け入れ条件: Core の Input / State / Event、部屋と初期位置、固定 tick。
+同じ入力列で同じ状態列。不正な部屋は検証済みの結果型で拒む。
+P1 の成功を、遊べるゲームや P2 の物理の証明と呼ばない。
 
-現在、実装 Issue / PR は未作成。初期化コミットは GIT-001 の例外。
+レビューのままの SWF は [QUALITY_GATES](../QUALITY_GATES.md)。機械検査が無いものを active にしない。

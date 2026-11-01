@@ -2,7 +2,7 @@
 
 An autonomous mountain-climbing platformer for your terminal.
 
-**Planning / documentation bootstrap. No playable application or release exists yet.**
+**Toolchain and a minimal Core module are in the tree. No playable climb or release exists yet.**
 
 [日本語](README.ja.md) · [Documentation](docs/README.md) · [Cursor handoff](docs/CURSOR_HANDOFF.md)
 
@@ -22,9 +22,10 @@ make bootstrap
 make check
 ```
 
-These commands need Git, Make and Python 3.10+. At this stage they check documentation
-and the documentation checker only. They do not build or test a game.
-Swift selection and full product gates are the first implementation milestone.
+These commands need Git, Make, Python 3.10+, and the Swift toolchain named in `.swift-version`.
+`make check` checks documents, commit messages, conformance, formatting, and lint,
+then builds and tests Core in debug and release.
+Passing it does not mean the climb exists. Format and lint configurations stay strict.
 
 ## Project policies
 
