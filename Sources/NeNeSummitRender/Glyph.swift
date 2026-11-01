@@ -3,6 +3,8 @@ public struct Glyph: Equatable, Sendable {
         case sky
         case stone
         case hazard
+        case flag
+        case crest
         case mark
         case climber
         case banner

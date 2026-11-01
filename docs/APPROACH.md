@@ -11,6 +11,7 @@
 方向を押したジャンプの斜めは [ADR 0012](adr/0012-up-right-jump.md)。
 次の部屋は [ADR 0014](adr/0014-next-room.md)。
 画面の下のボヤキと、枠の外を消すことは [ADR 0015](adr/0015-mutter-strip.md)。
+固定の色面と英語の四人は [ADR 0016](adr/0016-color-screen.md)。
 下の表は当初の区切りであり、P2 をゼロからやり直す指示ではない。
 
 | Phase | 成果 | 受け入れ条件 |

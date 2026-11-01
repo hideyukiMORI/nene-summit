@@ -7,7 +7,7 @@
 | --- | --- | --- |
 | NeNeSummitCore | 地形、物理、Input、状態遷移、出来事、復帰、登頂 | なし |
 | NeNeSummitEngine | 無入力の案内、遠征のやり直し、ボヤキ。先読みは後期 | NeNeSummitCore |
-| NeNeSummitRender | セルの枠、配色、案内 | NeNeSummitCore |
+| NeNeSummitRender | 固定の色面、右の状態、案内 | NeNeSummitCore |
 | NeNeSummitTerminal | raw mode、押す・離すと文字のくり返し、ANSI、待ち | NeNeSummitRender, Glibc |
 | nene-summit | キーを Input に写す、時計の方針、ループ | NeNeSummitCore, NeNeSummitEngine, NeNeSummitRender, NeNeSummitTerminal |
 

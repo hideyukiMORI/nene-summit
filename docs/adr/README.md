@@ -16,7 +16,8 @@
 | [0012](0012-up-right-jump.md) | accepted | 方向を押したジャンプは、押し続けているあいだ斜め上へ進む |
 | [0013](0013-trace-debug.md) | accepted | 入力記録は `PlayTrace.debug` が真のときだけ書く。いまは偽 |
 | [0014](0014-next-room.md) | accepted | 頂上のあと、道の次の部屋から進む。打ち切りは同じ部屋のまま |
-| [0015](0015-mutter-strip.md) | accepted | 帯にボヤキを一行足し、枠の外は毎フレーム消す。声は一人 |
+| [0015](0015-mutter-strip.md) | accepted | 枠の外は毎フレーム消す。帯の位置と一人の日本語は 0016 が置き換えた |
+| [0016](0016-color-screen.md) | accepted | 画面は固定の色面。英語の四人が順に話す |
 
 [テンプレート](0000-template.md) を複製し、連番と内容を表す名前を付ける。
 状態: proposed / accepted / superseded。accepted は記録した技術判断の採用であり、施主の発言を意味しない。

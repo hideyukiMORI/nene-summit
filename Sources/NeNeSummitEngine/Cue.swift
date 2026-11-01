@@ -24,9 +24,9 @@ enum Cue: Equatable, Sendable {
 
     var interrupts: Bool {
         switch self {
-        case .fall, .crest:
+        case .trail, .fall, .crest:
             return true
-        case .trail, .jump, .dash:
+        case .jump, .dash:
             return false
         }
     }
