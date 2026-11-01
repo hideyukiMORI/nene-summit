@@ -5,5 +5,6 @@ public enum Press: Equatable, Hashable, CaseIterable, Sendable {
     case down
     case jump
     case dash
+    case mode
     case quit
 }

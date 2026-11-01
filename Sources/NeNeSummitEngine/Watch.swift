@@ -12,17 +12,20 @@ public struct Watch: Equatable, Sendable {
         Watch(state: SummitState.begin(in: room), spent: 0, rest: 0)
     }
 
-    public func advance(human: Input) -> Watch {
+    public func advance(human: Input, attendance: Attendance = .automatic) -> Watch {
         if state.progress.expedition == .summited {
-            return finished(human)
+            return finished(human, attendance: attendance)
         }
-        if human != .idle {
+        if attendance == .manual || human != .idle {
             return stepped(state.advance(input: human).state, spent: 0)
         }
         return guided()
     }
 
-    private func finished(_ human: Input) -> Watch {
+    private func finished(_ human: Input, attendance: Attendance) -> Watch {
+        if attendance == .manual && human == .idle {
+            return Watch(state: state, spent: 0, rest: rest)
+        }
         if human != .idle || rest + 1 >= Watch.pause {
             return Watch.begin(in: state.room)
         }

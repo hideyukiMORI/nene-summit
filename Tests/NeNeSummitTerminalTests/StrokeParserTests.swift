@@ -10,6 +10,11 @@ import Testing
     #expect(StrokeParser.parse(bytes).strokes == strokes)
 }
 
+@Test func theModeKeyIsNotMovement() {
+    #expect(StrokeParser.parse([UInt8(ascii: "m")]).strokes == [.typed(.mode)])
+    #expect(StrokeParser.parse([UInt8(ascii: "M")]).strokes == [.typed(.mode)])
+}
+
 @Test func anUnknownKeyIsIgnored() {
     #expect(StrokeParser.parse([UInt8(ascii: "x")]).strokes.isEmpty)
 }

@@ -26,7 +26,7 @@ enum HeldBits {
             return HeldPlay.jump
         case .dash:
             return HeldPlay.dash
-        case .quit:
+        case .mode, .quit:
             return nil
         }
     }
