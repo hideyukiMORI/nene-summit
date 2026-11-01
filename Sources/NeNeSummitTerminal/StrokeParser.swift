@@ -201,6 +201,7 @@ enum StrokeParser {
             (UInt8(ascii: "s"), .down), (UInt8(ascii: "S"), .down),
             (UInt8(ascii: " "), .jump),
             (UInt8(ascii: "k"), .dash), (UInt8(ascii: "K"), .dash),
+            (UInt8(ascii: "m"), .mode), (UInt8(ascii: "M"), .mode),
             (UInt8(ascii: "q"), .quit), (UInt8(ascii: "Q"), .quit),
         ]
         return table.first { $0.0 == byte }?.1

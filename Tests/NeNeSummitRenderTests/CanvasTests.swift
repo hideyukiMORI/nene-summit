@@ -13,7 +13,16 @@ import Testing
     #expect(symbols.contains("^"))
     #expect(symbols.contains("*"))
     #expect(text.contains("DASH"))
+    #expect(text.contains("AUTO"))
+    #expect(text.contains("m mode"))
     #expect(text.contains("q quit"))
+}
+
+@Test func theManualStripSaysPlay() {
+    let frame = Canvas.draw(SummitState.begin(in: FirstAscent.make()), attendance: .manual)
+    let text = String(frame.lines.flatMap { $0.map(\.symbol) })
+    #expect(text.contains("PLAY"))
+    #expect(text.contains("AUTO") == false)
 }
 
 @Test func theSummitBannerChangesAfterTheClimb() {

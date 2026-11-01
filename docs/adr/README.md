@@ -10,6 +10,7 @@
 | [0006](0006-unattended-retry.md) | accepted | 無入力では案内が登り、頂上か打ち切りで同じ部屋をやり直す。跳び方は 0007 が置き換えた |
 | [0007](0007-shorter-jump.md) | accepted | ジャンプを体のおよそ 3 倍に抑え、一部屋の読みと画面下の案内にする |
 | [0008](0008-held-keys.md) | accepted | 押しっぱなしと同時押しは、端末が届ける押す・離すか文字のくり返しで受ける |
+| [0009](0009-attendance-toggle.md) | accepted | `m` でオートとマニュアルを切り替える。マニュアルは案内を呼ばない |
 
 [テンプレート](0000-template.md) を複製し、連番と内容を表す名前を付ける。
 状態: proposed / accepted / superseded。accepted は記録した技術判断の採用であり、施主の発言を意味しない。

@@ -37,6 +37,29 @@ import Testing
     #expect(watch.state.progress.expedition == .climbing)
 }
 
+@Test func aManualIdleStaysPut() {
+    let start = Watch.begin(in: FirstAscent.make()).state.portrait()
+    var watch = Watch.begin(in: FirstAscent.make())
+    var tick = 0
+    while tick < 30 {
+        watch = watch.advance(human: .idle, attendance: .manual)
+        tick += 1
+    }
+    #expect(watch.state.portrait() == start)
+    #expect(watch.state.progress.expedition == .climbing)
+}
+
+@Test func aManualSummitWaits() {
+    var watch = climb(Watch.begin(in: FirstAscent.make()))
+    #expect(watch.state.progress.expedition == .summited)
+    var tick = 0
+    while tick < Watch.pause + 5 {
+        watch = watch.advance(human: .idle, attendance: .manual)
+        tick += 1
+    }
+    #expect(watch.state.progress.expedition == .summited)
+}
+
 @Test func aPersonIsNotCutOffByTheBudget() {
     let room = deadEnd()
     var watch = Watch.begin(in: room)

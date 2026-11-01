@@ -32,7 +32,8 @@ Move with the arrow keys or `a` / `d`. `w` and `s` aim up and down.
 `space` jumps, `k` dashes, `q` quits. The jump stays low.
 A held key keeps moving until release. Terminals that never send release keep it while the key repeats.
 Keys pressed together share one tick. Jump and dash fire on the press, not for the whole hold.
-With no keys, a guide climbs and then retries the same room.
+The game starts in auto. `m` switches to manual. In auto, releasing every key lets the guide climb and then retry the same room.
+In manual, releasing the keys leaves the climber where they are.
 A title, a dash mark, and the keys sit under the mountain.
 Speeds live in `MotionPolicy`. The pause and the give-up live in `Watch`. Both are design choices.
 

@@ -13,6 +13,7 @@
 
 物理の数は Core の `MotionPolicy`。判断は [ADR 0005](adr/0005-playable-climb.md)。
 無入力の間と打ち切りは Engine の `Watch`。判断は [ADR 0006](adr/0006-unattended-retry.md)。
+オートとマニュアルは [ADR 0009](adr/0009-attendance-toggle.md)。マニュアルでは案内を呼ばない。
 押しっぱなしと同時押しは [ADR 0008](adr/0008-held-keys.md)。窓は Terminal の `HeldPresses`、短縮は `MotionPolicy`。
 製品の Foundation / FoundationEssentials / Dispatch の import は禁止。
 unsafe API は termios / read / write の端末境界として Terminal にのみ隔離する。
