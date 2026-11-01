@@ -114,7 +114,7 @@ import Testing
     #expect(Scenery.spark(viewX: 0, viewY: 0, origin: origin, tick: 0))
     #expect(Scenery.spark(viewX: 0, viewY: 0, origin: CellPoint(x: 1, y: 0), tick: 0))
     #expect(Scenery.spark(viewX: 0, viewY: 0, origin: CellPoint(x: 2, y: 0), tick: 0) == false)
-    #expect(Scenery.spark(viewX: 0, viewY: 0, origin: origin, tick: 8) == false)
+    #expect(Scenery.spark(viewX: 0, viewY: 0, origin: origin, tick: 16) == false)
 }
 
 private func letters(_ frame: Frame) -> String {

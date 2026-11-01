@@ -15,7 +15,7 @@ enum Scenery {
             while viewX < Stage.fieldCellsX {
                 let sight = Sight(state: state, origin: origin, viewX: viewX, viewY: viewY)
                 if let tone = tone(sight) {
-                    FieldView.block(&sheet, row: Stage.fieldRow + viewY, viewX: viewX, tone: tone)
+                    lay(&sheet, viewX: viewX, viewY: viewY, tone: tone)
                 }
                 viewX += 1
             }
@@ -37,12 +37,19 @@ enum Scenery {
         {
             return .ridge
         }
-        if spark(viewX: sight.viewX, viewY: sight.viewY, origin: sight.origin, tick: sight.state.elapsed())
-            && twinkle(viewX: sight.viewX, tick: sight.state.elapsed())
-        {
+        if spark(viewX: sight.viewX, viewY: sight.viewY, origin: sight.origin, tick: sight.state.elapsed()) {
             return .spark
         }
         return nil
+    }
+
+    static func lay(_ sheet: inout Sheet, viewX: Int, viewY: Int, tone: Glyph.Tone) {
+        if tone == .spark {
+            let column = Stage.fieldColumn + viewX * Stage.cellSpan
+            sheet.stamp(Stage.fieldRow + viewY, column, ".", tone)
+            return
+        }
+        FieldView.block(&sheet, row: Stage.fieldRow + viewY, viewX: viewX, tone: tone)
     }
 
     static func ridge(viewX: Int, viewY: Int, origin: CellPoint) -> Bool {
@@ -58,13 +65,13 @@ enum Scenery {
     static func chip(viewX: Int, viewY: Int, origin: CellPoint) -> Bool {
         let worldX = origin.x + viewX
         let worldY = origin.y + viewY
-        return positive(worldX * 5 + worldY * 9) % 29 == 0
+        return positive(worldX * 5 + worldY * 9) % 67 == 0
     }
 
     static func spark(viewX: Int, viewY: Int, origin: CellPoint, tick: Int) -> Bool {
         let midX = origin.x / 2 + viewX
-        let midY = viewY + tick / 8
-        return positive(midX * 13 + midY * 7) % 47 == 0
+        let midY = viewY + tick / 16
+        return positive(midX * 13 + midY * 7) % 97 == 0
     }
 
     static func open(_ state: SummitState, x: Int, y: Int) -> Bool {
@@ -83,10 +90,6 @@ enum Scenery {
 
     static func void(_ state: SummitState, x: Int, y: Int) -> Bool {
         x < 0 || y < 0 || x >= state.room.width || y >= state.room.height
-    }
-
-    static func twinkle(viewX: Int, tick: Int) -> Bool {
-        positive(viewX + tick / 6) % 2 == 0
     }
 
     static func positive(_ value: Int) -> Int {

@@ -28,9 +28,9 @@ enum Painter {
     static func terrain(_ tone: Glyph.Tone) -> String {
         switch tone {
         case .sky:
-            return fill(24)
+            return fill(16)
         case .ridge:
-            return fill(60)
+            return fill(18)
         case .stone:
             return fill(67)
         case .hazard:
@@ -51,11 +51,11 @@ enum Painter {
         case .spring:
             return fill(85)
         case .gleam:
-            return fill(159)
+            return fill(44)
         case .spark:
-            return fill(123)
+            return ink(24, 16)
         case .veil:
-            return fill(17)
+            return fill(16)
         default:
             return fill(24)
         }
@@ -64,15 +64,15 @@ enum Painter {
     static func script(_ tone: Glyph.Tone) -> String {
         switch tone {
         case .banner:
-            return ink(159, 17)
+            return ink(152, 16)
         case .mark:
-            return ink(223, 236)
+            return ink(223, 16)
         case .hint:
-            return ink(152, 17)
+            return ink(152, 16)
         case .quiet:
-            return ink(152, 236)
+            return ink(152, 16)
         default:
-            return ink(152, 236)
+            return ink(152, 16)
         }
     }
 
