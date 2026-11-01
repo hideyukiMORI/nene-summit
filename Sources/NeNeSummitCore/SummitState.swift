@@ -18,6 +18,18 @@ public struct SummitState: Equatable, Sendable {
         return CellPoint(x: x, y: y)
     }
 
+    public func paceX() -> Int {
+        kinematics.velocity.x
+    }
+
+    public func paceY() -> Int {
+        kinematics.velocity.y
+    }
+
+    public func elapsed() -> Int {
+        progress.tick.count
+    }
+
     var foot: CellPoint {
         CellPoint(
             x: kinematics.place.x / MotionPolicy.scale,
