@@ -159,7 +159,9 @@ import Testing
     #expect(lift.ascent == .lift)
     let well = Trail.after(lift)
     #expect(well.ascent == .well)
-    #expect(Trail.after(well).ascent == .first)
+    let slot = Trail.after(well)
+    #expect(slot.ascent == .slot)
+    #expect(Trail.after(slot).ascent == .first)
     let aside = chamber(
         width: 4,
         height: 3,

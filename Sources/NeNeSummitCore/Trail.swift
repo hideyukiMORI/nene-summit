@@ -16,6 +16,8 @@ public enum Trail {
         case .lift:
             return WellPitch.make()
         case .well:
+            return SlotPitch.make()
+        case .slot:
             return FirstAscent.make()
         case .aside:
             return room

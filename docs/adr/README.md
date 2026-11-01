@@ -23,6 +23,7 @@
 | [0019](0019-logic-not-pictures.md) | accepted | 絵やアスキーアートは足さず、仕組みのロジックだけ取り込む |
 | [0020](0020-wall-well.md) | accepted | 壁に沿って上る井戸を、上の床のあとに足す |
 | [0021](0021-steady-pace.md) | accepted | 画面の刻みは枠の残りだけ待つ。描画は間引かない |
+| [0022](0022-low-slot.md) | accepted | 低い隙間はダッシュで越す。井戸のあとに足す |
 
 [テンプレート](0000-template.md) を複製し、連番と内容を表す名前を付ける。
 状態: proposed / accepted / superseded。accepted は記録した技術判断の採用であり、施主の発言を意味しない。

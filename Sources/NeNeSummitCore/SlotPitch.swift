@@ -1,0 +1,12 @@
+public enum SlotPitch {
+    static let rows = [
+        "................",
+        "################",
+        ".@........SSSS..",
+        "##^^^###########",
+    ]
+
+    public static func make() -> Room {
+        RoomSketch.room(named: "slot-pitch", rows: rows, ascent: .slot)
+    }
+}

@@ -35,8 +35,14 @@ import Testing
     #expect(watch.state.progress.expedition == .climbing)
 }
 
-@Test func theWellReturnsToTheFirstRoom() {
+@Test func theWellOpensTheSlot() {
     let watch = rest(climb(Watch.begin(in: WellPitch.make())))
+    #expect(watch.state.room.ascent == .slot)
+    #expect(watch.state.progress.expedition == .climbing)
+}
+
+@Test func theSlotReturnsToTheFirstRoom() {
+    let watch = rest(climb(Watch.begin(in: SlotPitch.make())))
     #expect(watch.state.room.ascent == .first)
     #expect(watch.state.progress.expedition == .climbing)
 }
@@ -50,6 +56,24 @@ import Testing
     #expect(lift.state.progress.expedition == .summited)
     let well = climb(Watch.begin(in: WellPitch.make()))
     #expect(well.state.progress.expedition == .summited)
+    let slot = climb(Watch.begin(in: SlotPitch.make()))
+    #expect(slot.state.progress.expedition == .summited)
+}
+
+@Test func theSlotIsCrossedByADash() {
+    var watch = Watch.begin(in: SlotPitch.make())
+    var dashed = false
+    var tick = 0
+    while tick < Watch.budget && watch.state.progress.expedition != .summited {
+        let before = watch.state.action.charges.remaining
+        watch = watch.advance(human: .idle)
+        if watch.state.action.charges.remaining < before {
+            dashed = true
+        }
+        tick += 1
+    }
+    #expect(dashed)
+    #expect(watch.state.progress.expedition == .summited)
 }
 
 @Test func theWellIsClimbedAlongTheWall() {
