@@ -13,6 +13,10 @@ import Testing
     #expect(text.contains("STATUS"))
     #expect(text.contains("COMMS"))
     #expect(text.contains("DASH"))
+    #expect(text.contains("READY"))
+    #expect(text.contains("HOLD"))
+    #expect(text.contains("GROUND"))
+    #expect(text.contains("ALT"))
     #expect(text.contains("AUTO"))
     #expect(text.contains("q QUIT"))
     #expect(text.contains("#") == false)
@@ -56,6 +60,7 @@ import Testing
     let frame = Canvas.draw(SummitState.begin(in: FirstAscent.make()), note: "MIO (^^) made it")
     let text = letters(frame)
     #expect(text.contains("MIO"))
+    #expect(text.contains("(^^)"))
     #expect(text.contains("made"))
 }
 
