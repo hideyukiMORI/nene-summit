@@ -9,25 +9,40 @@ struct SummitApp {
         switch TerminalSession.open() {
         case .failure:
             TerminalSession.fail("この端末では遊べない。")
-        case .success(let session):
-            play(session)
+        case .success(var session):
+            play(&session)
         }
     }
 
-    static func play(_ session: TerminalSession) {
+    static func play(_ session: inout TerminalSession) {
         defer {
             session.close()
         }
         var watch = Watch.begin(in: FirstAscent.make())
-        var held = IntentBuffer()
+        var keys = HeldPresses()
+        var chord = PlayChord()
+        let moment = Moment()
         while true {
-            let presses = session.poll()
-            if presses.contains(.quit) {
+            let strokes = session.poll()
+            if strokes.contains(where: quits) {
                 break
             }
-            watch = watch.advance(human: held.take(presses))
+            let now = moment.milliseconds()
+            for stroke in strokes {
+                keys.apply(stroke, at: now)
+            }
+            watch = watch.advance(human: chord.make(HeldBits.play(keys.take(at: now))))
             session.present(Canvas.draw(watch.state))
             session.wait(milliseconds: 16)
+        }
+    }
+
+    static func quits(_ stroke: Stroke) -> Bool {
+        switch stroke {
+        case .pressed(let press), .typed(let press):
+            return press == .quit
+        case .released:
+            return false
         }
     }
 }

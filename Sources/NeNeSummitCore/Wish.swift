@@ -12,8 +12,17 @@ enum Wish {
         if facing != state.action.facing {
             events.append(.faced(facing))
         }
-        let steered = steer(state, input: input, facing: facing, events: events)
-        return steered
+        return shortened(steer(state, input: input, facing: facing, events: events), jump: input.jump)
+    }
+
+    static func shortened(_ result: WishResult, jump: Input.Jump) -> WishResult {
+        let velocity = result.kinematics.velocity
+        if result.action.dashTicks > 0 || jump != .released || velocity.y <= MotionPolicy.jumpCut {
+            return result
+        }
+        let slowed = Velocity(x: velocity.x, y: MotionPolicy.jumpCut)
+        let kinematics = Kinematics(place: result.kinematics.place, velocity: slowed)
+        return WishResult(kinematics: kinematics, action: result.action, events: result.events)
     }
 
     static func steer(
@@ -72,7 +81,7 @@ enum Wish {
     }
 
     static func jump(_ phase: Phase, velocity: Velocity, input: Input) -> Velocity? {
-        if input.jump == .off {
+        if input.jump != .pressed {
             return nil
         }
         switch phase {

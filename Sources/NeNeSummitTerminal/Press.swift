@@ -1,4 +1,4 @@
-public enum Press: Equatable, Sendable {
+public enum Press: Equatable, Hashable, CaseIterable, Sendable {
     case left
     case right
     case up

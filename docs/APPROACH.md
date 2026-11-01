@@ -4,6 +4,7 @@
 文書初期化完了はゲーム完成ではない。
 人が一部屋を登るところまでは [現在地](todo/current.md) と [ADR 0005](adr/0005-playable-climb.md)。
 無入力で登ってやり直すところは [ADR 0006](adr/0006-unattended-retry.md)。
+押しっぱなしと同時押しは [ADR 0008](adr/0008-held-keys.md)。
 下の表は当初の区切りであり、P2 をゼロからやり直す指示ではない。
 
 | Phase | 成果 | 受け入れ条件 |

@@ -16,6 +16,7 @@ NeNe Summit は、端末で一部屋を人が登れ、キーを離すと案内�
 起動は swift run nene-summit。矢印か a d で移動、w と s、space で跳ぶ、k でダッシュ、q で終了です。
 キーが無い tick は Guide が Input を返し、Watch が advance だけを呼びます。
 ジャンプの高さは docs/adr/0007-shorter-jump.md です。全力でも体のおよそ 3 倍に収めてください。
+押しっぱなしと同時押しは docs/adr/0008-held-keys.md です。固定 tick の残りで押したことにしないでください。
 参照作品の部屋や絵を写さないでください。画面の下は題、ダッシュの印、キーの一行です。
 位置を変える経路を SummitState.advance 以外に足さないでください。数は MotionPolicy と Watch に置き、文書へ写さないでください。
 数は設計判断であり、施主の確定要件ではありません。
