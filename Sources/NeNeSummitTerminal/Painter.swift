@@ -4,28 +4,36 @@ enum Painter {
     static func paint(_ glyphs: [Glyph]) -> String {
         var text = ""
         for glyph in glyphs {
-            text += color(glyph.tone)
+            text += style(glyph.tone)
             text.append(glyph.symbol)
         }
         return text
     }
 
-    static func color(_ tone: Glyph.Tone) -> String {
+    static func style(_ tone: Glyph.Tone) -> String {
         switch tone {
         case .sky:
-            return "\u{001B}[0m"
+            return fill(17)
         case .stone:
-            return "\u{001B}[37m"
+            return fill(252)
         case .hazard:
-            return "\u{001B}[31m"
-        case .mark:
-            return "\u{001B}[36m"
+            return fill(160)
+        case .flag:
+            return fill(44)
+        case .crest:
+            return fill(220)
         case .climber:
-            return "\u{001B}[33m"
+            return fill(214)
         case .banner:
-            return "\u{001B}[32m"
+            return "\u{001B}[0;38;5;46m"
+        case .mark:
+            return "\u{001B}[0;38;5;51m"
         case .quiet:
-            return "\u{001B}[2m"
+            return "\u{001B}[0;38;5;245m"
         }
+    }
+
+    static func fill(_ code: Int) -> String {
+        "\u{001B}[48;5;\(code)m"
     }
 }

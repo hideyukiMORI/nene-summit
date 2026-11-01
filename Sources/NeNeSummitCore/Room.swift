@@ -42,6 +42,17 @@ public struct Room: Equatable, Sendable {
         return .success(Room(spec: spec))
     }
 
+    public func title() -> String {
+        switch ascent {
+        case .first:
+            return "RIDGE"
+        case .second:
+            return "SHELF"
+        case .aside:
+            return "PITCH"
+        }
+    }
+
     public func kind(x: Int, y: Int) -> CellKind {
         if x < 0 || y < 0 || x >= width || y >= height {
             return .solid
