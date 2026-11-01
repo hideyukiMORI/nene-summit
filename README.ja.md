@@ -30,6 +30,7 @@ swift run nene-summit
 PTY での起動と `q` を実行します。整形と lint の設定は緩めません。
 
 矢印か `a` / `d` で移動します。`w` と `s` は上下、`space` で跳び、`k` でダッシュ、`q` で終えます。
-速さなどの数は `MotionPolicy` の設計判断です。
+キーを離すと案内が登り、頂上のあと、または打ち切りで同じ部屋をやり直します。
+速さは `MotionPolicy`、間と打ち切りは `Watch` の設計判断です。
 
 ライセンスは兄弟と同じ [MIT](LICENSE)。開発参加は [CONTRIBUTING.md](CONTRIBUTING.md)。

@@ -9,14 +9,16 @@ Swift 対象は `10-swift.mdc`、文書対象は `20-docs.mdc`。どれも入口
 ## 最初に貼り付ける指示
 
 ```text
-NeNe Summit は、端末で一部屋を人が登れるところまで入っています。
+NeNe Summit は、端末で一部屋を人が登れ、キーを離すと案内が登ってやり直すところまで入っています。
 まず AGENTS.md、docs/CURSOR_HANDOFF.md、docs/todo/current.md と、作業に必要な規範を読んでください。
-判断は docs/adr/0005-playable-climb.md です。0004 の「位置を変えない」「初期の向きは上」は 0005 が置き換えています。
+判断は docs/adr/0005-playable-climb.md と docs/adr/0006-unattended-retry.md です。
+0004 の「位置を変えない」「初期の向きは上」は 0005 が置き換えています。
 起動は swift run nene-summit。矢印か a d で移動、w と s、space で跳ぶ、k でダッシュ、q で終了です。
-位置を変える経路を SummitState.advance 以外に足さないでください。数は MotionPolicy に置き、文書へ写さないでください。
+キーが無い tick は Guide が Input を返し、Watch が advance だけを呼びます。
+位置を変える経路を SummitState.advance 以外に足さないでください。数は MotionPolicy と Watch に置き、文書へ写さないでください。
 数は設計判断であり、施主の確定要件ではありません。
 .swift-format と .swiftlint.yml は緩めないでください。
-次は複数の部屋か、advance だけを呼ぶ自律登山です。P2 をゼロからやり直さないでください。
+次は複数の部屋か、advance の複製による先読みです。P2 をゼロからやり直さないでください。
 復元とリサイズは未検査です。TERM-001 を active にしないでください。
 Bolt / Swarm は設計の参考です。完成済みコード・テスト結果・施主の承認を丸ごとコピーしないでください。
 終了時は実行した検証、未実装の検査、変更した文書、次の作業を日本語で報告し、docs/todo/current.md を更新してください。

@@ -1,4 +1,5 @@
 import NeNeSummitCore
+import NeNeSummitEngine
 import NeNeSummitRender
 import NeNeSummitTerminal
 
@@ -17,15 +18,15 @@ struct SummitApp {
         defer {
             session.close()
         }
-        var state = SummitState.begin(in: FirstAscent.make())
+        var watch = Watch.begin(in: FirstAscent.make())
         var held = IntentBuffer()
         while true {
             let presses = session.poll()
             if presses.contains(.quit) {
                 break
             }
-            state = state.advance(input: held.take(presses)).state
-            session.present(Canvas.draw(state))
+            watch = watch.advance(human: held.take(presses))
+            session.present(Canvas.draw(watch.state))
             session.wait(milliseconds: 16)
         }
     }

@@ -19,17 +19,22 @@
   走る、跳ぶ、壁蹴り、ダッシュ、棘、チェックポイント、登頂、`q` で終了。
   数は `MotionPolicy` の設計判断であり、施主の確定要件ではない。
   起動は `swift run nene-summit`。矢印か a d、w と s、space、k、q。
+- 無入力の案内。判断は [ADR 0006](../adr/0006-unattended-retry.md)。
+  キーが無い tick は右へ跳ぶ案内が `advance` だけを呼ぶ。
+  頂上のあと、または打ち切りで、同じ部屋を最初からやり直す。
+  人の入力がある tick は人が勝つ。間と打ち切りは `Watch` の設計判断。
 
 実行の成否は [gate-proofs](../quality/gate-proofs.md)。
 
 ## 未着手
 
-複数の部屋、移動する床、自律登山、カメラ、テーマ、リサイズと終了後の復元の検査、配布。
+複数の部屋、移動する床、先読み、カメラ、テーマ、リサイズと終了後の復元の検査、配布。
 target 同士の依存グラフを表と照合する検査。
+いまの案内は右へ跳ぶだけで、別の部屋を解く保証はない。
 TERM-001 は起動と `q` だけを見ていて、planned のまま。
 
 ## 次の作業
 
-著者が部屋を足すか、Core の `advance` だけを呼ぶ自律登山。
-新しい物理経路を足さない。`.swift-format` と `.swiftlint.yml` は緩めない。
+部屋を足すか、`advance` の複製で先読みする。新しい物理経路を足さない。
+`.swift-format` と `.swiftlint.yml` は緩めない。
 レビューのままの SWF は [QUALITY_GATES](../QUALITY_GATES.md)。機械検査が無いものを active にしない。

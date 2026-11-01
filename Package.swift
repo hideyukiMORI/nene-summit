@@ -12,6 +12,11 @@ let package = Package(
             swiftSettings: [.treatAllWarnings(as: .error), .enableUpcomingFeature("ExistentialAny")]
         ),
         .target(
+            name: "NeNeSummitEngine",
+            dependencies: ["NeNeSummitCore"],
+            swiftSettings: [.treatAllWarnings(as: .error), .enableUpcomingFeature("ExistentialAny")]
+        ),
+        .target(
             name: "NeNeSummitRender",
             dependencies: ["NeNeSummitCore"],
             swiftSettings: [.treatAllWarnings(as: .error), .enableUpcomingFeature("ExistentialAny")]
@@ -23,7 +28,12 @@ let package = Package(
         ),
         .executableTarget(
             name: "nene-summit",
-            dependencies: ["NeNeSummitCore", "NeNeSummitRender", "NeNeSummitTerminal"],
+            dependencies: ["NeNeSummitCore", "NeNeSummitEngine", "NeNeSummitRender", "NeNeSummitTerminal"],
+            swiftSettings: [.treatAllWarnings(as: .error), .enableUpcomingFeature("ExistentialAny")]
+        ),
+        .testTarget(
+            name: "NeNeSummitEngineTests",
+            dependencies: ["NeNeSummitCore", "NeNeSummitEngine"],
             swiftSettings: [.treatAllWarnings(as: .error), .enableUpcomingFeature("ExistentialAny")]
         ),
         .testTarget(

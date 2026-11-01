@@ -79,6 +79,16 @@
 | 画面 | 人、固体、棘、頂上。登頂後の案内に「頂上」 |
 | 矢印と a d w s、space、k、q | 対応する Press。未知のキーは空 |
 
+## 無入力のやり直し
+
+正例と反例は `Tests/NeNeSummitEngineTests`。
+
+| ケース | 期待 |
+| --- | --- |
+| キーが無い一部屋 | 登頂し、間のあと最初へ戻り、もう一度登頂する |
+| 天井と床だけの袋小路 | 途中で位置が変わり、打ち切りで開始位置へ戻る |
+| 袋小路を人が右へ進み続ける | 打ち切らず、開始位置より右にいる |
+
 ## 端末の起動
 
 `eng/play_session.py` が debug の `nene-summit` を PTY で起動し、出力のあと `q` を送り、終了コード 0 を見る。
@@ -114,6 +124,15 @@ unittest 35 件、conformance 0 件、整形と lint は違反 0、debug / relea
 Swift Testing は debug と release で 24 件ずつ成功。モジュール名、部屋の拒否、初期状態、同じ入力列、
 壁で止まるダッシュ、棘からの復帰、着地での回復、壁蹴り、著者の部屋の登頂、画面、キーを含む。
 XCTest の空スイートは 0 件で表示される。製品もテストも `import XCTest` はしていない。
+`eng/play_session.py` は debug の `nene-summit` を PTY で起動し、出力のあと `q` で終了コード 0 だった。
+復元とリサイズは未実行。この実行のとき変更はまだコミット前で、`origin/main..HEAD` は 0 件だった。
+CI はこの作業木では実行していない。
+
+2026-11-01、無入力の案内を足した作業木で `make check` は成功した。
+unittest 35 件、conformance 0 件、整形と lint は違反 0、debug / release の build は成功。
+Swift Testing は debug と release で 27 件ずつ成功。これまでの 24 件に、無入力の登頂とやり直し、
+袋小路の打ち切り、人の入力では打ち切らないことの 3 件を含む。
+XCTest の空スイートは 0 件で、テスト target の数だけ表示される。製品もテストも `import XCTest` はしていない。
 `eng/play_session.py` は debug の `nene-summit` を PTY で起動し、出力のあと `q` で終了コード 0 だった。
 復元とリサイズは未実行。この実行のとき変更はまだコミット前で、`origin/main..HEAD` は 0 件だった。
 CI はこの作業木では実行していない。
