@@ -9,16 +9,16 @@ Swift 対象は `10-swift.mdc`、文書対象は `20-docs.mdc`。どれも入口
 ## 最初に貼り付ける指示
 
 ```text
-NeNe Summit の P1 を開始してください。
+NeNe Summit の P2 を開始してください。
 まず AGENTS.md、docs/CURSOR_HANDOFF.md、docs/todo/current.md と、作業に必要な規範を読んでください。
-P0 の道具は make check に接続済みです。Swift の版は .swift-version、判断は docs/adr/0003-measured-toolchain.md です。
+P1 は一部屋の初期状態と固定 tick の advance までです。判断は docs/adr/0004-one-room-step.md です。
+位置を変える経路を advance 以外に足さないでください。倍率・tick・速度は測って ADR に固定してください。
 .swift-format と .swiftlint.yml は緩めないでください。
-docs/APPROACH.md の P1 を Issue とブランチに分けてください。
-Core の Input / State / Event、一部屋、固定 tick を足し、同じ入力列が同じ状態列になること、
-不正な部屋を結果型で拒むことを Swift Testing で確かめてください。
-P1 の成功を、遊べるゲームや P2 以降の物理の証明と呼ばないでください。
+docs/APPROACH.md の P2 を Issue とブランチに分け、重力、走る、跳ぶ、壁蹴り、ダッシュ、棘、
+チェックポイントを Core の一つの経路にしてください。
+高速衝突、角、消費と回復、死亡復帰の不変条件を Swift Testing で確かめてください。
+P2 の成功を、端末で遊べることや AI の証明と呼ばないでください。
 Bolt / Swarm は設計の参考です。完成済みコード・テスト結果・施主の承認を丸ごとコピーしないでください。
-要件の確定/初期方針/設計案/未決を区別し、細かな設計は根拠を記録して進めてください。
 終了時は実行した検証、未実装の検査、変更した文書、次の作業を日本語で報告し、docs/todo/current.md を更新してください。
 ```
 
