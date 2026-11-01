@@ -10,5 +10,10 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683af
-      - name: Check documentation bootstrap
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Install the locked Swift toolchain
+        run: eng/install-swift.sh
+      - name: Check
         run: make check

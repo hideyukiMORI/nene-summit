@@ -1,0 +1,15 @@
+---
+description: 規範文書を編集するとき、正本を一つに保つ
+globs: "**/*.md,**/*.mdc"
+alwaysApply: false
+---
+
+作業別の索引は docs/README.md。同じ規則の本文を 2 ファイルに書かない。
+Cursor ルールは入口だけにし、規範の全文は docs/ の担当ファイルへ置く。
+
+active / planned / review は docs/QUALITY_GATES.md だけに書く。
+確定依頼、初期方針、設計案、未決は docs/REQUIREMENTS.md で区別する。
+兄弟の実測、承認、Release、ruleset をこのリポジトリの事実として写さない。
+
+リンクはリポジトリ内の相対パス。日本語が規範の正本。
+ゲートの閾値や除外を、目の前の変更を通すために下げない。

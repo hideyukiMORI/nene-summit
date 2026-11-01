@@ -12,6 +12,13 @@ QUALITY_GATES、DEVELOPMENT_WORKFLOW、COMMIT_CONVENTIONS と ADR / waiver / PR 
 文書は Summit 向けに再構成。MIT LICENSE は同一著作権者の兄弟と揃えた。
 製品コード・画像・ゲート実装は移植していない。
 
+2026-11-01 に、同じ 2 つの snapshot から追加で読んだもの:
+`docs/CODING_RULES.md`、`docs/COMMIT_CONVENTIONS.md`、`.swiftlint.yml`、`.swift-format`、
+`eng/validate-commit-message.py`、`.githooks/commit-msg`。
+採用したのは記述の部分集合（SWF-001〜018）、整形ファイルの鍵、lint の `only_rules` と閾値、GIT-001〜005 の形。
+メッセージ検証器は Summit で書き、親の無い初期化コミットの `(#N)` 省略だけを例外にした。
+兄弟の `active`、実測ケース、ruleset、ツールの版、conformance 検査の実装は写していない。
+
 引き継がないもの: 射撃・ボス・残機・得点の確定仕様、キャストや台詞の本数、実測結果、active の強制状態、
 Release 済みという記録、過去セッションの承認、自動マージの権限。
 Swift の具体版と lint の lock も未固定。P0 でこの環境の debug / release 動作を検証してから決める。

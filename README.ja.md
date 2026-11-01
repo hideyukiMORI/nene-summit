@@ -2,7 +2,7 @@
 
 AI が山を登り続ける、端末向けのアクション・スクリーンセーバー。
 
-**現在はドキュメント初期化段階です。ゲーム本体・インストーラ・Release はまだありません。**
+**道具と最小の Core は作業木にあります。遊べる登山・インストーラ・Release はまだありません。**
 
 [English](README.md) · [ドキュメント一覧](docs/README.md) · [Cursor への引き継ぎ](docs/CURSOR_HANDOFF.md)
 
@@ -24,7 +24,8 @@ make bootstrap
 make check
 ```
 
-必要なのは Git・Make・Python 3.10 以降です。現時点の検査範囲は文書と文書検査器だけです。
-Swift の版固定・ビルド・ゲームのテストは最初の実装マイルストーンで整備します。
+必要なのは Git・Make・Python 3.10 以降と、`.swift-version` の Swift です。
+`make check` は文書、コミットメッセージ、規約、整形、lint、Core の debug / release のビルドとテストを実行します。
+通っても登山ができたことにはなりません。整形と lint の設定は緩めません。
 
 ライセンスは兄弟と同じ [MIT](LICENSE)。開発参加は [CONTRIBUTING.md](CONTRIBUTING.md)。

@@ -1,7 +1,7 @@
 # プロジェクト構成
 
-現在存在するのは文書、Cursor ルール、文書検査器、CI のみ。
-以下の SwiftPM target は**実装予定の構成**であり、まだ `Package.swift` はない。
+いま `Package.swift` にある製品 target は NeNeSummitCore だけである。テストは NeNeSummitCoreTests。
+以下の残りは実装予定で、target はまだ無い。
 
 | Target | 責務 | 直接依存 |
 | --- | --- | --- |
@@ -15,12 +15,16 @@
 unsafe API は termios / ioctl 等の端末境界として Terminal にのみ隔離する。
 テストは `<target>Tests` に置き、Swift Testing を使う。
 
-- `Sources/<target>/`: 製品コード。実装するときに作る。
-- `Tests/<target>Tests/`: 対応するテスト。空 target は作らない。
-- `eng/`: ローカル / CI 共通の検査とその検証。
-- `.github/`: CI、Issue / PR テンプレート。
+- `Sources/NeNeSummitCore/`: いまある製品コード。ほかの target は実装するときにディレクトリを作る。
+- `Tests/NeNeSummitCoreTests/`: 対応する Swift Testing。空 target は作らない。
+- `eng/`: ローカル / CI 共通の検査とその検証。コミットメッセージ、conformance、ツール導入を含む。
+- `.github/`: CI、Issue / PR テンプレート。CI は lock の Swift を入れてから `make check` する。
 - `.cursor/rules/`: 短い入口。詳細規範を重複させない。
+- `.swift-version`: Swift と swift-format の版。判断は [ADR 0003](adr/0003-measured-toolchain.md)。
+- `.swift-format` / `.swiftlint.yml`: 整形と lint の正本。`make check` が実行する。
+- `.githooks/`: GIT-003 の commit-msg。`make bootstrap` がこのリポジトリだけの `core.hooksPath` を向ける。
 - `docs/adr/`: 設計判断。`docs/waivers/`: 期限付き例外。
 
-P0 で機械可読の依存グラフを導入し、manifest と import を照合する。
-依存グラフを変更する場合はこの文書と ADR と検査を同時に更新する。
+依存の機械検査は、外部パッケージを manifest に置かないこと（CNF-010）と、禁止 import（CNF-004）まで。
+target 同士の辺を上の表と照合する検査は、2 つ目の製品 target を足す変更で入れる。
+依存を変えるときは、この文書と ADR と検査を同じ変更で更新する。

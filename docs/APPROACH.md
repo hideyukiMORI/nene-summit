@@ -5,7 +5,7 @@
 
 | Phase | 成果 | 受け入れ条件 |
 | --- | --- | --- |
-| P0: 道具と規約 | Swift 版を実測・固定、最小 SwiftPM、共通 make check、lint / 規約検査 | debug / release が通り、植えた違反が狙った検査で落ちる。文書のみ制限を製品ゲートへ置換 |
+| P0: 道具と規約 | Swift 版を実測・固定、最小 SwiftPM、共通 make check、lint / 規約検査 | debug / release が通り、植えた違反が狙った検査で落ちる。文書のみ制限を製品ゲートへ置換。既存の `.swift-format` と `.swiftlint.yml` は緩めず、実測した版で接続してから SWF を active にする |
 | P1: 状態と一部屋 | Core の Input / State / Event、部屋と初期位置、固定 tick | 同じ入力列で同じ状態列。不正な部屋を検証済み結果で拒む |
 | P2: 移動と復帰 | 重力、走る、跳ぶ、壁蹴り、ダッシュ、棘、チェックポイント | 高速衝突・角・消費回復・死亡復帰の不変条件が通る。倍率・tick・速度を ADR に固定 |
 | P3: 端末の縦切り | Render / Terminal / executable、簡易 AI、カメラ、HUD | 80×24 の一部屋を無入力で遊び、再挑戦する。q・割り込み・resize を PTY で確認 |

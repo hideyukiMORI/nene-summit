@@ -1,12 +1,23 @@
 ---
-description: Swift の実装・テスト・SwiftPM 構成を変更するときの規範
-globs: "Sources/**/*.swift,Tests/**/*.swift,Package.swift"
+description: Swift のソース、manifest、整形と lint の設定を触るときの記述
+globs: "**/*.swift,.swiftlint.yml,.swift-format"
 alwaysApply: false
 ---
 
-編集前に docs/ARCHITECTURE_CONSTITUTION.md、docs/PROJECT_LAYOUT.md、
-docs/CODING_RULES.md、docs/QUALITY_GATES.md と対象 ADR を読む。
-Core / Engine / Render は時計・端末・ファイルを知らない。
-座標・速度は整数固定小数点。AI は Core の step で先読みし、入力だけ返す。
-網羅的 enum、検証済み値型、Swift Testing を使う。target ごとの警告エラー化を固定する。
-不変条件・高速ダッシュ衝突・リプレイの決定性を検証する。
+編集前に docs/CODING_RULES.md を読む。閾値は .swiftlint.yml、行長とインデントは .swift-format。数値を文書へ写さない。
+強制状態は docs/QUALITY_GATES.md。設定ファイルがあるだけで SWF を active と呼ばない。
+
+Core / Engine / Render は時計・端末・ファイルを知らない。座標と速度は整数固定小数点の専用型。
+AI は Core の step を複製状態へ適用し、入力だけ返す。
+
+```swift
+// 全捕捉、強制アンラップ、throws、Any、async は書かない
+switch phase {
+case .grounded: break
+case .airborne: break
+}
+```
+
+1 ファイル 1 主要型。公開格納は let か private(set)。XCTest を混ぜない。
+unsafe は NeNeSummitTerminal だけ。Foundation と Dispatch を import しない。
+抑制は期限付き waiver と行単位の swiftlint:disable:next だけ。

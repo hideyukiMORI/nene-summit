@@ -1,0 +1,5 @@
+# CI が入れる Swift ツールチェーン tarball の SHA-256。版の正本は .swift-version。
+# 2026-11-01 に download.swift.org の ubuntu24.04 配布物を取得し sha256sum した。
+# 署名の検証はしていない。
+# 形: <版> <配布の platform> <SHA-256>
+6.4.1 ubuntu24.04 7d246c7114077ad01dba4ad897628446ada4c489d6c7dbcf39ae3f25cbe17e8b
