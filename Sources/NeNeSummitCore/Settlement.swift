@@ -1,6 +1,7 @@
 enum Settlement {
     static func resolve(start: SummitState, wish: WishResult, slide: Slide, progress: Progress) -> Resolved {
-        let phase = phase(after: slide, room: start.room)
+        let matter = Matter(room: start.room, tick: progress.tick.count)
+        let phase = phase(after: slide, matter: matter)
         let charges = refilled(phase, previous: start.action.phase, charges: wish.action.charges)
         let action = Action(
             facing: wish.action.facing,
@@ -8,11 +9,13 @@ enum Settlement {
             dashTicks: wish.action.dashTicks,
             charges: charges
         )
-        switch Probe.contact(place: slide.place, room: start.room) {
+        switch Probe.contact(place: slide.place, matter: matter) {
         case .spike:
             return respawn(start, wish: wish, progress: progress)
         case .summit:
             return arrive(slide, action: action, progress: progress, events: wish.events + [.summited])
+        case .spring:
+            return Springboard.launch(slide, action: action, progress: progress, events: wish.events)
         case .checkpoint(let cell):
             let marked = progress.withCheckpoint(cell)
             return Resolved(kinematics: slide.kinematics, action: action, progress: marked, events: wish.events)
@@ -21,8 +24,8 @@ enum Settlement {
         }
     }
 
-    static func phase(after slide: Slide, room: Room) -> Phase {
-        if slide.vertical == .negative || Probe.supported(place: slide.place, room: room) {
+    static func phase(after slide: Slide, matter: Matter) -> Phase {
+        if slide.vertical == .negative || Probe.supported(place: slide.place, matter: matter) {
             return .grounded
         }
         if slide.across == .negative {

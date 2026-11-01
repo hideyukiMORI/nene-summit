@@ -12,6 +12,7 @@ public struct Room: Equatable, Sendable {
     public let height: Int
     let spawn: CellPoint
     let cells: [CellKind]
+    let decks: [Deck]
     let ascent: Ascent
 
     private init(spec: RoomSpec) {
@@ -20,6 +21,7 @@ public struct Room: Equatable, Sendable {
         height = spec.grid.height
         spawn = spec.spawn
         cells = spec.grid.cells
+        decks = spec.grid.decks
         ascent = spec.ascent
     }
 
@@ -48,6 +50,12 @@ public struct Room: Equatable, Sendable {
             return "RIDGE"
         case .second:
             return "SHELF"
+        case .spring:
+            return "SPRING"
+        case .raft:
+            return "RAFT"
+        case .lift:
+            return "LIFT"
         case .aside:
             return "PITCH"
         }
@@ -58,6 +66,10 @@ public struct Room: Equatable, Sendable {
             return .solid
         }
         return cells[y * width + x]
+    }
+
+    public func moving(x: Int, y: Int, tick: Int) -> Bool {
+        DeckField.covers(self, x: x, y: y, tick: tick)
     }
 
     private static func contains(_ point: CellPoint, width: Int, height: Int) -> Bool {
@@ -71,6 +83,8 @@ public struct Room: Equatable, Sendable {
             return false
         case .solid, .spike, .summit:
             return true
+        case .spring:
+            return false
         }
     }
 }

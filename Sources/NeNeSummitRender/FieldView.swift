@@ -9,6 +9,32 @@ enum FieldView {
             paintRow(&sheet, state: state, origin: origin, viewY: viewY)
             viewY += 1
         }
+        moving(&sheet, state: state, origin: origin)
+    }
+
+    static func moving(_ sheet: inout Sheet, state: SummitState, origin: CellPoint) {
+        let here = state.portrait()
+        var y = 0
+        while y < state.room.height {
+            var x = 0
+            while x < state.room.width {
+                let deck = state.room.moving(x: x, y: y, tick: state.elapsed())
+                if deck && (here.x != x || here.y != y) {
+                    stamp(&sheet, origin: origin, x: x, y: y)
+                }
+                x += 1
+            }
+            y += 1
+        }
+    }
+
+    static func stamp(_ sheet: inout Sheet, origin: CellPoint, x: Int, y: Int) {
+        let viewX = x - origin.x
+        let viewY = origin.y + Stage.fieldCellsY - 1 - y
+        if viewX < 0 || viewX >= Stage.fieldCellsX || viewY < 0 || viewY >= Stage.fieldCellsY {
+            return
+        }
+        block(&sheet, row: Stage.fieldRow + viewY, viewX: viewX, tone: .stone)
     }
 
     static func paintRow(_ sheet: inout Sheet, state: SummitState, origin: CellPoint, viewY: Int) {
@@ -41,6 +67,8 @@ enum FieldView {
             return .flag
         case .summit:
             return .crest
+        case .spring:
+            return .spring
         }
     }
 

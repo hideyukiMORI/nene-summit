@@ -20,7 +20,7 @@ unsafe API は termios / read / write の端末境界として Terminal にの�
 実行ファイルは Glibc を import しない。
 テストは `<target>Tests` に置き、Swift Testing を使う。
 
-- `Sources/NeNeSummitCore/`: 部屋、物理、`SummitState.advance`。
+- `Sources/NeNeSummitCore/`: 部屋、物理、ばね、動く床、`SummitState.advance`。
 - `Sources/NeNeSummitEngine/`: 案内と、advance の複製による先読みと、頂上か打ち切りのやり直しと、ボヤキ。
 - `Sources/NeNeSummitRender/`: 枠を返す。当たり判定は持たない。
 - `Sources/NeNeSummitTerminal/`: 端末の開始、読み、描画、待ち、終了。

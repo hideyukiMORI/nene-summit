@@ -21,12 +21,27 @@ import Testing
     #expect(watch.state.room.ascent == .second)
 }
 
-@Test func theSecondSummitReturnsToTheFirstRoom() {
+@Test func theSecondSummitOpensTheSpring() {
     var watch = rest(climb(Watch.begin(in: FirstAscent.make())))
     #expect(watch.state.room.ascent == .second)
     watch = rest(climb(watch))
+    #expect(watch.state.room.ascent == .spring)
+    #expect(watch.state.progress.expedition == .climbing)
+}
+
+@Test func theLiftReturnsToTheFirstRoom() {
+    let watch = rest(climb(Watch.begin(in: LiftPitch.make())))
     #expect(watch.state.room.ascent == .first)
     #expect(watch.state.progress.expedition == .climbing)
+}
+
+@Test func anUnattendedWatchSummitsTheNewRooms() {
+    let spring = climb(Watch.begin(in: SpringPitch.make()))
+    #expect(spring.state.progress.expedition == .summited)
+    let raft = climb(Watch.begin(in: RaftPitch.make()))
+    #expect(raft.state.progress.expedition == .summited)
+    let lift = climb(Watch.begin(in: LiftPitch.make()))
+    #expect(lift.state.progress.expedition == .summited)
 }
 
 @Test func aBlockedGuideStartsAgain() {

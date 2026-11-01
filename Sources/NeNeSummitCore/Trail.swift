@@ -8,6 +8,12 @@ public enum Trail {
         case .first:
             return SecondPitch.make()
         case .second:
+            return SpringPitch.make()
+        case .spring:
+            return RaftPitch.make()
+        case .raft:
+            return LiftPitch.make()
+        case .lift:
             return FirstAscent.make()
         case .aside:
             return room

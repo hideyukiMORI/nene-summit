@@ -30,6 +30,15 @@ import Testing
     #expect(letters(second).contains("SHELF"))
 }
 
+@Test func theSpringAndTheRaftAreColoredFaces() {
+    let spring = Canvas.draw(SummitState.begin(in: SpringPitch.make()))
+    let raft = Canvas.draw(SummitState.begin(in: RaftPitch.make()))
+    #expect(has(spring, .spring))
+    #expect(has(raft, .stone))
+    #expect(letters(spring).contains("SPRING"))
+    #expect(letters(raft).contains("RAFT"))
+}
+
 @Test func aFarSpikeStaysOutsideTheWindow() {
     let frame = Canvas.draw(SummitState.begin(in: wideRoom()))
     #expect(has(frame, .hazard) == false)

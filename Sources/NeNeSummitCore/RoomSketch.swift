@@ -29,7 +29,8 @@ enum RoomSketch {
         case .failure:
             preconditionFailure("部屋名が空")
         case .success(let id):
-            let grid = RoomGrid(width: width, height: height, cells: filled.cells)
+            let decks = DeckPlan.collect(rows: rows)
+            let grid = RoomGrid(width: width, height: height, cells: filled.cells, decks: decks)
             let spec = RoomSpec(id: id, spawn: filled.spawn, grid: grid, ascent: ascent)
             return Room.make(spec)
         }
@@ -63,6 +64,10 @@ enum RoomSketch {
             return Mark(cell: .checkpoint, spawn: false)
         case "S":
             return Mark(cell: .summit, spawn: false)
+        case "*":
+            return Mark(cell: .spring, spawn: false)
+        case "M", "V":
+            return Mark(cell: .open, spawn: false)
         case "@":
             return Mark(cell: .open, spawn: true)
         default:
