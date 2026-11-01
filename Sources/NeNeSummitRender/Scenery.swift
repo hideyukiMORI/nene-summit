@@ -24,8 +24,10 @@ enum Scenery {
     }
 
     enum Layer {
-        case ridge
-        case chip
+        case cloud
+        case peak(String)
+        case drift
+        case frost
         case spark
     }
 
@@ -35,13 +37,32 @@ enum Scenery {
         if !open(sight.state, x: roomX, y: roomY) {
             return nil
         }
-        if void(sight.state, x: roomX, y: roomY) && ridge(viewX: sight.viewX, viewY: sight.viewY, origin: sight.origin)
-        {
-            return .ridge
+        if void(sight.state, x: roomX, y: roomY) {
+            return far(sight)
         }
-        if !void(sight.state, x: roomX, y: roomY) && chip(viewX: sight.viewX, viewY: sight.viewY, origin: sight.origin)
-        {
-            return .chip
+        return near(sight)
+    }
+
+    static func far(_ sight: Sight) -> Layer? {
+        if cloud(viewX: sight.viewX, viewY: sight.viewY, origin: sight.origin) {
+            return .cloud
+        }
+        if ridge(viewX: sight.viewX, viewY: sight.viewY, origin: sight.origin) {
+            let far = sight.origin.x / 3 + sight.viewX
+            return .peak(CellMark.slope(far))
+        }
+        if drift(viewX: sight.viewX, viewY: sight.viewY, origin: sight.origin) {
+            return .drift
+        }
+        if spark(viewX: sight.viewX, viewY: sight.viewY, origin: sight.origin, tick: sight.state.elapsed()) {
+            return .spark
+        }
+        return nil
+    }
+
+    static func near(_ sight: Sight) -> Layer? {
+        if chip(viewX: sight.viewX, viewY: sight.viewY, origin: sight.origin) {
+            return .frost
         }
         if spark(viewX: sight.viewX, viewY: sight.viewY, origin: sight.origin, tick: sight.state.elapsed()) {
             return .spark
@@ -55,23 +76,45 @@ enum Scenery {
 
     static func stamp(_ layer: Layer) -> CellStamp {
         switch layer {
-        case .ridge:
-            return CellStamp(text: CellMark.ridge, tone: .ridge)
-        case .chip:
-            return CellStamp(text: CellMark.chip, tone: .ridge)
+        case .cloud:
+            return CellStamp(text: CellMark.cloud, tone: .cloud)
+        case .peak(let text):
+            return CellStamp(text: text, tone: .ridge)
+        case .drift:
+            return CellStamp(text: CellMark.cloud, tone: .mist)
+        case .frost:
+            return CellStamp(text: CellMark.frost, tone: .spark)
         case .spark:
-            return CellStamp(text: ". ", tone: .spark)
+            return CellStamp(text: CellMark.spark, tone: .spark)
         }
+    }
+
+    static func cloud(viewX: Int, viewY: Int, origin: CellPoint) -> Bool {
+        if viewY < 1 || viewY > 3 {
+            return false
+        }
+        let far = origin.x / 5 + viewX
+        let local = positive(far) % 12
+        if viewY == 2 && local < 4 {
+            return true
+        }
+        return viewY == 3 && local > 0 && local < 3
     }
 
     static func ridge(viewX: Int, viewY: Int, origin: CellPoint) -> Bool {
         let far = origin.x / 3 + viewX
-        if positive(far) % 3 != 0 {
+        let local = positive(far) % 8
+        let rise = local <= 4 ? local : 8 - local
+        let fromBottom = Stage.fieldCellsY - 1 - viewY
+        return fromBottom == 11 + rise
+    }
+
+    static func drift(viewX: Int, viewY: Int, origin: CellPoint) -> Bool {
+        if viewY != 9 {
             return false
         }
-        let fromBottom = Stage.fieldCellsY - 1 - viewY
-        let peak = 13 + positive(far * 5) % 5
-        return fromBottom >= 11 && fromBottom <= peak
+        let far = origin.x / 3 + viewX
+        return positive(far) % 5 != 0
     }
 
     static func chip(viewX: Int, viewY: Int, origin: CellPoint) -> Bool {
