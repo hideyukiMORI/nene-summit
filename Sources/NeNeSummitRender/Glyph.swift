@@ -6,9 +6,14 @@ public struct Glyph: Equatable, Sendable {
         case flag
         case crest
         case spring
+        case gleam
+        case ridge
+        case spark
+        case veil
         case mark
         case climber
         case banner
+        case hint
         case quiet
     }
 

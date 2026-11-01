@@ -21,6 +21,16 @@ import Testing
     #expect(watch.state.room.ascent == .second)
 }
 
+@Test func aLaterRoomKeepsTheGleamsAlreadyFound() {
+    let held = GleamBag.empty.taking(CellPoint(x: 4, y: 1))
+    let next = Watch.begin(in: SecondPitch.make(), gleams: held.carried())
+    #expect(next.state.finds() == 1)
+    #expect(next.state.gathered(x: 4, y: 1) == false)
+    let same = Watch.begin(in: FirstAscent.make(), gleams: held)
+    #expect(same.state.gathered(x: 4, y: 1))
+    #expect(same.state.finds() == 1)
+}
+
 @Test func theSecondSummitOpensTheSpring() {
     var watch = rest(climb(Watch.begin(in: FirstAscent.make())))
     #expect(watch.state.room.ascent == .second)

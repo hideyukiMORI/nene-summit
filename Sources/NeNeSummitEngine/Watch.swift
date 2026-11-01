@@ -9,8 +9,13 @@ public struct Watch: Equatable, Sendable {
     static let budget = 500
     static let pause = 40
 
-    public static func begin(in room: Room) -> Watch {
-        Watch(state: SummitState.begin(in: room), notice: Notice(events: [], opened: true), spent: 0, rest: 0)
+    public static func begin(in room: Room, gleams: GleamBag = .empty) -> Watch {
+        Watch(
+            state: SummitState.begin(in: room, gleams: gleams),
+            notice: Notice(events: [], opened: true),
+            spent: 0,
+            rest: 0
+        )
     }
 
     public func advance(human: Input, attendance: Attendance = .automatic) -> Watch {
@@ -28,7 +33,7 @@ public struct Watch: Equatable, Sendable {
             return Watch(state: state, notice: Notice(events: [], opened: false), spent: 0, rest: rest)
         }
         if human != .idle || rest + 1 >= Watch.pause {
-            return Watch.begin(in: Trail.after(state.room))
+            return Watch.begin(in: Trail.after(state.room), gleams: state.bag().carried())
         }
         return Watch(state: state, notice: Notice(events: [], opened: false), spent: 0, rest: rest + 1)
     }
@@ -40,7 +45,7 @@ public struct Watch: Equatable, Sendable {
         }
         let spent = self.spent + 1
         if spent >= Watch.budget {
-            return Watch.begin(in: state.room)
+            return Watch.begin(in: state.room, gleams: state.bag())
         }
         return stepped(outcome, spent: spent)
     }

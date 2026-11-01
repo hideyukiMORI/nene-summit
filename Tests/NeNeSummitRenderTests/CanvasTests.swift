@@ -17,13 +17,24 @@ import Testing
     #expect(text.contains("HOLD"))
     #expect(text.contains("GROUND"))
     #expect(text.contains("ALT"))
+    #expect(text.contains("GLEAM"))
     #expect(text.contains("AUTO"))
     #expect(text.contains("q QUIT"))
+    #expect(text.contains("\u{250C}"))
+    #expect(text.contains("\u{2500}"))
+    #expect(text.contains("\u{2502}"))
     #expect(text.contains("#") == false)
     #expect(text.contains("^") == false)
+    #expect(frame.lines[0][0].tone == .veil)
+    #expect(frame.lines[Stage.rows - 1][0].tone == .veil)
+    #expect(frame.lines[Stage.rows - 1][1].tone == .hint)
     #expect(has(frame, .climber))
     #expect(has(frame, .stone))
     #expect(has(frame, .hazard))
+    #expect(has(frame, .gleam))
+    #expect(has(frame, .ridge))
+    #expect(has(frame, .spark))
+    #expect(has(frame, .sky))
 }
 
 @Test func bothRoomsShareOneScreen() {
@@ -74,6 +85,36 @@ import Testing
     let text = letters(Canvas.draw(watch.state))
     #expect(text.contains("CREST"))
     #expect(text.contains("NENE SUMMIT") == false)
+}
+
+@Test func drawingLeavesTheClimbWhereItWas() {
+    let state = SummitState.begin(in: FirstAscent.make())
+    _ = Canvas.draw(state)
+    #expect(state == SummitState.begin(in: FirstAscent.make()))
+    #expect(state.finds() == 0)
+}
+
+@Test func aFoundGleamLeavesTheSky() {
+    let held = GleamBag.empty.taking(CellPoint(x: 4, y: 1))
+    let state = SummitState.begin(in: FirstAscent.make(), gleams: held)
+    #expect(has(Canvas.draw(state), .gleam) == false)
+    #expect(state.finds() == 1)
+}
+
+@Test func distantRidgesSlipBehindTheCave() {
+    let origin = CellPoint(x: 0, y: 0)
+    let slid = CellPoint(x: 2, y: 0)
+    let jumped = CellPoint(x: 3, y: 0)
+    #expect(Scenery.ridge(viewX: 6, viewY: 8, origin: origin))
+    #expect(Scenery.ridge(viewX: 6, viewY: 8, origin: slid))
+    #expect(Scenery.ridge(viewX: 6, viewY: 8, origin: jumped) == false)
+    #expect(Scenery.chip(viewX: 0, viewY: 0, origin: origin))
+    #expect(Scenery.chip(viewX: 0, viewY: 0, origin: jumped) == false)
+    #expect(Scenery.chip(viewX: 4, viewY: 1, origin: origin) == Scenery.chip(viewX: 1, viewY: 1, origin: jumped))
+    #expect(Scenery.spark(viewX: 0, viewY: 0, origin: origin, tick: 0))
+    #expect(Scenery.spark(viewX: 0, viewY: 0, origin: CellPoint(x: 1, y: 0), tick: 0))
+    #expect(Scenery.spark(viewX: 0, viewY: 0, origin: CellPoint(x: 2, y: 0), tick: 0) == false)
+    #expect(Scenery.spark(viewX: 0, viewY: 0, origin: origin, tick: 8) == false)
 }
 
 private func letters(_ frame: Frame) -> String {

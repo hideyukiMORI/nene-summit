@@ -30,6 +30,18 @@ public struct SummitState: Equatable, Sendable {
         progress.tick.count
     }
 
+    public func finds() -> Int {
+        progress.gleams.count()
+    }
+
+    public func gathered(x: Int, y: Int) -> Bool {
+        progress.gleams.holds(x: x, y: y)
+    }
+
+    public func bag() -> GleamBag {
+        progress.gleams
+    }
+
     var foot: CellPoint {
         CellPoint(
             x: kinematics.place.x / MotionPolicy.scale,
@@ -41,11 +53,11 @@ public struct SummitState: Equatable, Sendable {
         SummitState(room: room, kinematics: kinematics.at(place), action: action, progress: progress)
     }
 
-    public static func begin(in room: Room) -> SummitState {
+    public static func begin(in room: Room, gleams: GleamBag = .empty) -> SummitState {
         let place = Place(x: room.spawn.x * MotionPolicy.scale, y: room.spawn.y * MotionPolicy.scale)
         let kinematics = Kinematics(place: place, velocity: .still)
         let action = Action(facing: .right, phase: .grounded, dashTicks: 0, charges: .full)
-        let progress = Progress(checkpoint: room.spawn, expedition: .climbing, tick: .zero)
+        let progress = Progress(checkpoint: room.spawn, expedition: .climbing, tick: .zero, gleams: gleams)
         return SummitState(room: room, kinematics: kinematics, action: action, progress: progress)
     }
 

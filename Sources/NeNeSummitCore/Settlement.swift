@@ -16,6 +16,10 @@ enum Settlement {
             return arrive(slide, action: action, progress: progress, events: wish.events + [.summited])
         case .spring:
             return Springboard.launch(slide, action: action, progress: progress, events: wish.events)
+        case .gleam(let cell):
+            let resting = Resolved(
+                kinematics: slide.kinematics, action: action, progress: progress, events: wish.events)
+            return gather(resting, cell: cell)
         case .checkpoint(let cell):
             let marked = progress.withCheckpoint(cell)
             return Resolved(kinematics: slide.kinematics, action: action, progress: marked, events: wish.events)
@@ -51,6 +55,19 @@ enum Settlement {
         let action = Action(facing: wish.action.facing, phase: .grounded, dashTicks: 0, charges: .full)
         let events = wish.events + [.fell, .returned]
         return Resolved(kinematics: kinematics, action: action, progress: progress, events: events)
+    }
+
+    static func gather(_ resting: Resolved, cell: CellPoint) -> Resolved {
+        let marked = resting.progress.gathering(cell)
+        if marked == resting.progress {
+            return resting
+        }
+        return Resolved(
+            kinematics: resting.kinematics,
+            action: resting.action,
+            progress: marked,
+            events: resting.events + [.gathered]
+        )
     }
 
     static func arrive(_ slide: Slide, action: Action, progress: Progress, events: [StepEvent]) -> Resolved {
