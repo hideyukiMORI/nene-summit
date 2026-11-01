@@ -86,7 +86,7 @@ enum Wish {
         }
         switch phase {
         case .grounded:
-            return Velocity(x: velocity.x, y: MotionPolicy.jumpSpeed)
+            return Velocity(x: leapX(velocity.x, horizontal: input.horizontal), y: MotionPolicy.jumpSpeed)
         case .wall(.left):
             return Velocity(x: MotionPolicy.wallJumpX, y: MotionPolicy.jumpSpeed)
         case .wall(.right):
@@ -94,6 +94,13 @@ enum Wish {
         case .air, .wall(.up), .wall(.down):
             return nil
         }
+    }
+
+    static func leapX(_ vx: Int, horizontal: Horizontal) -> Int {
+        if horizontal == .none {
+            return vx
+        }
+        return targetSpeed(horizontal)
     }
 
     static func dashRequested(_ input: Input, charges: DashCharges, dashTicks: Int) -> Bool {

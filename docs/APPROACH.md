@@ -6,6 +6,7 @@
 無入力で登ってやり直すところは [ADR 0006](adr/0006-unattended-retry.md)。
 押しっぱなしと同時押しは [ADR 0008](adr/0008-held-keys.md)。
 オートとマニュアルの切替は [ADR 0009](adr/0009-attendance-toggle.md)。
+ジャンプ中の左右は [ADR 0010](adr/0010-jump-steer.md)。
 下の表は当初の区切りであり、P2 をゼロからやり直す指示ではない。
 
 | Phase | 成果 | 受け入れ条件 |

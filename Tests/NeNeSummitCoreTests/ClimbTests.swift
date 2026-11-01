@@ -84,6 +84,49 @@ import Testing
     #expect(next == MotionPolicy.jumpSpeed - MotionPolicy.gravity)
 }
 
+@Test func aJumpCarriesTheHeldDirection() {
+    let room = chamber(width: 12, height: 8, spawn: CellPoint(x: 2, y: 1), cells: floorCells(width: 12, height: 8))
+    let origin = SummitState.begin(in: room).kinematics.place.x
+    let leap = Input(horizontal: .right, vertical: .none, jump: .pressed, dash: .off)
+    var state = SummitState.begin(in: room).advance(input: leap).state
+    #expect(state.kinematics.velocity.x == MotionPolicy.runSpeed)
+    #expect(state.kinematics.velocity.y == MotionPolicy.jumpSpeed)
+    let cut = Input(horizontal: .right, vertical: .none, jump: .released, dash: .off)
+    state = state.advance(input: cut).state
+    #expect(state.kinematics.velocity.y == MotionPolicy.jumpCut)
+    #expect(state.kinematics.velocity.x == MotionPolicy.runSpeed)
+    var tick = 0
+    while tick < 8 && state.action.phase != .grounded {
+        state = state.advance(input: .moving(.right)).state
+        tick += 1
+    }
+    #expect(state.kinematics.place.x - origin >= MotionPolicy.scale)
+}
+
+@Test func aJumpWithoutADirectionKeepsMomentum() {
+    let room = chamber(width: 12, height: 8, spawn: CellPoint(x: 2, y: 1), cells: floorCells(width: 12, height: 8))
+    var state = SummitState.begin(in: room)
+    var tick = 0
+    while tick < 4 {
+        state = state.advance(input: .moving(.right)).state
+        tick += 1
+    }
+    let carried = state.kinematics.velocity.x
+    let leap = Input(horizontal: .none, vertical: .none, jump: .pressed, dash: .off)
+    let jumped = state.advance(input: leap).state
+    #expect(jumped.kinematics.velocity.x == carried)
+    #expect(jumped.kinematics.velocity.y == MotionPolicy.jumpSpeed)
+}
+
+@Test func airSteersToRunSpeedInOneTick() {
+    let room = chamber(width: 12, height: 8, spawn: CellPoint(x: 2, y: 1), cells: floorCells(width: 12, height: 8))
+    let leap = Input(horizontal: .none, vertical: .none, jump: .pressed, dash: .off)
+    let state = SummitState.begin(in: room).advance(input: leap).state
+    #expect(state.kinematics.velocity.x == 0)
+    let steered = state.advance(input: .moving(.right)).state
+    #expect(steered.kinematics.velocity.x == MotionPolicy.runSpeed)
+}
+
 @Test func aFullJumpStaysNearThreeBodies() {
     let rise = MotionPolicy.jumpSpeed * MotionPolicy.jumpSpeed / (2 * MotionPolicy.gravity)
     #expect(rise >= MotionPolicy.bodyHeight * 2)
