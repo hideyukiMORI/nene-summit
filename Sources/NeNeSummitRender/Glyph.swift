@@ -9,6 +9,8 @@ public struct Glyph: Equatable, Sendable {
         case gleam
         case coin
         case ridge
+        case cloud
+        case mist
         case spark
         case veil
         case mark
