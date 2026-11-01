@@ -1,23 +1,25 @@
 # プロジェクト構成
 
-`Package.swift` の製品 target は NeNeSummitCore、NeNeSummitRender、NeNeSummitTerminal と、実行ファイル `nene-summit`。
-テストはそれぞれの `Tests`。Engine はまだ無い。
+`Package.swift` の製品 target は NeNeSummitCore、NeNeSummitEngine、NeNeSummitRender、NeNeSummitTerminal と、実行ファイル `nene-summit`。
+テストはそれぞれの `Tests`。
 
 | Target | 責務 | 直接依存 |
 | --- | --- | --- |
 | NeNeSummitCore | 地形、物理、Input、状態遷移、出来事、復帰、登頂 | なし |
-| NeNeSummitEngine | 自動登山、ルート判断、性格・台詞（後期） | NeNeSummitCore |
+| NeNeSummitEngine | 無入力の案内、遠征のやり直し。先読みと台詞は後期 | NeNeSummitCore |
 | NeNeSummitRender | セルの枠、配色、案内 | NeNeSummitCore |
 | NeNeSummitTerminal | raw mode、入力解析、ANSI、待ち | NeNeSummitRender, Glibc |
-| nene-summit | キーを Input に写す、時計の方針、ループ | NeNeSummitCore, NeNeSummitRender, NeNeSummitTerminal |
+| nene-summit | キーを Input に写す、時計の方針、ループ | NeNeSummitCore, NeNeSummitEngine, NeNeSummitRender, NeNeSummitTerminal |
 
 物理の数は Core の `MotionPolicy`。判断は [ADR 0005](adr/0005-playable-climb.md)。
+無入力の間と打ち切りは Engine の `Watch`。判断は [ADR 0006](adr/0006-unattended-retry.md)。
 製品の Foundation / FoundationEssentials / Dispatch の import は禁止。
 unsafe API は termios / read / write の端末境界として Terminal にのみ隔離する。
 実行ファイルは Glibc を import しない。
 テストは `<target>Tests` に置き、Swift Testing を使う。
 
 - `Sources/NeNeSummitCore/`: 部屋、物理、`SummitState.advance`。
+- `Sources/NeNeSummitEngine/`: 案内と、頂上か打ち切りのやり直し。
 - `Sources/NeNeSummitRender/`: 枠を返す。当たり判定は持たない。
 - `Sources/NeNeSummitTerminal/`: 端末の開始、読み、描画、待ち、終了。
 - `Sources/nene-summit/`: 人が遊ぶループ。
