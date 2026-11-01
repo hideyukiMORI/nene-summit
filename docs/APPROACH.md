@@ -7,7 +7,7 @@
 押しっぱなしと同時押しは [ADR 0008](adr/0008-held-keys.md)。
 オートとマニュアルの切替は [ADR 0009](adr/0009-attendance-toggle.md)。
 ジャンプ中の左右は [ADR 0010](adr/0010-jump-steer.md)。
-実機の入力記録は [ADR 0011](adr/0011-input-trace.md)。
+実機の入力記録は [ADR 0013](adr/0013-trace-debug.md)。
 方向を押したジャンプの斜めは [ADR 0012](adr/0012-up-right-jump.md)。
 下の表は当初の区切りであり、P2 をゼロからやり直す指示ではない。
 

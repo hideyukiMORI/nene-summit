@@ -12,8 +12,9 @@
 | [0008](0008-held-keys.md) | accepted | 押しっぱなしと同時押しは、端末が届ける押す・離すか文字のくり返しで受ける |
 | [0009](0009-attendance-toggle.md) | accepted | `m` でオートとマニュアルを切り替える。マニュアルは案内を呼ばない |
 | [0010](0010-jump-steer.md) | accepted | 方向を押したジャンプは走る速さで跳び、空中の左右もその速さへ届く |
-| [0011](0011-input-trace.md) | accepted | 実機の入力と速度は、起動のたびにローカルファイルへ残す |
+| [0011](0011-input-trace.md) | accepted | 実機の入力と速度はローカルファイルへ残せる。いつもの起動で書くことは 0013 が置き換えた |
 | [0012](0012-up-right-jump.md) | accepted | 方向を押したジャンプは、押し続けているあいだ斜め上へ進む |
+| [0013](0013-trace-debug.md) | accepted | 入力記録は `PlayTrace.debug` が真のときだけ書く。いまは偽 |
 
 [テンプレート](0000-template.md) を複製し、連番と内容を表す名前を付ける。
 状態: proposed / accepted / superseded。accepted は記録した技術判断の採用であり、施主の発言を意味しない。

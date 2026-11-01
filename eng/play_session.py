@@ -18,7 +18,6 @@ def main() -> int:
         return 1
     pid, master = pty.fork()
     if pid == 0:
-        os.environ["NENE_SUMMIT_TRACE"] = "0"
         os.execv(binary, [binary])
         return 1
     return watch(pid, master)
