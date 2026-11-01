@@ -88,8 +88,24 @@ public struct TerminalSession {
 
     private static func emit(_ text: String) {
         let bytes = Array(text.utf8)
-        _ = bytes.withUnsafeBytes { raw in
-            Glibc.write(STDOUT_FILENO, raw.baseAddress, raw.count)
+        var offset = 0
+        while offset < bytes.count {
+            let wrote = bytes.withUnsafeBytes { raw -> ssize_t in
+                guard let base = raw.baseAddress else {
+                    return -1
+                }
+                return Glibc.write(STDOUT_FILENO, base + offset, raw.count - offset)
+            }
+            if wrote < 0 {
+                if errno == EINTR {
+                    continue
+                }
+                return
+            }
+            if wrote == 0 {
+                return
+            }
+            offset += Int(wrote)
         }
     }
 }

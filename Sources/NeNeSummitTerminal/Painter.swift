@@ -3,8 +3,12 @@ import NeNeSummitRender
 enum Painter {
     static func paint(_ glyphs: [Glyph]) -> String {
         var text = ""
+        var previous: Glyph.Tone?
         for glyph in glyphs {
-            text += style(glyph.tone)
+            if previous != glyph.tone {
+                text += style(glyph.tone)
+                previous = glyph.tone
+            }
             text.append(glyph.symbol)
         }
         return text
@@ -34,6 +38,6 @@ enum Painter {
     }
 
     static func fill(_ code: Int) -> String {
-        "\u{001B}[48;5;\(code)m"
+        "\u{001B}[0;48;5;\(code)m"
     }
 }
