@@ -14,6 +14,7 @@
 固定の色面と英語の四人は [ADR 0016](adr/0016-color-screen.md)。
 先読みは [ADR 0017](adr/0017-lookahead.md)。
 ばねと動く床は [ADR 0018](adr/0018-spring-and-deck.md)。
+絵は足さずロジックだけ取り込むことは [ADR 0019](adr/0019-logic-not-pictures.md)。
 下の表は当初の区切りであり、P2 をゼロからやり直す指示ではない。
 
 | Phase | 成果 | 受け入れ条件 |
