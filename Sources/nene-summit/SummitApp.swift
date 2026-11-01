@@ -19,6 +19,7 @@ struct SummitApp {
             session.close()
         }
         var watch = Watch.begin(in: Trail.opening())
+        var banter = Banter()
         var keys = HeldPresses()
         var chord = PlayChord()
         var attendance = Attendance.automatic
@@ -38,7 +39,9 @@ struct SummitApp {
             attendance = flipped(attendance, presses: presses, wasDown: &modeDown)
             let human = chord.make(HeldBits.play(presses))
             let before = watch.state
+            let opened = watch.notice.opened
             watch = watch.advance(human: human, attendance: attendance)
+            banter.listen(watch.notice.events, at: watch.state.elapsed(), opened: opened || watch.notice.opened)
             let sample = TraceSample(
                 now: now,
                 keys: TraceKeys(arrival: arrival, presses: presses, human: human, attendance: attendance),
@@ -51,7 +54,7 @@ struct SummitApp {
             if arrival.strokes.contains(where: quits) {
                 break
             }
-            session.present(Canvas.draw(watch.state, attendance: attendance))
+            session.present(Canvas.draw(watch.state, attendance: attendance, note: banter.line))
             session.wait(milliseconds: 16)
         }
     }

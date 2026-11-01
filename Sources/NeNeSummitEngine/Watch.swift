@@ -2,6 +2,7 @@ import NeNeSummitCore
 
 public struct Watch: Equatable, Sendable {
     public let state: SummitState
+    public let notice: Notice
     let spent: Int
     let rest: Int
 
@@ -9,7 +10,7 @@ public struct Watch: Equatable, Sendable {
     static let pause = 40
 
     public static func begin(in room: Room) -> Watch {
-        Watch(state: SummitState.begin(in: room), spent: 0, rest: 0)
+        Watch(state: SummitState.begin(in: room), notice: Notice(events: [], opened: true), spent: 0, rest: 0)
     }
 
     public func advance(human: Input, attendance: Attendance = .automatic) -> Watch {
@@ -17,34 +18,34 @@ public struct Watch: Equatable, Sendable {
             return finished(human, attendance: attendance)
         }
         if attendance == .manual || human != .idle {
-            return stepped(state.advance(input: human).state, spent: 0)
+            return stepped(state.advance(input: human), spent: 0)
         }
         return guided()
     }
 
     private func finished(_ human: Input, attendance: Attendance) -> Watch {
         if attendance == .manual && human == .idle {
-            return Watch(state: state, spent: 0, rest: rest)
+            return Watch(state: state, notice: Notice(events: [], opened: false), spent: 0, rest: rest)
         }
         if human != .idle || rest + 1 >= Watch.pause {
             return Watch.begin(in: Trail.after(state.room))
         }
-        return Watch(state: state, spent: 0, rest: rest + 1)
+        return Watch(state: state, notice: Notice(events: [], opened: false), spent: 0, rest: rest + 1)
     }
 
     private func guided() -> Watch {
-        let next = state.advance(input: Guide.choose(state)).state
-        if next.progress.expedition == .summited {
-            return stepped(next, spent: 0)
+        let outcome = state.advance(input: Guide.choose(state))
+        if outcome.state.progress.expedition == .summited {
+            return stepped(outcome, spent: 0)
         }
         let spent = self.spent + 1
         if spent >= Watch.budget {
             return Watch.begin(in: state.room)
         }
-        return stepped(next, spent: spent)
+        return stepped(outcome, spent: spent)
     }
 
-    private func stepped(_ state: SummitState, spent: Int) -> Watch {
-        Watch(state: state, spent: spent, rest: 0)
+    private func stepped(_ outcome: StepOutcome, spent: Int) -> Watch {
+        Watch(state: outcome.state, notice: Notice(events: outcome.events, opened: false), spent: spent, rest: 0)
     }
 }

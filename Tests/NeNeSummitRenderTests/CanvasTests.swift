@@ -16,6 +16,14 @@ import Testing
     #expect(text.contains("AUTO"))
     #expect(text.contains("m mode"))
     #expect(text.contains("q quit"))
+    #expect(text.contains("……"))
+}
+
+@Test func theNoteSitsOnTheStrip() {
+    let frame = Canvas.draw(SummitState.begin(in: FirstAscent.make()), note: "ミオ (^^) 着いた")
+    let text = String(frame.lines.flatMap { $0.map(\.symbol) })
+    #expect(text.contains("ミオ"))
+    #expect(text.contains("着いた"))
 }
 
 @Test func theManualStripSaysPlay() {

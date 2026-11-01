@@ -1,4 +1,4 @@
-enum StepEvent: Equatable, Sendable {
+public enum StepEvent: Equatable, Sendable {
     case tick
     case faced(Direction)
     case jumped
