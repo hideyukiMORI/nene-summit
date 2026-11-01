@@ -57,21 +57,32 @@
 | 製品の Swift ソースを swift-format に渡す | 成功 |
 | 未使用の `let` を、製品と同じ manifest 設定で `swift build` | 失敗。使用する関数だけにすると成功 |
 
-## 一部屋の状態
+## 一部屋を登る
 
-正例と反例は `Tests/NeNeSummitCoreTests` の RoomId、Room、SummitState。
+正例と反例は `Tests/NeNeSummitCoreTests`、描画は `NeNeSummitRenderTests`、キーは `NeNeSummitTerminalTests`。
+0004 の時点で「位置はそのまま」「上向き」と書いていた行は、いまの検査ではない。
 
 | ケース | 期待 |
 | --- | --- |
 | 空でない部屋名 | 成功 |
 | 空の部屋名 | `RoomId` が拒否 |
-| 幅 3 高さ 2、初期位置 (2, 1) | 成功 |
-| 幅 0、負の高さ、幅ちょうどの位置、負の位置 | `Room` が拒否 |
-| 開始状態 | 初期位置、上向き、tick 0 |
-| `idle` の一歩 | tick が 1、位置はそのまま、出来事は `.tick` |
-| `face(.left)` | 向きが左、出来事は `.tick` のあと `.faced` |
-| 同じ入力列を二度 | 状態列が一致。tick は 0 から入力の本数まで。位置は初期位置のまま |
-| `face(.left)` と `face(.right)` | 状態列が分かれ、最後の向きがそれぞれの方向 |
+| 幅 0、高さが正でない、幅ちょうどの位置、負の位置、セル数の不一致、初期位置が固体 | `Room` が拒否 |
+| 開始状態 | 初期位置、右向き、tick 0、ダッシュは満タン |
+| `idle` の一歩 | tick が 1、位置はそのまま |
+| 右へ 5 歩を二度 | 状態列が一致し、x が増える |
+| 左と右 | 状態列が分かれる |
+| 1 セルの壁へダッシュ | 体が固体に重ならない |
+| 棘 | チェックポイントへ戻り、ダッシュは満タン |
+| 空中でダッシュを使い、着地 | ダッシュが戻る |
+| 左の壁を蹴る | 右かつ上へ離れる |
+| 著者の部屋を右へ跳び続ける | 登頂。同じ入力列の `Replay` も登頂 |
+| 画面 | 人、固体、棘、頂上。登頂後の案内に「頂上」 |
+| 矢印と a d w s、space、k、q | 対応する Press。未知のキーは空 |
+
+## 端末の起動
+
+`eng/play_session.py` が debug の `nene-summit` を PTY で起動し、出力のあと `q` を送り、終了コード 0 を見る。
+終了後の termios 復元とリサイズは見ていない。TERM-001 は planned のまま。
 
 ## 実行記録
 
@@ -97,3 +108,12 @@ unittest 35 件、conformance 0 件、整形と lint は違反 0、debug / relea
 Swift Testing は debug と release で 14 件ずつ成功。モジュール名の 2 件と、部屋の拒否、初期状態、tick、同じ入力列、向きの分岐を含む。
 この実行のとき変更はまだコミット前で、`origin/main..HEAD` は 0 件だった。
 XCTest の空スイートは、前の記録と同じく 0 件で表示される。重力、衝突、復帰は未実行。
+
+2026-11-01、人が一部屋を登る作業木で `make check` は成功した。
+unittest 35 件、conformance 0 件、整形と lint は違反 0、debug / release の build は成功。
+Swift Testing は debug と release で 24 件ずつ成功。モジュール名、部屋の拒否、初期状態、同じ入力列、
+壁で止まるダッシュ、棘からの復帰、着地での回復、壁蹴り、著者の部屋の登頂、画面、キーを含む。
+XCTest の空スイートは 0 件で表示される。製品もテストも `import XCTest` はしていない。
+`eng/play_session.py` は debug の `nene-summit` を PTY で起動し、出力のあと `q` で終了コード 0 だった。
+復元とリサイズは未実行。この実行のとき変更はまだコミット前で、`origin/main..HEAD` は 0 件だった。
+CI はこの作業木では実行していない。

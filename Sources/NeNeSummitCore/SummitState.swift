@@ -1,45 +1,53 @@
-struct SummitState: Equatable, Sendable {
-    let room: Room
-    let position: CellPoint
-    let facing: Direction
-    let tick: Tick
+public struct SummitState: Equatable, Sendable {
+    public let room: Room
+    let kinematics: Kinematics
+    public let action: Action
+    public let progress: Progress
 
-    private init(room: Room, position: CellPoint, facing: Direction, tick: Tick) {
+    private init(room: Room, kinematics: Kinematics, action: Action, progress: Progress) {
         self.room = room
-        self.position = position
-        self.facing = facing
-        self.tick = tick
+        self.kinematics = kinematics
+        self.action = action
+        self.progress = progress
     }
 
-    static func begin(in room: Room) -> SummitState {
-        SummitState(room: room, position: room.spawn, facing: .up, tick: .zero)
+    public func portrait() -> CellPoint {
+        let place = kinematics.place
+        let x = (place.x + MotionPolicy.bodyWidth / 2) / MotionPolicy.scale
+        let y = (place.y + MotionPolicy.bodyHeight / 2) / MotionPolicy.scale
+        return CellPoint(x: x, y: y)
     }
 
-    func advance(input: Input) -> StepOutcome {
+    var foot: CellPoint {
+        CellPoint(
+            x: kinematics.place.x / MotionPolicy.scale,
+            y: kinematics.place.y / MotionPolicy.scale
+        )
+    }
+
+    public static func begin(in room: Room) -> SummitState {
+        let place = Place(x: room.spawn.x * MotionPolicy.scale, y: room.spawn.y * MotionPolicy.scale)
+        let kinematics = Kinematics(place: place, velocity: .still)
+        let action = Action(facing: .right, phase: .grounded, dashTicks: 0, charges: .full)
+        let progress = Progress(checkpoint: room.spawn, expedition: .climbing, tick: .zero)
+        return SummitState(room: room, kinematics: kinematics, action: action, progress: progress)
+    }
+
+    public func advance(input: Input) -> StepOutcome {
+        let progress = progress.ticked()
+        if self.progress.expedition == .summited {
+            let frozen = SummitState(room: room, kinematics: kinematics.stopped(), action: action, progress: progress)
+            return StepOutcome(state: frozen, events: [.tick])
+        }
+        let wish = Wish.apply(self, input: input)
+        let slide = Collider.slide(place: wish.kinematics.place, velocity: wish.kinematics.velocity, room: room)
+        let resolved = Settlement.resolve(start: self, wish: wish, slide: slide, progress: progress)
         let next = SummitState(
             room: room,
-            position: position,
-            facing: facing(after: input),
-            tick: tick.advanced()
+            kinematics: resolved.kinematics,
+            action: resolved.action,
+            progress: resolved.progress
         )
-        return StepOutcome(state: next, events: events(for: input))
-    }
-
-    private func facing(after input: Input) -> Direction {
-        switch input {
-        case .idle:
-            return facing
-        case .face(let direction):
-            return direction
-        }
-    }
-
-    private func events(for input: Input) -> [StepEvent] {
-        switch input {
-        case .idle:
-            return [.tick]
-        case .face(let direction):
-            return [.tick, .faced(direction)]
-        }
+        return StepOutcome(state: next, events: [.tick] + resolved.events)
     }
 }

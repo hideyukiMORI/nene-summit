@@ -1,36 +1,63 @@
-struct Room: Equatable, Sendable {
+public struct Room: Equatable, Sendable {
     enum Rejection: Error, Equatable, Sendable {
         case widthNotPositive
         case heightNotPositive
         case spawnOutside
+        case cellCount
+        case spawnBlocked
     }
 
     let id: RoomId
-    let width: Int
-    let height: Int
+    public let width: Int
+    public let height: Int
     let spawn: CellPoint
+    let cells: [CellKind]
 
-    private init(id: RoomId, width: Int, height: Int, spawn: CellPoint) {
-        self.id = id
-        self.width = width
-        self.height = height
-        self.spawn = spawn
+    private init(spec: RoomSpec) {
+        id = spec.id
+        width = spec.grid.width
+        height = spec.grid.height
+        spawn = spec.spawn
+        cells = spec.grid.cells
     }
 
-    static func make(id: RoomId, width: Int, height: Int, spawn: CellPoint) -> Result<Room, Rejection> {
-        if width <= 0 {
+    static func make(_ spec: RoomSpec) -> Result<Room, Rejection> {
+        if spec.grid.width <= 0 {
             return .failure(.widthNotPositive)
         }
-        if height <= 0 {
+        if spec.grid.height <= 0 {
             return .failure(.heightNotPositive)
         }
-        if !contains(width: width, height: height, point: spawn) {
+        if !contains(spec.spawn, width: spec.grid.width, height: spec.grid.height) {
             return .failure(.spawnOutside)
         }
-        return .success(Room(id: id, width: width, height: height, spawn: spawn))
+        if spec.grid.cells.count != spec.grid.width * spec.grid.height {
+            return .failure(.cellCount)
+        }
+        if blocked(spec) {
+            return .failure(.spawnBlocked)
+        }
+        return .success(Room(spec: spec))
     }
 
-    private static func contains(width: Int, height: Int, point: CellPoint) -> Bool {
+    public func kind(x: Int, y: Int) -> CellKind {
+        if x < 0 || y < 0 || x >= width || y >= height {
+            return .solid
+        }
+        return cells[y * width + x]
+    }
+
+    private static func contains(_ point: CellPoint, width: Int, height: Int) -> Bool {
         point.x >= 0 && point.x < width && point.y >= 0 && point.y < height
+    }
+
+    private static func blocked(_ spec: RoomSpec) -> Bool {
+        let kind = spec.grid.cells[spec.spawn.y * spec.grid.width + spec.spawn.x]
+        switch kind {
+        case .open, .checkpoint:
+            return false
+        case .solid, .spike, .summit:
+            return true
+        }
     }
 }

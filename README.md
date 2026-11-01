@@ -2,7 +2,7 @@
 
 An autonomous mountain-climbing platformer for your terminal.
 
-**Toolchain and a minimal Core module are in the tree. No playable climb or release exists yet.**
+**One room is playable in the terminal. There is no installer or release yet.**
 
 [日本語](README.ja.md) · [Documentation](docs/README.md) · [Cursor handoff](docs/CURSOR_HANDOFF.md)
 
@@ -20,12 +20,16 @@ Open this repository root in Cursor. Read [AGENTS.md](AGENTS.md), then
 ```sh
 make bootstrap
 make check
+swift run nene-summit
 ```
 
 These commands need Git, Make, Python 3.10+, and the Swift toolchain named in `.swift-version`.
 `make check` checks documents, commit messages, conformance, formatting, and lint,
-then builds and tests Core in debug and release.
-Passing it does not mean the climb exists. Format and lint configurations stay strict.
+then builds and tests in debug and release, and starts the game in a PTY until `q`.
+Format and lint configurations stay strict.
+
+Move with the arrow keys or `a` / `d`. `w` and `s` aim up and down.
+`space` jumps, `k` dashes, `q` quits. The numbers live in `MotionPolicy` as a design choice.
 
 ## Project policies
 
