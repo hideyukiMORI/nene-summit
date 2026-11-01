@@ -14,8 +14,8 @@ enum Scenery {
             var viewX = 0
             while viewX < Stage.fieldCellsX {
                 let sight = Sight(state: state, origin: origin, viewX: viewX, viewY: viewY)
-                if let tone = tone(sight) {
-                    lay(&sheet, viewX: viewX, viewY: viewY, tone: tone)
+                if let layer = layer(sight) {
+                    lay(&sheet, viewX: viewX, viewY: viewY, layer: layer)
                 }
                 viewX += 1
             }
@@ -23,7 +23,13 @@ enum Scenery {
         }
     }
 
-    static func tone(_ sight: Sight) -> Glyph.Tone? {
+    enum Layer {
+        case ridge
+        case chip
+        case spark
+    }
+
+    static func layer(_ sight: Sight) -> Layer? {
         let roomX = sight.origin.x + sight.viewX
         let roomY = sight.origin.y + Stage.fieldCellsY - 1 - sight.viewY
         if !open(sight.state, x: roomX, y: roomY) {
@@ -35,7 +41,7 @@ enum Scenery {
         }
         if !void(sight.state, x: roomX, y: roomY) && chip(viewX: sight.viewX, viewY: sight.viewY, origin: sight.origin)
         {
-            return .ridge
+            return .chip
         }
         if spark(viewX: sight.viewX, viewY: sight.viewY, origin: sight.origin, tick: sight.state.elapsed()) {
             return .spark
@@ -43,13 +49,19 @@ enum Scenery {
         return nil
     }
 
-    static func lay(_ sheet: inout Sheet, viewX: Int, viewY: Int, tone: Glyph.Tone) {
-        if tone == .spark {
-            let column = Stage.fieldColumn + viewX * Stage.cellSpan
-            sheet.stamp(Stage.fieldRow + viewY, column, ".", tone)
-            return
+    static func lay(_ sheet: inout Sheet, viewX: Int, viewY: Int, layer: Layer) {
+        FieldView.block(&sheet, row: Stage.fieldRow + viewY, viewX: viewX, stamp: stamp(layer))
+    }
+
+    static func stamp(_ layer: Layer) -> CellStamp {
+        switch layer {
+        case .ridge:
+            return CellStamp(text: CellMark.ridge, tone: .ridge)
+        case .chip:
+            return CellStamp(text: CellMark.chip, tone: .ridge)
+        case .spark:
+            return CellStamp(text: ". ", tone: .spark)
         }
-        FieldView.block(&sheet, row: Stage.fieldRow + viewY, viewX: viewX, tone: tone)
     }
 
     static func ridge(viewX: Int, viewY: Int, origin: CellPoint) -> Bool {

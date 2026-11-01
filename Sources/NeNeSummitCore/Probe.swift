@@ -10,6 +10,7 @@ enum Probe {
         var summit = false
         var spring = false
         var gleam: CellPoint?
+        var coin: CellPoint?
         var checkpoint: CellPoint?
     }
 
@@ -57,6 +58,10 @@ enum Probe {
             }
             y += 1
         }
+        return ranked(found)
+    }
+
+    static func ranked(_ found: Found) -> Contact {
         if found.summit {
             return .summit
         }
@@ -65,6 +70,9 @@ enum Probe {
         }
         if let cell = found.gleam {
             return .gleam(cell)
+        }
+        if let cell = found.coin {
+            return .coin(cell)
         }
         if let cell = found.checkpoint {
             return .checkpoint(cell)
@@ -92,6 +100,8 @@ enum Probe {
             found.spring = true
         case .gleam:
             found.gleam = CellPoint(x: x, y: y)
+        case .coin:
+            found.coin = CellPoint(x: x, y: y)
         case .open, .solid:
             break
         }

@@ -35,7 +35,8 @@ enum FieldView {
         if viewX < 0 || viewX >= Stage.fieldCellsX || viewY < 0 || viewY >= Stage.fieldCellsY {
             return
         }
-        block(&sheet, row: Stage.fieldRow + viewY, viewX: viewX, tone: .stone)
+        let stamp = CellStamp(text: CellMark.stone(capped: true), tone: .stone)
+        block(&sheet, row: Stage.fieldRow + viewY, viewX: viewX, stamp: stamp)
     }
 
     static func paintRow(_ sheet: inout Sheet, state: SummitState, origin: CellPoint, viewY: Int) {
@@ -43,51 +44,65 @@ enum FieldView {
         let screenY = Stage.fieldRow + viewY
         var viewX = 0
         while viewX < Stage.fieldCellsX {
-            let tone = tone(state, x: origin.x + viewX, y: roomY)
-            block(&sheet, row: screenY, viewX: viewX, tone: tone)
+            let stamp = mark(state, x: origin.x + viewX, y: roomY)
+            block(&sheet, row: screenY, viewX: viewX, stamp: stamp)
             viewX += 1
         }
     }
 
-    static func tone(_ state: SummitState, x: Int, y: Int) -> Glyph.Tone {
+    static func mark(_ state: SummitState, x: Int, y: Int) -> CellStamp {
         if y < 0 || y >= state.room.height || x < 0 || x >= state.room.width {
-            return .sky
+            return CellStamp(text: CellMark.sky, tone: .sky)
         }
         let here = state.portrait()
         if here.x == x && here.y == y {
-            return .climber
+            return CellStamp(text: CellMark.climber(state.action.phase), tone: .climber)
         }
         if state.gathered(x: x, y: y) {
-            return .sky
+            return CellStamp(text: CellMark.sky, tone: .sky)
         }
-        return face(state.room.kind(x: x, y: y))
+        return face(state, x: x, y: y)
     }
 
-    static func face(_ kind: CellKind) -> Glyph.Tone {
-        switch kind {
+    static func face(_ state: SummitState, x: Int, y: Int) -> CellStamp {
+        switch state.room.kind(x: x, y: y) {
         case .open:
-            return .sky
+            return CellStamp(text: CellMark.sky, tone: .sky)
         case .solid:
-            return .stone
+            return CellStamp(text: CellMark.stone(capped: capped(state, x: x, y: y)), tone: .stone)
         case .spike:
-            return .hazard
+            return CellStamp(text: CellMark.spike, tone: .hazard)
         case .checkpoint:
-            return .flag
+            return CellStamp(text: CellMark.flag, tone: .flag)
         case .summit:
-            return .crest
+            return CellStamp(text: CellMark.crest, tone: .crest)
         case .spring:
-            return .spring
+            return CellStamp(text: CellMark.spring, tone: .spring)
         case .gleam:
-            return .gleam
+            return CellStamp(text: CellMark.berry, tone: .gleam)
+        case .coin:
+            return CellStamp(text: CellMark.coin, tone: .coin)
         }
     }
 
-    static func block(_ sheet: inout Sheet, row: Int, viewX: Int, tone: Glyph.Tone) {
-        let column = Stage.fieldColumn + viewX * Stage.cellSpan
-        var span = 0
-        while span < Stage.cellSpan {
-            sheet.fill(row, column + span, tone)
-            span += 1
+    static func capped(_ state: SummitState, x: Int, y: Int) -> Bool {
+        let above = y + 1
+        if above >= state.room.height {
+            return true
         }
+        return state.room.kind(x: x, y: above) != .solid
+    }
+
+    static func block(_ sheet: inout Sheet, row: Int, viewX: Int, stamp: CellStamp) {
+        let column = Stage.fieldColumn + viewX * Stage.cellSpan
+        if stamp.tone == .sky {
+            var span = 0
+            while span < Stage.cellSpan {
+                sheet.fill(row, column + span, .sky)
+                span += 1
+            }
+            return
+        }
+        sheet.stamp(row, column, stamp.text, stamp.tone)
     }
 }

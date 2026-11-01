@@ -20,6 +20,7 @@
 低い隙間は [ADR 0022](adr/0022-low-slot.md)。
 色面と右の欄は [ADR 0023](adr/0023-color-and-hud.md)。
 画面の枠と奥行きと拾う光は [ADR 0024](adr/0024-depth-and-gleam.md)。
+山の罫と拾うものは [ADR 0025](adr/0025-line-marks.md)。
 下の表は当初の区切りであり、P2 をゼロからやり直す指示ではない。
 
 | Phase | 成果 | 受け入れ条件 |

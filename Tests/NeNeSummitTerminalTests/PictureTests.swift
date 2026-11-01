@@ -26,6 +26,6 @@ import Testing
     let text = Picture.text(Frame(lines: lines))
     #expect(text.contains("\n") == false)
     #expect(text.contains("\u{001B}[24;1H"))
-    let marks = text.split(separator: "48;5;16m").count - 1
+    let marks = text.split(separator: "0;48;5;16m").count - 1
     #expect(marks == 24)
 }
