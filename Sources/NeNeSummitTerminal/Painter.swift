@@ -28,6 +28,8 @@ enum Painter {
             return fill(220)
         case .climber:
             return fill(214)
+        case .spring:
+            return fill(123)
         case .banner:
             return "\u{001B}[0;38;5;46m"
         case .mark:

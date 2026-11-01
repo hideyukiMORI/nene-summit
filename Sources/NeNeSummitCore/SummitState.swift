@@ -37,6 +37,10 @@ public struct SummitState: Equatable, Sendable {
         )
     }
 
+    func riding(_ place: Place) -> SummitState {
+        SummitState(room: room, kinematics: kinematics.at(place), action: action, progress: progress)
+    }
+
     public static func begin(in room: Room) -> SummitState {
         let place = Place(x: room.spawn.x * MotionPolicy.scale, y: room.spawn.y * MotionPolicy.scale)
         let kinematics = Kinematics(place: place, velocity: .still)
@@ -51,8 +55,11 @@ public struct SummitState: Equatable, Sendable {
             let frozen = SummitState(room: room, kinematics: kinematics.stopped(), action: action, progress: progress)
             return StepOutcome(state: frozen, events: [.tick])
         }
-        let wish = Wish.apply(self, input: input)
-        let slide = Collider.slide(place: wish.kinematics.place, velocity: wish.kinematics.velocity, room: room)
+        let place = DeckField.ride(
+            kinematics.place, room: room, from: self.progress.tick.count, to: progress.tick.count)
+        let wish = Wish.apply(riding(place), input: input)
+        let matter = Matter(room: room, tick: progress.tick.count)
+        let slide = Collider.slide(place: wish.kinematics.place, velocity: wish.kinematics.velocity, matter: matter)
         let resolved = Settlement.resolve(start: self, wish: wish, slide: slide, progress: progress)
         let next = SummitState(
             room: room,

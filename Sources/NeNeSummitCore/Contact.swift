@@ -3,4 +3,5 @@ enum Contact: Equatable, Sendable {
     case spike
     case checkpoint(CellPoint)
     case summit
+    case spring
 }

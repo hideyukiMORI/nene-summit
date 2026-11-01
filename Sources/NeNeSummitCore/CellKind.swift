@@ -4,4 +4,5 @@ public enum CellKind: Equatable, Sendable {
     case spike
     case checkpoint
     case summit
+    case spring
 }

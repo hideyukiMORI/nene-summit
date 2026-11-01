@@ -8,10 +8,15 @@ enum Probe {
 
     struct Found {
         var summit = false
+        var spring = false
         var checkpoint: CellPoint?
     }
 
     static func hitsSolid(place: Place, room: Room) -> Bool {
+        hitsSolid(place: place, matter: Matter(room: room, tick: 0))
+    }
+
+    static func hitsSolid(place: Place, matter: Matter) -> Bool {
         if place.x < 0 || place.y < 0 {
             return true
         }
@@ -20,7 +25,7 @@ enum Probe {
         while y <= span.y1 {
             var x = span.x0
             while x <= span.x1 {
-                if room.kind(x: x, y: y) == .solid {
+                if matter.kind(x: x, y: y) == .solid {
                     return true
                 }
                 x += 1
@@ -30,11 +35,11 @@ enum Probe {
         return false
     }
 
-    static func supported(place: Place, room: Room) -> Bool {
-        hitsSolid(place: place.moved(x: 0, y: -1), room: room)
+    static func supported(place: Place, matter: Matter) -> Bool {
+        hitsSolid(place: place.moved(x: 0, y: -1), matter: matter)
     }
 
-    static func contact(place: Place, room: Room) -> Contact {
+    static func contact(place: Place, matter: Matter) -> Contact {
         if place.x < 0 || place.y < 0 {
             return .none
         }
@@ -44,7 +49,7 @@ enum Probe {
         while y <= span.y1 {
             var x = span.x0
             while x <= span.x1 {
-                if note(room.kind(x: x, y: y), x: x, y: y, found: &found) {
+                if note(matter.kind(x: x, y: y), x: x, y: y, found: &found) {
                     return .spike
                 }
                 x += 1
@@ -53,6 +58,9 @@ enum Probe {
         }
         if found.summit {
             return .summit
+        }
+        if found.spring {
+            return .spring
         }
         if let cell = found.checkpoint {
             return .checkpoint(cell)
@@ -76,6 +84,8 @@ enum Probe {
             found.summit = true
         case .checkpoint:
             found.checkpoint = CellPoint(x: x, y: y)
+        case .spring:
+            found.spring = true
         case .open, .solid:
             break
         }

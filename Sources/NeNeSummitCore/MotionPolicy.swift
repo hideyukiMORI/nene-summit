@@ -18,4 +18,8 @@ enum MotionPolicy {
     static let substep = 64
     static let maxSubsteps = 16
     static let maxCharges = 1
+    static let springSpeed = 400
+    static let deckReach = 8
+    static let deckTravel = 40
+    static let deckDwell = 40
 }

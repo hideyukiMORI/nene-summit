@@ -54,7 +54,7 @@ enum Cue: Equatable, Sendable {
             return .fall
         case .summited:
             return .crest
-        case .tick, .faced, .returned:
+        case .tick, .faced, .returned, .sprung:
             return nil
         }
     }
