@@ -1,6 +1,7 @@
 # プロジェクト構成
 
 いま `Package.swift` にある製品 target は NeNeSummitCore だけである。テストは NeNeSummitCoreTests。
+Core はモジュール名に加え、一部屋、初期位置、Input、State、Event、固定 tick の `advance` を持つ。移動はまだ無い。
 以下の残りは実装予定で、target はまだ無い。
 
 | Target | 責務 | 直接依存 |

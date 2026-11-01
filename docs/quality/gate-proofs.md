@@ -57,6 +57,22 @@
 | 製品の Swift ソースを swift-format に渡す | 成功 |
 | 未使用の `let` を、製品と同じ manifest 設定で `swift build` | 失敗。使用する関数だけにすると成功 |
 
+## 一部屋の状態
+
+正例と反例は `Tests/NeNeSummitCoreTests` の RoomId、Room、SummitState。
+
+| ケース | 期待 |
+| --- | --- |
+| 空でない部屋名 | 成功 |
+| 空の部屋名 | `RoomId` が拒否 |
+| 幅 3 高さ 2、初期位置 (2, 1) | 成功 |
+| 幅 0、負の高さ、幅ちょうどの位置、負の位置 | `Room` が拒否 |
+| 開始状態 | 初期位置、上向き、tick 0 |
+| `idle` の一歩 | tick が 1、位置はそのまま、出来事は `.tick` |
+| `face(.left)` | 向きが左、出来事は `.tick` のあと `.faced` |
+| 同じ入力列を二度 | 状態列が一致。tick は 0 から入力の本数まで。位置は初期位置のまま |
+| `face(.left)` と `face(.right)` | 状態列が分かれ、最後の向きがそれぞれの方向 |
+
 ## 実行記録
 
 2026-11-01、この作業木で `make check` は成功した。
@@ -75,3 +91,9 @@
 `~/.cache/swift-toolchain/swift-6.4.1-RELEASE-ubuntu24.04.tar.gz` の SHA-256 は `eng/swift.lock` と一致した。
 CI の `eng/install-swift.sh` はこの作業木では実行していない。GitHub Actions も実行していない。
 ゲームの再生、PTY、物理の不変条件は未実行。
+
+2026-11-01、一部屋の `advance` を足した作業木で `make check` は再び成功した。
+unittest 35 件、conformance 0 件、整形と lint は違反 0、debug / release の build は成功。
+Swift Testing は debug と release で 14 件ずつ成功。モジュール名の 2 件と、部屋の拒否、初期状態、tick、同じ入力列、向きの分岐を含む。
+この実行のとき変更はまだコミット前で、`origin/main..HEAD` は 0 件だった。
+XCTest の空スイートは、前の記録と同じく 0 件で表示される。重力、衝突、復帰は未実行。

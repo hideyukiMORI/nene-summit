@@ -12,20 +12,22 @@
   最小 target は NeNeSummitCore。`make check` は文書、GIT-003、conformance、整形、lint、
   debug / release build、Swift Testing を実行する。
 - 文書検査が Swift ソースを拒む制限は外し、同じ `make check` の製品ゲートへ置き換えた。
+- P1 の一部屋。判断は [ADR 0004](../adr/0004-one-room-step.md)。
+  `RoomId` と `Room` が不正な部屋を拒み、`SummitState.advance` が tick を 1 進める。
+  同じ入力列は `Replay.states` で同じ状態列になる。位置は初期位置のまま。
 
-実行の成否は [gate-proofs](../quality/gate-proofs.md)。この一覧は、コマンドが何を見るかを書く。
+実行の成否は [gate-proofs](../quality/gate-proofs.md)。
 
 ## 未着手
 
-P1〜P5。Core の状態遷移、一部屋、物理、端末、自律登山、配布。
+P2〜P5。重力、走る、跳ぶ、壁蹴り、ダッシュ、棘、チェックポイント、端末、自律登山、配布。
 target 同士の依存グラフを表と照合する検査。
-Issue、作業ブランチ、PR。この変更はまだコミットしていない。
+tick と秒の対応、固定小数点の倍率。
 
 ## 次の作業
 
-[APPROACH](../APPROACH.md) の P1。
-受け入れ条件: Core の Input / State / Event、部屋と初期位置、固定 tick。
-同じ入力列で同じ状態列。不正な部屋は検証済みの結果型で拒む。
-P1 の成功を、遊べるゲームや P2 の物理の証明と呼ばない。
+[APPROACH](../APPROACH.md) の P2。
+受け入れ条件: 高速衝突、角、消費と回復、死亡復帰の不変条件。倍率・tick・速度は ADR に固定する。
+P2 の成功を、端末で遊べることや AI の証明と呼ばない。
 
 レビューのままの SWF は [QUALITY_GATES](../QUALITY_GATES.md)。機械検査が無いものを active にしない。
