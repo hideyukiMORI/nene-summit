@@ -27,7 +27,7 @@ public struct Watch: Equatable, Sendable {
             return Watch(state: state, spent: 0, rest: rest)
         }
         if human != .idle || rest + 1 >= Watch.pause {
-            return Watch.begin(in: state.room)
+            return Watch.begin(in: Trail.after(state.room))
         }
         return Watch(state: state, spent: 0, rest: rest + 1)
     }

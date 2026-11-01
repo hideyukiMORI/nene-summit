@@ -146,6 +146,35 @@ import Testing
     #expect(rise <= MotionPolicy.bodyHeight * 4)
 }
 
+@Test func theTrailContinuesAndAsideStays() {
+    let first = Trail.opening()
+    #expect(first.ascent == .first)
+    let second = Trail.after(first)
+    #expect(second.ascent == .second)
+    #expect(Trail.after(second).ascent == .first)
+    let aside = chamber(
+        width: 4,
+        height: 3,
+        spawn: CellPoint(x: 1, y: 1),
+        cells: floorCells(width: 4, height: 3)
+    )
+    let stayed = Trail.after(aside)
+    #expect(stayed.ascent == .aside)
+    #expect(stayed.width == aside.width)
+}
+
+@Test func theSecondPitchCrossesBeforeTheMark() {
+    let room = SecondPitch.make()
+    let checkpoint = find(room, .checkpoint)
+    let spike = find(room, .spike)
+    let summit = find(room, .summit)
+    #expect(room.height < FirstAscent.make().height)
+    #expect(checkpoint.x > firstGap(room))
+    #expect(checkpoint.x < spike.x)
+    #expect(summit.y > spike.y)
+    #expect(pitWidth(room) >= 3)
+}
+
 @Test func theAuthoredRoomTeachesOneScreen() {
     let room = FirstAscent.make()
     let checkpoint = find(room, .checkpoint)
@@ -184,6 +213,17 @@ private func find(_ room: Room, _ kind: CellKind) -> CellPoint {
     preconditionFailure("印が無い")
 }
 
+private func firstGap(_ room: Room) -> Int {
+    var x = 0
+    while x < room.width {
+        if room.kind(x: x, y: 0) != .solid {
+            return x
+        }
+        x += 1
+    }
+    preconditionFailure("隙間が無い")
+}
+
 private func pitWidth(_ room: Room) -> Int {
     var best = 0
     var run = 0
@@ -204,7 +244,7 @@ private func chamber(width: Int, height: Int, spawn: CellPoint, cells: [CellKind
     switch RoomId.make(value: "chamber") {
     case .success(let id):
         let grid = RoomGrid(width: width, height: height, cells: cells)
-        switch Room.make(RoomSpec(id: id, spawn: spawn, grid: grid)) {
+        switch Room.make(RoomSpec(id: id, spawn: spawn, grid: grid, ascent: .aside)) {
         case .success(let room):
             return room
         case .failure:

@@ -18,7 +18,7 @@ struct SummitApp {
         defer {
             session.close()
         }
-        var watch = Watch.begin(in: FirstAscent.make())
+        var watch = Watch.begin(in: Trail.opening())
         var keys = HeldPresses()
         var chord = PlayChord()
         var attendance = Attendance.automatic
