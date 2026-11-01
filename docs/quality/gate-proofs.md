@@ -292,3 +292,12 @@ XCTest の空スイートは 0 件で、テスト target の数だけ表示さ�
 復元とリサイズは未実行。実機でばねと床の感触は未計測。
 この実行のとき変更はまだコミット前で、`origin/main..HEAD` は 0 件だった。
 CI はこの作業木では実行していない。
+
+2026-11-01、絵は足さずロジックだけ取り込む方針を書いた作業木で `make check` は成功した。
+unittest 35 件、conformance 0 件、整形と lint は違反 0、debug / release の build は成功。
+Swift Testing は debug と release で 73 件ずつ成功。内訳は端末 15、描画 7、案内 14、Core 37。
+製品コードは増えていない。これまでの 73 件のまま。
+XCTest の空スイートは 0 件で、テスト target の数だけ表示される。
+`eng/play_session.py` は debug の `nene-summit` を PTY で起動し、出力のあと `q` で終了コード 0 だった。
+この実行のとき変更はまだコミット前で、`origin/main..HEAD` は 0 件だった。
+CI はこの作業木では実行していない。
