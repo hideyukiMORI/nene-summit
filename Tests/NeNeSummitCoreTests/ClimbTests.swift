@@ -90,7 +90,10 @@ import Testing
     let leap = Input(horizontal: .right, vertical: .none, jump: .pressed, dash: .off)
     var state = SummitState.begin(in: room).advance(input: leap).state
     #expect(state.kinematics.velocity.x == MotionPolicy.runSpeed)
+    #expect(state.paceX() == MotionPolicy.runSpeed)
     #expect(state.kinematics.velocity.y == MotionPolicy.jumpSpeed)
+    #expect(state.paceY() == MotionPolicy.jumpSpeed)
+    #expect(state.elapsed() == 1)
     let cut = Input(horizontal: .right, vertical: .none, jump: .released, dash: .off)
     state = state.advance(input: cut).state
     #expect(state.kinematics.velocity.y == MotionPolicy.jumpCut)

@@ -23,20 +23,34 @@ struct SummitApp {
         var chord = PlayChord()
         var attendance = Attendance.automatic
         var modeDown = false
+        var trace = PlayTrace.open()
+        defer {
+            trace?.close()
+        }
         let moment = Moment()
         while true {
-            let strokes = session.poll()
-            if strokes.contains(where: quits) {
-                break
-            }
+            let arrival = session.poll()
             let now = moment.milliseconds()
-            for stroke in strokes {
+            for stroke in arrival.strokes {
                 keys.apply(stroke, at: now)
             }
             let presses = keys.take(at: now)
             attendance = flipped(attendance, presses: presses, wasDown: &modeDown)
             let human = chord.make(HeldBits.play(presses))
+            let before = watch.state
             watch = watch.advance(human: human, attendance: attendance)
+            let sample = TraceSample(
+                now: now,
+                keys: TraceKeys(arrival: arrival, presses: presses, human: human, attendance: attendance),
+                before: before,
+                after: watch.state
+            )
+            if let line = sample.line() {
+                trace?.write(line)
+            }
+            if arrival.strokes.contains(where: quits) {
+                break
+            }
             session.present(Canvas.draw(watch.state, attendance: attendance))
             session.wait(milliseconds: 16)
         }

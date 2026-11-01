@@ -38,14 +38,15 @@ public struct TerminalSession {
         _ = fcntl(STDIN_FILENO, F_SETFL, flags)
     }
 
-    public mutating func poll() -> [Stroke] {
-        pending.append(contentsOf: readChunk())
+    public mutating func poll() -> Arrival {
+        let bytes = readChunk()
+        pending.append(contentsOf: bytes)
         trimPending()
         let read = StrokeParser.parse(pending)
         if read.consumed > 0 {
             pending.removeFirst(read.consumed)
         }
-        return read.strokes
+        return Arrival(bytes: bytes, strokes: read.strokes)
     }
 
     public func present(_ frame: Frame) {
