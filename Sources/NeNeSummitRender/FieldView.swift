@@ -75,7 +75,7 @@ enum FieldView {
         case .checkpoint:
             return CellStamp(text: CellMark.flag, tone: .flag)
         case .summit:
-            return CellStamp(text: CellMark.crest, tone: .crest)
+            return CellStamp(text: crest(state, x: x, y: y), tone: .crest)
         case .spring:
             return CellStamp(text: CellMark.spring, tone: .spring)
         case .gleam:
@@ -83,6 +83,35 @@ enum FieldView {
         case .coin:
             return CellStamp(text: CellMark.coin, tone: .coin)
         }
+    }
+
+    static func crest(_ state: SummitState, x: Int, y: Int) -> String {
+        if pennant(state, x: x, y: y) {
+            return CellMark.crest
+        }
+        return "--"
+    }
+
+    static func pennant(_ state: SummitState, x: Int, y: Int) -> Bool {
+        let start = bound(state, x: x, y: y, step: -1)
+        let end = bound(state, x: x, y: y, step: 1)
+        let count = end - start + 1
+        return x == start + count / 2
+    }
+
+    static func bound(_ state: SummitState, x: Int, y: Int, step: Int) -> Int {
+        var cursor = x
+        while summit(state, x: cursor + step, y: y) {
+            cursor += step
+        }
+        return cursor
+    }
+
+    static func summit(_ state: SummitState, x: Int, y: Int) -> Bool {
+        if x < 0 || y < 0 || x >= state.room.width || y >= state.room.height {
+            return false
+        }
+        return state.room.kind(x: x, y: y) == .summit
     }
 
     static func capped(_ state: SummitState, x: Int, y: Int) -> Bool {

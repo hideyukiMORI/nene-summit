@@ -9,7 +9,6 @@ enum CellMark {
     static let berry = "*'"
     static let coin = "(o"
     static let cloud = "~~"
-    static let frost = "* "
     static let spark = ". "
 
     static func stone(capped: Bool) -> String {
@@ -35,12 +34,12 @@ enum CellMark {
     static func slope(_ far: Int) -> String {
         let local = positive(far) % 8
         if local == 4 {
-            return "/\\"
+            return "~~"
         }
         if local < 4 {
-            return "/ "
+            return "//"
         }
-        return "\\ "
+        return "\\\\"
     }
 
     static func positive(_ value: Int) -> Int {

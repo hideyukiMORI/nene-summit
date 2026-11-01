@@ -27,7 +27,8 @@
 | [0023](0023-color-and-hud.md) | accepted | 色面を整え、右の欄を段で組む。箱線も得点も足さない |
 | [0024](0024-depth-and-gleam.md) | accepted | 画面に枠と奥行きと、拾う光を足す。山の字形は 0025 |
 | [0025](0025-line-marks.md) | accepted | 山は罫で描き、拾うものに字形を付ける。雪山の絵は 0026 |
-| [0026](0026-ice-vista.md) | accepted | 奥は雲と稜線、手前は雪 |
+| [0026](0026-ice-vista.md) | accepted | 奥は雲と稜線、手前は雪。旗一本は 0027 |
+| [0027](0027-one-pennant.md) | accepted | 頂は一本の旗、奥の雲は輪郭 |
 
 [テンプレート](0000-template.md) を複製し、連番と内容を表す名前を付ける。
 状態: proposed / accepted / superseded。accepted は記録した技術判断の採用であり、施主の発言を意味しない。

@@ -24,7 +24,8 @@ enum Scenery {
     }
 
     enum Layer {
-        case cloud
+        case cloud(String)
+        case hem(String)
         case peak(String)
         case drift
         case frost
@@ -45,11 +46,14 @@ enum Scenery {
 
     static func far(_ sight: Sight) -> Layer? {
         if cloud(viewX: sight.viewX, viewY: sight.viewY, origin: sight.origin) {
-            return .cloud
+            return puff(sight)
         }
         if ridge(viewX: sight.viewX, viewY: sight.viewY, origin: sight.origin) {
             let far = sight.origin.x / 3 + sight.viewX
             return .peak(CellMark.slope(far))
+        }
+        if foot(viewX: sight.viewX, viewY: sight.viewY, origin: sight.origin) {
+            return .peak("\\\\")
         }
         if drift(viewX: sight.viewX, viewY: sight.viewY, origin: sight.origin) {
             return .drift
@@ -76,29 +80,60 @@ enum Scenery {
 
     static func stamp(_ layer: Layer) -> CellStamp {
         switch layer {
-        case .cloud:
-            return CellStamp(text: CellMark.cloud, tone: .cloud)
+        case .cloud(let text):
+            return CellStamp(text: text, tone: .cloud)
+        case .hem(let text):
+            return CellStamp(text: text, tone: .mist)
         case .peak(let text):
             return CellStamp(text: text, tone: .ridge)
         case .drift:
             return CellStamp(text: CellMark.cloud, tone: .mist)
         case .frost:
-            return CellStamp(text: CellMark.frost, tone: .spark)
+            return CellStamp(text: ", ", tone: .spark)
         case .spark:
             return CellStamp(text: CellMark.spark, tone: .spark)
         }
+    }
+
+    static func puff(_ sight: Sight) -> Layer {
+        let local = positive(sight.origin.x / 5 + sight.viewX) % 12
+        let text = cloudText(viewY: sight.viewY, local: local)
+        if sight.viewY == 3 {
+            return .hem(text)
+        }
+        return .cloud(text)
+    }
+
+    static func cloudText(viewY: Int, local: Int) -> String {
+        if viewY == 1 {
+            return local == 1 ? ".-" : "-."
+        }
+        if viewY == 2 {
+            return local == 0 ? " (" : ") "
+        }
+        return local == 1 ? "`-" : "-'"
     }
 
     static func cloud(viewX: Int, viewY: Int, origin: CellPoint) -> Bool {
         if viewY < 1 || viewY > 3 {
             return false
         }
-        let far = origin.x / 5 + viewX
-        let local = positive(far) % 12
-        if viewY == 2 && local < 4 {
-            return true
+        let local = positive(origin.x / 5 + viewX) % 12
+        if viewY == 1 {
+            return local == 1 || local == 2
         }
-        return viewY == 3 && local > 0 && local < 3
+        if viewY == 2 {
+            return local == 0 || local == 3
+        }
+        return local == 1 || local == 2
+    }
+
+    static func foot(viewX: Int, viewY: Int, origin: CellPoint) -> Bool {
+        if viewY != 8 {
+            return false
+        }
+        let far = origin.x / 3 + viewX
+        return positive(far) % 8 == 7
     }
 
     static func ridge(viewX: Int, viewY: Int, origin: CellPoint) -> Bool {

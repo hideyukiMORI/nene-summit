@@ -130,6 +130,14 @@ import Testing
     #expect(Scenery.spark(viewX: 0, viewY: 0, origin: origin, tick: 16) == false)
 }
 
+@Test func onePennantStandsOnTheLip() {
+    let state = SummitState.begin(in: FirstAscent.make())
+    #expect(FieldView.mark(state, x: 28, y: 5).text == "--")
+    #expect(FieldView.mark(state, x: 30, y: 5).text == "|>")
+    #expect(FieldView.mark(state, x: 32, y: 5).text == "--")
+    #expect(FieldView.mark(state, x: 29, y: 5).tone == .crest)
+}
+
 private func letters(_ frame: Frame) -> String {
     String(frame.lines.flatMap { $0.map(\.symbol) })
 }
