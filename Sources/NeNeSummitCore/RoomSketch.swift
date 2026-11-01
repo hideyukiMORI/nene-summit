@@ -53,6 +53,13 @@ enum RoomSketch {
     }
 
     static func mark(_ character: Character) -> Mark {
+        if let ground = ground(character) {
+            return ground
+        }
+        return placed(character)
+    }
+
+    static func ground(_ character: Character) -> Mark? {
         switch character {
         case ".":
             return Mark(cell: .open, spawn: false)
@@ -60,6 +67,15 @@ enum RoomSketch {
             return Mark(cell: .solid, spawn: false)
         case "^":
             return Mark(cell: .spike, spawn: false)
+        case "o":
+            return Mark(cell: .gleam, spawn: false)
+        default:
+            return nil
+        }
+    }
+
+    static func placed(_ character: Character) -> Mark {
+        switch character {
         case "C":
             return Mark(cell: .checkpoint, spawn: false)
         case "S":

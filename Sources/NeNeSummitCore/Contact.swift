@@ -4,4 +4,5 @@ enum Contact: Equatable, Sendable {
     case checkpoint(CellPoint)
     case summit
     case spring
+    case gleam(CellPoint)
 }

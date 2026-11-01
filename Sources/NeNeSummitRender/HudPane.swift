@@ -15,10 +15,11 @@ enum HudPane {
         pair(&sheet, row: top + 4, label: "HOLD", value: hold(state.action.phase))
         pair(&sheet, row: top + 5, label: "ALT", value: String(state.portrait().y))
         dash(&sheet, state: state, row: top + 6)
-        sheet.stamp(top + 8, Stage.hudColumn, "--------", .quiet)
-        sheet.stamp(top + 9, Stage.hudColumn, "COMMS", .banner)
-        speaker(&sheet, note: note, row: top + 10)
-        noteRows(&sheet, note: note, row: top + 11)
+        pair(&sheet, row: top + 7, label: "GLEAM", value: String(state.finds()))
+        sheet.stamp(top + 9, Stage.hudColumn, "--------", .quiet)
+        sheet.stamp(top + 10, Stage.hudColumn, "COMMS", .banner)
+        speaker(&sheet, note: note, row: top + 11)
+        noteRows(&sheet, note: note, row: top + 12)
     }
 
     static func pair(_ sheet: inout Sheet, row: Int, label: String, value: String) {

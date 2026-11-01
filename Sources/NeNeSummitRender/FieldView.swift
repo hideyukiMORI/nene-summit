@@ -9,6 +9,7 @@ enum FieldView {
             paintRow(&sheet, state: state, origin: origin, viewY: viewY)
             viewY += 1
         }
+        Scenery.paint(&sheet, state: state, origin: origin)
         moving(&sheet, state: state, origin: origin)
     }
 
@@ -56,7 +57,14 @@ enum FieldView {
         if here.x == x && here.y == y {
             return .climber
         }
-        switch state.room.kind(x: x, y: y) {
+        if state.gathered(x: x, y: y) {
+            return .sky
+        }
+        return face(state.room.kind(x: x, y: y))
+    }
+
+    static func face(_ kind: CellKind) -> Glyph.Tone {
+        switch kind {
         case .open:
             return .sky
         case .solid:
@@ -69,6 +77,8 @@ enum FieldView {
             return .crest
         case .spring:
             return .spring
+        case .gleam:
+            return .gleam
         }
     }
 
