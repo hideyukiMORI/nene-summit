@@ -29,8 +29,14 @@ import Testing
     #expect(watch.state.progress.expedition == .climbing)
 }
 
-@Test func theLiftReturnsToTheFirstRoom() {
+@Test func theLiftOpensTheWell() {
     let watch = rest(climb(Watch.begin(in: LiftPitch.make())))
+    #expect(watch.state.room.ascent == .well)
+    #expect(watch.state.progress.expedition == .climbing)
+}
+
+@Test func theWellReturnsToTheFirstRoom() {
+    let watch = rest(climb(Watch.begin(in: WellPitch.make())))
     #expect(watch.state.room.ascent == .first)
     #expect(watch.state.progress.expedition == .climbing)
 }
@@ -42,6 +48,23 @@ import Testing
     #expect(raft.state.progress.expedition == .summited)
     let lift = climb(Watch.begin(in: LiftPitch.make()))
     #expect(lift.state.progress.expedition == .summited)
+    let well = climb(Watch.begin(in: WellPitch.make()))
+    #expect(well.state.progress.expedition == .summited)
+}
+
+@Test func theWellIsClimbedAlongTheWall() {
+    var watch = Watch.begin(in: WellPitch.make())
+    var along = false
+    var tick = 0
+    while tick < Watch.budget && watch.state.progress.expedition != .summited {
+        watch = watch.advance(human: .idle)
+        if case .wall = watch.state.action.phase {
+            along = true
+        }
+        tick += 1
+    }
+    #expect(along)
+    #expect(watch.state.progress.expedition == .summited)
 }
 
 @Test func aBlockedGuideStartsAgain() {

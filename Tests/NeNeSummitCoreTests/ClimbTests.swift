@@ -157,7 +157,9 @@ import Testing
     #expect(raft.ascent == .raft)
     let lift = Trail.after(raft)
     #expect(lift.ascent == .lift)
-    #expect(Trail.after(lift).ascent == .first)
+    let well = Trail.after(lift)
+    #expect(well.ascent == .well)
+    #expect(Trail.after(well).ascent == .first)
     let aside = chamber(
         width: 4,
         height: 3,

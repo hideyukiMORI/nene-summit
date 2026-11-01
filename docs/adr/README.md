@@ -21,7 +21,8 @@
 | [0017](0017-lookahead.md) | accepted | 案内は advance の複製で短く先を見る。本番の状態は消費しない |
 | [0018](0018-spring-and-deck.md) | accepted | ばねと動く床は advance の中で動き、道に三部屋足す |
 | [0019](0019-logic-not-pictures.md) | accepted | 絵やアスキーアートは足さず、仕組みのロジックだけ取り込む |
+| [0020](0020-wall-well.md) | accepted | 壁に沿って上る井戸を、上の床のあとに足す |
 
 [テンプレート](0000-template.md) を複製し、連番と内容を表す名前を付ける。
 状態: proposed / accepted / superseded。accepted は記録した技術判断の採用であり、施主の発言を意味しない。
-残る判断は、壁の井戸、さらに先の部屋、テーマ、配布。
+残る判断は、さらに先の部屋、テーマ、配布。

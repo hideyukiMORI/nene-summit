@@ -4,5 +4,6 @@ enum Ascent: Equatable, Sendable {
     case spring
     case raft
     case lift
+    case well
     case aside
 }

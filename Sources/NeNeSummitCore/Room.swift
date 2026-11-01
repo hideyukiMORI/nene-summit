@@ -56,6 +56,8 @@ public struct Room: Equatable, Sendable {
             return "RAFT"
         case .lift:
             return "LIFT"
+        case .well:
+            return "WELL"
         case .aside:
             return "PITCH"
         }
