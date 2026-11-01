@@ -30,6 +30,7 @@ struct SummitApp {
         }
         let moment = Moment()
         while true {
+            let started = moment.milliseconds()
             let arrival = session.poll()
             let now = moment.milliseconds()
             for stroke in arrival.strokes {
@@ -55,7 +56,10 @@ struct SummitApp {
                 break
             }
             session.present(Canvas.draw(watch.state, attendance: attendance, note: banter.line))
-            session.wait(milliseconds: 16)
+            let left = FramePace.remaining(started: started, now: moment.milliseconds())
+            if left > 0 {
+                session.wait(milliseconds: left)
+            }
         }
     }
 
