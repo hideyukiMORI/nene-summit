@@ -6,7 +6,7 @@
 | Target | 責務 | 直接依存 |
 | --- | --- | --- |
 | NeNeSummitCore | 地形、物理、Input、状態遷移、出来事、復帰、登頂 | なし |
-| NeNeSummitEngine | 無入力の案内、遠征のやり直し、ボヤキ。先読みは後期 | NeNeSummitCore |
+| NeNeSummitEngine | 無入力の案内、advance の複製による先読み、遠征のやり直し、ボヤキ | NeNeSummitCore |
 | NeNeSummitRender | 固定の色面、右の状態、案内 | NeNeSummitCore |
 | NeNeSummitTerminal | raw mode、押す・離すと文字のくり返し、ANSI、待ち | NeNeSummitRender, Glibc |
 | nene-summit | キーを Input に写す、時計の方針、ループ | NeNeSummitCore, NeNeSummitEngine, NeNeSummitRender, NeNeSummitTerminal |
@@ -21,7 +21,7 @@ unsafe API は termios / read / write の端末境界として Terminal にの�
 テストは `<target>Tests` に置き、Swift Testing を使う。
 
 - `Sources/NeNeSummitCore/`: 部屋、物理、`SummitState.advance`。
-- `Sources/NeNeSummitEngine/`: 案内と、頂上か打ち切りのやり直しと、ボヤキ。
+- `Sources/NeNeSummitEngine/`: 案内と、advance の複製による先読みと、頂上か打ち切りのやり直しと、ボヤキ。
 - `Sources/NeNeSummitRender/`: 枠を返す。当たり判定は持たない。
 - `Sources/NeNeSummitTerminal/`: 端末の開始、読み、描画、待ち、終了。
 - `Sources/nene-summit/`: 人が遊ぶループ。
