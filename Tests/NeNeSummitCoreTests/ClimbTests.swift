@@ -202,6 +202,30 @@ import Testing
     #expect(pitWidth(room) >= 3)
 }
 
+@Test func theOpeningSkyIsAPillarLine() {
+    let room = FirstAscent.make()
+    let left = pillarHeight(room, x: 0)
+    let stub = pillarHeight(room, x: 12)
+    let right = pillarHeight(room, x: 34)
+    #expect(left >= 6)
+    #expect(right >= 6)
+    #expect(stub < left)
+    #expect(room.kind(x: 29, y: 8) == .open)
+    #expect(room.kind(x: 29, y: 9) == .solid)
+    #expect(room.kind(x: 29, y: 7) == .solid)
+    #expect(room.kind(x: 0, y: 1) == .open)
+}
+
+@Test func aFramedRoomKeepsASideWall() {
+    let room = SpringPitch.make()
+    #expect(room.kind(x: 0, y: 4) == .solid)
+    #expect(room.kind(x: 21, y: 4) == .solid)
+    #expect(room.kind(x: 0, y: 1) == .open)
+    #expect(room.kind(x: 5, y: 1) == .spring)
+    #expect(room.width <= 26)
+    #expect(room.height <= 20)
+}
+
 private func rightLeap(_ state: SummitState) -> SummitState {
     let leap = Input(horizontal: .right, vertical: .none, jump: .pressed, dash: .off)
     let held = Input(horizontal: .right, vertical: .none, jump: .held, dash: .off)
@@ -254,6 +278,16 @@ private func pitWidth(_ room: Room) -> Int {
         x += 1
     }
     return max(best, run)
+}
+
+private func pillarHeight(_ room: Room, x: Int) -> Int {
+    var y = room.height - 1
+    var count = 0
+    while y >= 0 && room.kind(x: x, y: y) == .solid {
+        count += 1
+        y -= 1
+    }
+    return count
 }
 
 private func chamber(width: Int, height: Int, spawn: CellPoint, cells: [CellKind]) -> Room {
