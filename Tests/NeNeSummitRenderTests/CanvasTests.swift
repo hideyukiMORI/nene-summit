@@ -160,8 +160,9 @@ import Testing
     #expect(FieldView.mark(state, x: 12, y: 4).text == "--")
     #expect(FieldView.mark(state, x: 11, y: 4).tone == .crest)
     let opening = SummitState.begin(in: FirstAscent.make())
-    #expect(FieldView.mark(opening, x: 30, y: 5).text == ">>")
+    #expect(FieldView.mark(opening, x: 30, y: 5).text == "  ")
     #expect(FieldView.mark(opening, x: 30, y: 5).tone != .crest)
+    #expect(opening.room.kind(x: opening.room.width - 1, y: 5) == .open)
 }
 
 private func letters(_ frame: Frame) -> String {

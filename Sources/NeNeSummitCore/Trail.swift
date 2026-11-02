@@ -10,6 +10,59 @@ public enum Trail {
         return late(room.ascent, room)
     }
 
+    public static func beside(_ room: Room, toward side: Direction) -> Room? {
+        if Border.leaves(room, toward: side) {
+            let next = after(room)
+            if next.ascent == room.ascent {
+                return nil
+            }
+            return next
+        }
+        if side == .left {
+            return earlier(room)
+        }
+        return nil
+    }
+
+    static func earlier(_ room: Room) -> Room? {
+        if let back = earlyBack(room.ascent) {
+            return back
+        }
+        return lateBack(room.ascent)
+    }
+
+    static func earlyBack(_ ascent: Ascent) -> Room? {
+        switch ascent {
+        case .second:
+            return FirstAscent.make()
+        case .spring:
+            return SecondPitch.make()
+        case .raft:
+            return SpringPitch.make()
+        case .lift:
+            return RaftPitch.make()
+        default:
+            return nil
+        }
+    }
+
+    static func lateBack(_ ascent: Ascent) -> Room? {
+        switch ascent {
+        case .well:
+            return LiftPitch.make()
+        case .slot:
+            return WellPitch.make()
+        case .span:
+            return SlotPitch.make()
+        case .fall:
+            return SpanPitch.make()
+        case .rift:
+            return FallPitch.make()
+        default:
+            return nil
+        }
+    }
+
     static func early(_ ascent: Ascent) -> Room? {
         switch ascent {
         case .first:

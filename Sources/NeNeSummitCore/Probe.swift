@@ -21,7 +21,10 @@ enum Probe {
     }
 
     static func hitsSolid(place: Place, matter: Matter) -> Bool {
-        if place.x < 0 || place.y < 0 {
+        if place.y < 0 {
+            return true
+        }
+        if place.x < 0 && !Border.leaks(matter.room, x: -1, y: place.y / MotionPolicy.scale) {
             return true
         }
         let span = covering(place)

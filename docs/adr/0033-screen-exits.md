@@ -1,6 +1,6 @@
 # ADR 0033 — 途中の部屋は画面の出口、旗は最後だけ
 
-Status: accepted
+Status: superseded by [0034](0034-edge-rooms.md)
 Date: 2026-11-02
 Issue: #69
 Scope: 頂上に旗がある。それまでの部屋は、旗を目指すのではなく、出口から次の画面へ移る。
