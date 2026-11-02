@@ -19,6 +19,7 @@ enum RoomSketch {
     }
 
     static func assemble(named name: String, rows: [String], ascent: Ascent) -> Result<Room, Room.Rejection> {
+        let rows = widen(rows, ascent)
         let height = rows.count
         let width = rows[0].count
         if rows.contains(where: { $0.count != width }) {
@@ -33,6 +34,26 @@ enum RoomSketch {
             let grid = RoomGrid(width: width, height: height, cells: filled.cells, decks: decks)
             let spec = RoomSpec(id: id, spawn: filled.spawn, grid: grid, ascent: ascent)
             return Room.make(spec)
+        }
+    }
+
+    static func widen(_ rows: [String], _ ascent: Ascent) -> [String] {
+        let span = 26
+        guard let sample = rows.first else {
+            return rows
+        }
+        if sample.count >= span || ascent == .rift || ascent == .aside {
+            return rows
+        }
+        let door = Border.along(ascent)
+        let extra = span - sample.count
+        let height = rows.count
+        return rows.enumerated().map { index, row in
+            let y = height - 1 - index
+            if y >= door {
+                return row + String(repeating: ".", count: extra)
+            }
+            return row + String(repeating: "#", count: extra)
         }
     }
 
@@ -88,7 +109,7 @@ enum RoomSketch {
             return Mark(cell: .exit, spawn: false)
         case "*":
             return Mark(cell: .spring, spawn: false)
-        case "M", "V", "D":
+        case "M", "V", "D", "H", "L", "W":
             return Mark(cell: .open, spawn: false)
         case "R":
             return Mark(cell: .refill, spawn: false)

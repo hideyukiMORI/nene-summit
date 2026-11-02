@@ -3,14 +3,23 @@ enum DeckPlan {
         var decks: [Deck] = []
         for (index, row) in rows.enumerated() {
             let y = rows.count - 1 - index
-            decks.append(contentsOf: runs(row, y: y, mark: "M", axis: .horizontal))
-            decks.append(contentsOf: runs(row, y: y, mark: "V", axis: .vertical))
+            decks.append(contentsOf: marked(row, y: y))
             decks.append(contentsOf: drops(row, y: y))
         }
         return decks
     }
 
-    static func runs(_ row: String, y: Int, mark: Character, axis: Axis) -> [Deck] {
+    static func marked(_ row: String, y: Int) -> [Deck] {
+        var decks: [Deck] = []
+        decks.append(contentsOf: runs(row, y: y, mark: "M", pace: .ferry()))
+        decks.append(contentsOf: runs(row, y: y, mark: "H", pace: .haste()))
+        decks.append(contentsOf: runs(row, y: y, mark: "L", pace: .drift()))
+        decks.append(contentsOf: runs(row, y: y, mark: "W", pace: .west()))
+        decks.append(contentsOf: runs(row, y: y, mark: "V", pace: .hoist()))
+        return decks
+    }
+
+    static func runs(_ row: String, y: Int, mark: Character, pace: DeckPace) -> [Deck] {
         var decks: [Deck] = []
         var x = 0
         let characters = Array(row)
@@ -20,7 +29,7 @@ enum DeckPlan {
                 while x < characters.count && characters[x] == mark {
                     x += 1
                 }
-                decks.append(deck(x: start, y: y, width: x - start, axis: axis))
+                decks.append(deck(x: start, y: y, width: x - start, pace: pace))
             } else {
                 x += 1
             }
@@ -50,17 +59,11 @@ enum DeckPlan {
         Deck(
             origin: CellPoint(x: x, y: y),
             size: CellPoint(x: width, y: 1),
-            axis: .vertical,
-            reach: -MotionPolicy.dropReach
+            pace: .drop()
         )
     }
 
-    static func deck(x: Int, y: Int, width: Int, axis: Axis) -> Deck {
-        Deck(
-            origin: CellPoint(x: x, y: y),
-            size: CellPoint(x: width, y: 1),
-            axis: axis,
-            reach: MotionPolicy.deckReach
-        )
+    static func deck(x: Int, y: Int, width: Int, pace: DeckPace) -> Deck {
+        Deck(origin: CellPoint(x: x, y: y), size: CellPoint(x: width, y: 1), pace: pace)
     }
 }

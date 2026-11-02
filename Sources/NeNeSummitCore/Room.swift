@@ -45,6 +45,12 @@ public struct Room: Equatable, Sendable {
     }
 
     public func title() -> String {
+        if ascent == .bridge {
+            return "ARCH"
+        }
+        if case .lane(let index) = ascent {
+            return LanePitch.name(index)
+        }
         if let early = earlyTitle(ascent) {
             return early
         }
