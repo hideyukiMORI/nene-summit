@@ -88,6 +88,9 @@ public struct Room: Equatable, Sendable {
     }
 
     public func kind(x: Int, y: Int) -> CellKind {
+        if Border.leaks(self, x: x, y: y) {
+            return .open
+        }
         if x < 0 || y < 0 || x >= width || y >= height {
             return .solid
         }

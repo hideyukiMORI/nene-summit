@@ -61,6 +61,37 @@ public struct SummitState: Equatable, Sendable {
         SummitState(room: room, kinematics: kinematics.at(place), action: action, progress: progress)
     }
 
+    private static func entrance(_ room: Room) -> Int {
+        if room.kind(x: 0, y: room.spawn.y) == .solid {
+            return room.spawn.x
+        }
+        return 0
+    }
+
+    public func crossing() -> Direction? {
+        Border.side(room, kinematics.place)
+    }
+
+    public func carry(into next: Room, toward side: Direction) -> SummitState {
+        let scale = MotionPolicy.scale
+        let yCell = side == .left ? Border.goal(next)?.y ?? next.spawn.y : next.spawn.y
+        let xCell = side == .left ? next.width - 1 : Self.entrance(next)
+        let place = Place(x: xCell * scale, y: yCell * scale)
+        let velocity = kinematics.velocity
+        let matter = Matter(room: next, tick: 0)
+        let standing = Probe.supported(place: place, matter: matter)
+        let phase: Phase = standing && velocity.y <= 0 ? .grounded : .air
+        let action = Action(facing: action.facing, phase: phase, dashTicks: 0, charges: .full)
+        let progress = Progress(
+            checkpoint: CellPoint(x: xCell, y: yCell),
+            expedition: .climbing,
+            tick: .zero,
+            gleams: progress.gleams.carried()
+        )
+        let kinematics = Kinematics(place: place, velocity: velocity)
+        return SummitState(room: next, kinematics: kinematics, action: action, progress: progress)
+    }
+
     public static func begin(in room: Room, gleams: GleamBag = .empty) -> SummitState {
         let place = Place(x: room.spawn.x * MotionPolicy.scale, y: room.spawn.y * MotionPolicy.scale)
         let kinematics = Kinematics(place: place, velocity: .still)
@@ -87,6 +118,17 @@ public struct SummitState: Equatable, Sendable {
             action: resolved.action,
             progress: resolved.progress
         )
-        return StepOutcome(state: next, events: [.tick] + resolved.events)
+        return StepOutcome(state: next, events: departing(resolved.events, next))
+    }
+
+    private func departing(_ events: [StepEvent], _ next: SummitState) -> [StepEvent] {
+        let stepped = [StepEvent.tick] + events
+        if stepped.contains(.departed) {
+            return stepped
+        }
+        guard let side = next.crossing(), Trail.beside(room, toward: side) != nil else {
+            return stepped
+        }
+        return stepped + [.departed]
     }
 }

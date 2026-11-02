@@ -61,10 +61,18 @@ public struct Watch: Equatable, Sendable {
     }
 
     private func crossed(_ outcome: StepOutcome) -> Watch? {
-        if outcome.events.contains(.departed) {
-            return Watch.begin(in: Trail.after(state.room), gleams: state.bag().carried())
+        guard outcome.events.contains(.departed), let side = outcome.state.crossing() else {
+            return nil
         }
-        return nil
+        guard let next = Trail.beside(state.room, toward: side) else {
+            return nil
+        }
+        return Watch(
+            state: outcome.state.carry(into: next, toward: side),
+            notice: Notice(events: outcome.events, opened: true),
+            spent: 0,
+            rest: 0
+        )
     }
 
     private func stepped(_ outcome: StepOutcome, spent: Int) -> Watch {
