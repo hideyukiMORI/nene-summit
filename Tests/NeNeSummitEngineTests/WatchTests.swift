@@ -57,6 +57,42 @@ import Testing
     #expect(watch.state.progress.expedition == .climbing)
 }
 
+@Test func theGuideCrossesWhileTheMassDrops() {
+    var watch = Watch.begin(in: FallPitch.make())
+    var crossed = false
+    var dropped = false
+    var tick = 0
+    while tick < Watch.budget && watch.state.progress.expedition != .summited {
+        watch = watch.advance(human: .idle)
+        if watch.state.portrait().x == 2 {
+            crossed = true
+        }
+        if watch.state.room.crushing(x: 2, y: 3, tick: watch.state.elapsed()) {
+            dropped = true
+        }
+        tick += 1
+    }
+    #expect(watch.state.progress.expedition == .summited)
+    #expect(crossed)
+    #expect(dropped)
+}
+
+@Test func theGuideStandsOnTheCrumble() {
+    var watch = Watch.begin(in: RiftPitch.make())
+    var stood = false
+    var tick = 0
+    while tick < Watch.budget && watch.state.progress.expedition != .summited {
+        watch = watch.advance(human: .idle)
+        let here = watch.state.portrait()
+        if watch.state.room.kind(x: here.x, y: here.y - 1) == .crumble {
+            stood = true
+        }
+        tick += 1
+    }
+    #expect(watch.state.progress.expedition == .summited)
+    #expect(stood)
+}
+
 @Test func theFallOpensTheRift() {
     let watch = rest(climb(Watch.begin(in: FallPitch.make())))
     #expect(watch.state.room.ascent == .rift)
