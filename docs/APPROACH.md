@@ -24,6 +24,7 @@
 雪山の雲と稜線は [ADR 0026](adr/0026-ice-vista.md)。
 頂の旗一本は [ADR 0027](adr/0027-one-pennant.md)。
 落ちる塊と崩れる床と結晶は [ADR 0028](adr/0028-falling-traps.md)。
+雲の欠けと、大きな塊と、窓より広い部屋は [ADR 0029](adr/0029-flat-cloud-wide-fall.md)。
 下の表は当初の区切りであり、P2 をゼロからやり直す指示ではない。
 
 | Phase | 成果 | 受け入れ条件 |
