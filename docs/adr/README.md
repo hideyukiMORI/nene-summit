@@ -31,6 +31,7 @@
 | [0027](0027-one-pennant.md) | accepted | 頂は一本の旗、奥の雲は輪郭 |
 | [0028](0028-falling-traps.md) | accepted | 落ちる塊と崩れる床と結晶を足す |
 | [0029](0029-flat-cloud-wide-fall.md) | accepted | 雲は平たい欠け、落ちる塊は大きく、その部屋は窓より広い |
+| [0030](0030-locked-screen-lead.md) | accepted | 窓に収まる部屋はカメラを止め、広い部屋は先を見せる |
 
 [テンプレート](0000-template.md) を複製し、連番と内容を表す名前を付ける。
 状態: proposed / accepted / superseded。accepted は記録した技術判断の採用であり、施主の発言を意味しない。

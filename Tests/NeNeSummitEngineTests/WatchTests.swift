@@ -51,10 +51,26 @@ import Testing
     #expect(watch.state.progress.expedition == .climbing)
 }
 
-@Test func theSlotOpensTheFall() {
+@Test func theSlotOpensTheSpan() {
     let watch = rest(climb(Watch.begin(in: SlotPitch.make())))
-    #expect(watch.state.room.ascent == .fall)
+    #expect(watch.state.room.ascent == .span)
     #expect(watch.state.progress.expedition == .climbing)
+}
+
+@Test func theGuideCrossesUnderTheCrystal() {
+    var watch = Watch.begin(in: SpanPitch.make())
+    var caught = false
+    var tick = 0
+    while tick < Watch.budget && watch.state.progress.expedition != .summited {
+        watch = watch.advance(human: .idle)
+        let here = watch.state.portrait()
+        if watch.state.room.kind(x: here.x, y: here.y) == .refill {
+            caught = true
+        }
+        tick += 1
+    }
+    #expect(watch.state.progress.expedition == .summited)
+    #expect(caught)
 }
 
 @Test func theGuideCrossesWhileTheMassDrops() {

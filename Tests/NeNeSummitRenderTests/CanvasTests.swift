@@ -140,6 +140,19 @@ import Testing
     #expect(later.x > start.x)
 }
 
+@Test func aWideRoomShowsTheWayAhead() {
+    let room = FallPitch.make()
+    let portrait = CellPoint(x: 16, y: 1)
+    let origin = Viewport.origin(width: room.width, height: room.height, portrait: portrait)
+    #expect(origin.x > portrait.x - Stage.fieldCellsX / 2)
+    #expect(origin.x + Stage.fieldCellsX <= room.width)
+    let span = SpanPitch.make()
+    let held = Viewport.origin(width: span.width, height: span.height, portrait: CellPoint(x: 1, y: 1))
+    #expect(span.width <= Stage.fieldCellsX)
+    #expect(span.height <= Stage.fieldCellsY)
+    #expect(held.x == 0)
+}
+
 @Test func onePennantStandsOnTheLip() {
     let state = SummitState.begin(in: FirstAscent.make())
     #expect(FieldView.mark(state, x: 28, y: 5).text == "--")
