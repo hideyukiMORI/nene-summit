@@ -13,7 +13,7 @@ import Testing
 
 @Test func aPitPrefersAMoveThatDoesNotFall() {
     let live = SummitState.begin(in: pitRoom())
-    let walking = Lookahead.glimpse(live, opening: .moving(.right))
+    let walking = Lookahead.glimpse(live, opening: .moving(.right), wait: 0)
     let choice = Lookahead.choose(live)
     #expect(walking.fell)
     #expect(choice != .moving(.right))

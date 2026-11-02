@@ -15,7 +15,7 @@ public enum LiftPitch {
         "#..............#",
         "#..............#",
         "..@.............",
-        "#####VVV^^^^^^^^",
+        "..VVV###^^^^^^^^",
     ]
 
     public static func make() -> Room {

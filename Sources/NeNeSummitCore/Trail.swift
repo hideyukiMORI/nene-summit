@@ -4,6 +4,9 @@ public enum Trail {
     }
 
     public static func after(_ room: Room) -> Room {
+        if let next = LanePitch.follow(room) {
+            return next
+        }
         if let next = early(room.ascent) {
             return next
         }
@@ -25,6 +28,9 @@ public enum Trail {
     }
 
     static func earlier(_ room: Room) -> Room? {
+        if let back = LanePitch.back(room) {
+            return back
+        }
         if let back = earlyBack(room.ascent) {
             return back
         }

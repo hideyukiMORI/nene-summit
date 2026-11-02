@@ -26,7 +26,7 @@ enum DeckField {
         var x = span.x0
         while x <= span.x1 {
             for deck in room.decks {
-                if deck.reach > 0 && deck.covers(x, span.y0 - 1, tick: tick) {
+                if !deck.pace.harms() && deck.covers(x, span.y0 - 1, tick: tick) {
                     return deck
                 }
             }
@@ -37,7 +37,7 @@ enum DeckField {
 
     static func crushes(_ room: Room, x: Int, y: Int, tick: Int) -> Bool {
         for deck in room.decks {
-            if deck.reach < 0 && deck.covers(x, y, tick: tick) {
+            if deck.pace.harms() && deck.covers(x, y, tick: tick) {
                 return true
             }
         }

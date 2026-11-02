@@ -99,7 +99,7 @@ import Testing
         }
         tick += 1
     }
-    #expect(watch.state.room.ascent == .rift)
+    #expect(watch.state.room.ascent == .bridge)
     #expect(crossed)
     #expect(dropped)
 }
@@ -121,10 +121,34 @@ import Testing
     #expect(stood)
 }
 
-@Test func theFallOpensTheRift() {
+@Test func theFallOpensTheArch() {
     let watch = climb(Watch.begin(in: FallPitch.make()))
-    #expect(watch.state.room.ascent == .rift)
+    #expect(watch.state.room.ascent == .bridge)
     #expect(watch.state.progress.expedition == .climbing)
+}
+
+@Test func aManualStepBackReturnsToThePreviousRoom() {
+    var watch = climb(Watch.begin(in: FirstAscent.make()))
+    #expect(watch.state.room.ascent == .second)
+    var tick = 0
+    while tick < 80 && watch.state.room.ascent == .second {
+        watch = watch.advance(human: Input.moving(.left), attendance: .manual)
+        tick += 1
+    }
+    #expect(watch.state.room.ascent == .first)
+    #expect(watch.state.portrait().x > 20)
+}
+
+@Test func theLanesReachTheBridge() {
+    var watch = Watch.begin(in: LanePitch.make(0))
+    var index = 0
+    while index < LanePitch.count {
+        watch = climb(watch)
+        index += 1
+    }
+    #expect(watch.state.room.ascent == .rift)
+    #expect(watch.state.berries() >= 1)
+    #expect(watch.state.coins() >= 1)
 }
 
 @Test func theRiftReturnsToTheFirstRoom() {
@@ -145,7 +169,7 @@ import Testing
     let slot = climb(Watch.begin(in: SlotPitch.make()))
     #expect(slot.state.room.ascent == .span)
     let fall = climb(Watch.begin(in: FallPitch.make()))
-    #expect(fall.state.room.ascent == .rift)
+    #expect(fall.state.room.ascent == .bridge)
     let rift = climb(Watch.begin(in: RiftPitch.make()))
     #expect(rift.state.progress.expedition == .summited)
     #expect(rift.state.room.ascent == .rift)
@@ -188,6 +212,26 @@ import Testing
     }
     #expect(along)
     #expect(watch.state.room.ascent == .slot)
+}
+
+@Test func theArchIsCrossedWhileItHolds() {
+    var watch = Watch.begin(in: BridgePitch.make())
+    var stood = false
+    var tick = 0
+    let home = watch.state.room.ascent
+    while tick < Watch.budget && watch.state.room.ascent == home {
+        watch = watch.advance(human: .idle)
+        if watch.state.room.ascent != home {
+            break
+        }
+        let here = watch.state.portrait()
+        if onDeck(watch.state.room, x: here.x, y: here.y) {
+            stood = true
+        }
+        tick += 1
+    }
+    #expect(stood)
+    #expect(watch.state.room.ascent == .lane(0))
 }
 
 @Test func aBlockedGuideStartsAgain() {

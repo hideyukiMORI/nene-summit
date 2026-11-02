@@ -165,7 +165,18 @@ import Testing
     #expect(span.ascent == .span)
     let fall = Trail.after(span)
     #expect(fall.ascent == .fall)
-    let rift = Trail.after(fall)
+    let arch = Trail.after(fall)
+    #expect(arch.ascent == .bridge)
+    let lane = Trail.after(arch)
+    #expect(lane.ascent == .lane(0))
+    var step = lane
+    var index = 0
+    while index < LanePitch.count - 1 {
+        step = Trail.after(step)
+        index += 1
+        #expect(step.ascent == .lane(index))
+    }
+    let rift = Trail.after(step)
     #expect(rift.ascent == .rift)
     #expect(Trail.after(rift).ascent == .first)
     let aside = chamber(
@@ -177,6 +188,22 @@ import Testing
     let stayed = Trail.after(aside)
     #expect(stayed.ascent == .aside)
     #expect(stayed.width == aside.width)
+}
+
+@Test func theWellFloorStopsShortOfTheDoor() {
+    let room = WellPitch.make()
+    #expect(room.width == 26)
+    #expect(room.kind(x: 8, y: 1) == .solid)
+    #expect(room.kind(x: 4, y: 3) == .crumble)
+    #expect(Border.along(.well) == 4)
+}
+
+@Test func theArchIsOpenUnderTheSpan() {
+    let room = BridgePitch.make()
+    #expect(room.width == 26)
+    #expect(room.kind(x: 5, y: 3) == .crumble)
+    #expect(room.kind(x: 5, y: 1) == .open)
+    #expect(room.kind(x: 5, y: 0) == .spike)
 }
 
 @Test func theSecondPitchCrossesBeforeTheMark() {

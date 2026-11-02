@@ -8,6 +8,8 @@ enum Ascent: Equatable, Sendable {
     case slot
     case span
     case fall
+    case bridge
     case rift
     case aside
+    case lane(Int)
 }

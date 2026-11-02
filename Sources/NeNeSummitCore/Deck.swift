@@ -1,8 +1,10 @@
 struct Deck: Equatable, Sendable {
     let origin: CellPoint
     let size: CellPoint
-    let axis: Axis
-    let reach: Int
+    let pace: DeckPace
+
+    var axis: Axis { pace.axis }
+    var reach: Int { pace.reach }
 
     func covers(_ x: Int, _ y: Int, tick: Int) -> Bool {
         let shift = cellShift(at: tick)
@@ -14,8 +16,8 @@ struct Deck: Equatable, Sendable {
     }
 
     func cellShift(at tick: Int) -> Int {
-        let travel = MotionPolicy.deckTravel
-        let dwell = MotionPolicy.deckDwell
+        let travel = pace.travel
+        let dwell = pace.dwell
         let cycle = travel * 2 + dwell
         let phase = tick % cycle
         if phase < travel {
