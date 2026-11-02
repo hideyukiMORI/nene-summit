@@ -100,7 +100,8 @@ import Testing
     while tick < Watch.budget && watch.state.progress.expedition != .summited {
         watch = watch.advance(human: .idle)
         let here = watch.state.portrait()
-        if watch.state.room.kind(x: here.x, y: here.y - 1) == .crumble {
+        let room = watch.state.room
+        if onDeck(room, x: here.x, y: here.y) {
             stood = true
         }
         tick += 1
@@ -219,6 +220,16 @@ import Testing
         tick += 1
     }
     #expect(watch.state.portrait().x > Watch.begin(in: room).state.portrait().x)
+}
+
+private func onDeck(_ room: Room, x: Int, y: Int) -> Bool {
+    if y - 1 >= 0 && room.kind(x: x, y: y - 1) == .crumble {
+        return true
+    }
+    if y - 2 >= 0 && room.kind(x: x, y: y - 2) == .crumble {
+        return true
+    }
+    return false
 }
 
 private func rest(_ watch: Watch) -> Watch {

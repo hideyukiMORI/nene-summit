@@ -202,6 +202,25 @@ import Testing
     #expect(pitWidth(room) >= 3)
 }
 
+@Test func theCrumbleCrossesAGap() {
+    let room = RiftPitch.make()
+    var span = 0
+    var y = 1
+    while y < room.height {
+        var x = 0
+        while x < room.width {
+            if room.kind(x: x, y: y) == .crumble && room.kind(x: x, y: y - 1) == .open {
+                span += 1
+            }
+            x += 1
+        }
+        y += 1
+    }
+    #expect(span >= 4)
+    #expect(room.width <= 26)
+    #expect(room.height <= 20)
+}
+
 @Test func theOpeningSkyIsAPillarLine() {
     let room = FirstAscent.make()
     let left = pillarHeight(room, x: 0)

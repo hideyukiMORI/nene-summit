@@ -79,7 +79,7 @@ public struct Room: Equatable, Sendable {
         case .fall:
             return "FALL"
         case .rift:
-            return "RIFT"
+            return "BRIDGE"
         case .aside:
             return "PITCH"
         default:
