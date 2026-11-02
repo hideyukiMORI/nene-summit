@@ -9,4 +9,5 @@ public enum CellKind: Equatable, Sendable {
     case coin
     case crumble
     case refill
+    case exit
 }

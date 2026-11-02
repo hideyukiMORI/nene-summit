@@ -113,7 +113,7 @@ public struct Room: Equatable, Sendable {
     private static func blocked(_ spec: RoomSpec) -> Bool {
         let kind = spec.grid.cells[spec.spawn.y * spec.grid.width + spec.spawn.x]
         switch kind {
-        case .open, .checkpoint, .spring, .gleam, .coin, .refill:
+        case .open, .checkpoint, .spring, .gleam, .coin, .refill, .exit:
             return false
         case .solid, .spike, .summit, .crumble:
             return true

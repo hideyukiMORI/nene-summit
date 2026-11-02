@@ -4,9 +4,10 @@ import Testing
 @testable import NeNeSummitEngine
 
 @Test func anUnattendedWatchSummitsAndStartsAgain() {
-    var watch = Watch.begin(in: FirstAscent.make())
+    var watch = Watch.begin(in: RiftPitch.make())
     watch = climb(watch)
     #expect(watch.state.progress.expedition == .summited)
+    #expect(watch.state.room.ascent == .rift)
     var rest = 0
     while rest < Watch.pause - 1 {
         watch = watch.advance(human: .idle)
@@ -15,9 +16,9 @@ import Testing
     }
     watch = watch.advance(human: .idle)
     #expect(watch.state.progress.expedition == .climbing)
-    #expect(watch.state.room.ascent == .second)
+    #expect(watch.state.room.ascent == .first)
     watch = climb(watch)
-    #expect(watch.state.progress.expedition == .summited)
+    #expect(watch.state.progress.expedition == .climbing)
     #expect(watch.state.room.ascent == .second)
 }
 
@@ -32,27 +33,28 @@ import Testing
 }
 
 @Test func theSecondSummitOpensTheSpring() {
-    var watch = rest(climb(Watch.begin(in: FirstAscent.make())))
+    var watch = climb(Watch.begin(in: FirstAscent.make()))
     #expect(watch.state.room.ascent == .second)
-    watch = rest(climb(watch))
+    #expect(watch.state.progress.expedition == .climbing)
+    watch = climb(watch)
     #expect(watch.state.room.ascent == .spring)
     #expect(watch.state.progress.expedition == .climbing)
 }
 
 @Test func theLiftOpensTheWell() {
-    let watch = rest(climb(Watch.begin(in: LiftPitch.make())))
+    let watch = climb(Watch.begin(in: LiftPitch.make()))
     #expect(watch.state.room.ascent == .well)
     #expect(watch.state.progress.expedition == .climbing)
 }
 
 @Test func theWellOpensTheSlot() {
-    let watch = rest(climb(Watch.begin(in: WellPitch.make())))
+    let watch = climb(Watch.begin(in: WellPitch.make()))
     #expect(watch.state.room.ascent == .slot)
     #expect(watch.state.progress.expedition == .climbing)
 }
 
 @Test func theSlotOpensTheSpan() {
-    let watch = rest(climb(Watch.begin(in: SlotPitch.make())))
+    let watch = climb(Watch.begin(in: SlotPitch.make()))
     #expect(watch.state.room.ascent == .span)
     #expect(watch.state.progress.expedition == .climbing)
 }
@@ -61,15 +63,20 @@ import Testing
     var watch = Watch.begin(in: SpanPitch.make())
     var caught = false
     var tick = 0
-    while tick < Watch.budget && watch.state.progress.expedition != .summited {
+    let home = watch.state.room.ascent
+    while tick < Watch.budget && watch.state.room.ascent == home {
         watch = watch.advance(human: .idle)
+        if watch.state.room.ascent != home {
+            break
+        }
         let here = watch.state.portrait()
         if watch.state.room.kind(x: here.x, y: here.y) == .refill {
             caught = true
         }
         tick += 1
     }
-    #expect(watch.state.progress.expedition == .summited)
+    #expect(watch.state.room.ascent == .fall)
+    #expect(watch.state.progress.expedition == .climbing)
     #expect(caught)
 }
 
@@ -78,8 +85,12 @@ import Testing
     var crossed = false
     var dropped = false
     var tick = 0
-    while tick < Watch.budget && watch.state.progress.expedition != .summited {
+    let home = watch.state.room.ascent
+    while tick < Watch.budget && watch.state.room.ascent == home {
         watch = watch.advance(human: .idle)
+        if watch.state.room.ascent != home {
+            break
+        }
         if watch.state.portrait().x >= 4 && watch.state.portrait().x <= 6 {
             crossed = true
         }
@@ -88,7 +99,7 @@ import Testing
         }
         tick += 1
     }
-    #expect(watch.state.progress.expedition == .summited)
+    #expect(watch.state.room.ascent == .rift)
     #expect(crossed)
     #expect(dropped)
 }
@@ -111,7 +122,7 @@ import Testing
 }
 
 @Test func theFallOpensTheRift() {
-    let watch = rest(climb(Watch.begin(in: FallPitch.make())))
+    let watch = climb(Watch.begin(in: FallPitch.make()))
     #expect(watch.state.room.ascent == .rift)
     #expect(watch.state.progress.expedition == .climbing)
 }
@@ -124,50 +135,59 @@ import Testing
 
 @Test func anUnattendedWatchSummitsTheNewRooms() {
     let spring = climb(Watch.begin(in: SpringPitch.make()))
-    #expect(spring.state.progress.expedition == .summited)
+    #expect(spring.state.room.ascent == .raft)
     let raft = climb(Watch.begin(in: RaftPitch.make()))
-    #expect(raft.state.progress.expedition == .summited)
+    #expect(raft.state.room.ascent == .lift)
     let lift = climb(Watch.begin(in: LiftPitch.make()))
-    #expect(lift.state.progress.expedition == .summited)
+    #expect(lift.state.room.ascent == .well)
     let well = climb(Watch.begin(in: WellPitch.make()))
-    #expect(well.state.progress.expedition == .summited)
+    #expect(well.state.room.ascent == .slot)
     let slot = climb(Watch.begin(in: SlotPitch.make()))
-    #expect(slot.state.progress.expedition == .summited)
+    #expect(slot.state.room.ascent == .span)
     let fall = climb(Watch.begin(in: FallPitch.make()))
-    #expect(fall.state.progress.expedition == .summited)
+    #expect(fall.state.room.ascent == .rift)
     let rift = climb(Watch.begin(in: RiftPitch.make()))
     #expect(rift.state.progress.expedition == .summited)
+    #expect(rift.state.room.ascent == .rift)
 }
 
 @Test func theSlotIsCrossedByADash() {
     var watch = Watch.begin(in: SlotPitch.make())
     var dashed = false
     var tick = 0
-    while tick < Watch.budget && watch.state.progress.expedition != .summited {
+    let home = watch.state.room.ascent
+    while tick < Watch.budget && watch.state.room.ascent == home {
         let before = watch.state.action.charges.remaining
         watch = watch.advance(human: .idle)
+        if watch.state.room.ascent != home {
+            break
+        }
         if watch.state.action.charges.remaining < before {
             dashed = true
         }
         tick += 1
     }
     #expect(dashed)
-    #expect(watch.state.progress.expedition == .summited)
+    #expect(watch.state.room.ascent == .span)
 }
 
 @Test func theWellIsClimbedAlongTheWall() {
     var watch = Watch.begin(in: WellPitch.make())
     var along = false
     var tick = 0
-    while tick < Watch.budget && watch.state.progress.expedition != .summited {
+    let home = watch.state.room.ascent
+    while tick < Watch.budget && watch.state.room.ascent == home {
         watch = watch.advance(human: .idle)
+        if watch.state.room.ascent != home {
+            break
+        }
         if case .wall = watch.state.action.phase {
             along = true
         }
         tick += 1
     }
     #expect(along)
-    #expect(watch.state.progress.expedition == .summited)
+    #expect(watch.state.room.ascent == .slot)
 }
 
 @Test func aBlockedGuideStartsAgain() {
@@ -201,8 +221,9 @@ import Testing
 }
 
 @Test func aManualSummitWaits() {
-    var watch = climb(Watch.begin(in: FirstAscent.make()))
+    var watch = climb(Watch.begin(in: RiftPitch.make()))
     #expect(watch.state.progress.expedition == .summited)
+    #expect(watch.state.room.ascent == .rift)
     var tick = 0
     while tick < Watch.pause + 5 {
         watch = watch.advance(human: .idle, attendance: .manual)
@@ -243,9 +264,12 @@ private func rest(_ watch: Watch) -> Watch {
 }
 
 private func climb(_ watch: Watch) -> Watch {
+    let home = watch.state.room.ascent
     var watch = watch
     var tick = 0
-    while tick < Watch.budget && watch.state.progress.expedition != .summited {
+    while tick < Watch.budget && watch.state.room.ascent == home
+        && watch.state.progress.expedition != .summited
+    {
         watch = watch.advance(human: .idle)
         tick += 1
     }

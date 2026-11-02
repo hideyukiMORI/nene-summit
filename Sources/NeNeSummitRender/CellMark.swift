@@ -5,6 +5,7 @@ enum CellMark {
     static let spike = "/\\"
     static let flag = "|+"
     static let crest = "|>"
+    static let exit = ">>"
     static let spring = "\\/"
     static let berry = "*'"
     static let coin = "(o"

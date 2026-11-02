@@ -28,6 +28,7 @@
 窓に収まる部屋のカメラと、先を見せることは [ADR 0030](adr/0030-locked-screen-lead.md)。
 高さの違う柱と枠の一枚は [ADR 0031](adr/0031-pillar-frames.md)。
 崩れる床の橋は [ADR 0032](adr/0032-crumble-bridge.md)。
+途中の部屋の出口と、最後の部屋の旗は [ADR 0033](adr/0033-screen-exits.md)。
 下の表は当初の区切りであり、P2 をゼロからやり直す指示ではない。
 
 | Phase | 成果 | 受け入れ条件 |

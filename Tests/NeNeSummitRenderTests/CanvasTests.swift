@@ -84,7 +84,7 @@ import Testing
 }
 
 @Test func theSummitBannerChangesAfterTheClimb() {
-    var watch = Watch.begin(in: FirstAscent.make())
+    var watch = Watch.begin(in: RiftPitch.make())
     var tick = 0
     while tick < Watch.budget && watch.state.progress.expedition != .summited {
         watch = watch.advance(human: .idle)
@@ -154,11 +154,14 @@ import Testing
 }
 
 @Test func onePennantStandsOnTheLip() {
-    let state = SummitState.begin(in: FirstAscent.make())
-    #expect(FieldView.mark(state, x: 28, y: 5).text == "--")
-    #expect(FieldView.mark(state, x: 30, y: 5).text == "|>")
-    #expect(FieldView.mark(state, x: 32, y: 5).text == "--")
-    #expect(FieldView.mark(state, x: 29, y: 5).tone == .crest)
+    let state = SummitState.begin(in: RiftPitch.make())
+    #expect(FieldView.mark(state, x: 9, y: 4).text == "--")
+    #expect(FieldView.mark(state, x: 11, y: 4).text == "|>")
+    #expect(FieldView.mark(state, x: 12, y: 4).text == "--")
+    #expect(FieldView.mark(state, x: 11, y: 4).tone == .crest)
+    let opening = SummitState.begin(in: FirstAscent.make())
+    #expect(FieldView.mark(opening, x: 30, y: 5).text == ">>")
+    #expect(FieldView.mark(opening, x: 30, y: 5).tone != .crest)
 }
 
 private func letters(_ frame: Frame) -> String {

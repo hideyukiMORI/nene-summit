@@ -8,6 +8,7 @@ enum Probe {
 
     struct Found {
         var summit = false
+        var exit = false
         var spring = false
         var gleam: CellPoint?
         var coin: CellPoint?
@@ -66,6 +67,9 @@ enum Probe {
         if found.summit {
             return .summit
         }
+        if found.exit {
+            return .exit
+        }
         if found.spring {
             return .spring
         }
@@ -98,6 +102,8 @@ enum Probe {
             return true
         case .summit:
             found.summit = true
+        case .exit:
+            found.exit = true
         case .checkpoint:
             found.checkpoint = CellPoint(x: x, y: y)
         case .spring:

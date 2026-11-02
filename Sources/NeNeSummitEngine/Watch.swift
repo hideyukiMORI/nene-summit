@@ -23,7 +23,7 @@ public struct Watch: Equatable, Sendable {
             return finished(human, attendance: attendance)
         }
         if attendance == .manual || human != .idle {
-            return stepped(state.advance(input: human), spent: 0)
+            return played(state.advance(input: human))
         }
         return guided()
     }
@@ -38,8 +38,18 @@ public struct Watch: Equatable, Sendable {
         return Watch(state: state, notice: Notice(events: [], opened: false), spent: 0, rest: rest + 1)
     }
 
+    private func played(_ outcome: StepOutcome) -> Watch {
+        if let next = crossed(outcome) {
+            return next
+        }
+        return stepped(outcome, spent: 0)
+    }
+
     private func guided() -> Watch {
         let outcome = state.advance(input: Guide.choose(state))
+        if let next = crossed(outcome) {
+            return next
+        }
         if outcome.state.progress.expedition == .summited {
             return stepped(outcome, spent: 0)
         }
@@ -48,6 +58,13 @@ public struct Watch: Equatable, Sendable {
             return Watch.begin(in: state.room, gleams: state.bag())
         }
         return stepped(outcome, spent: spent)
+    }
+
+    private func crossed(_ outcome: StepOutcome) -> Watch? {
+        if outcome.events.contains(.departed) {
+            return Watch.begin(in: Trail.after(state.room), gleams: state.bag().carried())
+        }
+        return nil
     }
 
     private func stepped(_ outcome: StepOutcome, spent: Int) -> Watch {

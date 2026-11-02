@@ -34,6 +34,7 @@
 | [0030](0030-locked-screen-lead.md) | accepted | 窓に収まる部屋はカメラを止め、広い部屋は先を見せる |
 | [0031](0031-pillar-frames.md) | accepted | 部屋は高さの違う柱と、枠の一枚にする |
 | [0032](0032-crumble-bridge.md) | accepted | 崩れる床は二つの岸のあいだの橋 |
+| [0033](0033-screen-exits.md) | accepted | 途中の部屋は画面の出口、旗は最後だけ |
 
 [テンプレート](0000-template.md) を複製し、連番と内容を表す名前を付ける。
 状態: proposed / accepted / superseded。accepted は記録した技術判断の採用であり、施主の発言を意味しない。

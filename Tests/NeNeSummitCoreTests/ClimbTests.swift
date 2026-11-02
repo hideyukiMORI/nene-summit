@@ -183,11 +183,11 @@ import Testing
     let room = SecondPitch.make()
     let checkpoint = find(room, .checkpoint)
     let spike = find(room, .spike)
-    let summit = find(room, .summit)
+    let door = find(room, .exit)
     #expect(room.height < FirstAscent.make().height)
     #expect(checkpoint.x > firstGap(room))
     #expect(checkpoint.x < spike.x)
-    #expect(summit.y > spike.y)
+    #expect(door.y > spike.y)
     #expect(pitWidth(room) >= 3)
 }
 
@@ -195,10 +195,10 @@ import Testing
     let room = FirstAscent.make()
     let checkpoint = find(room, .checkpoint)
     let spike = find(room, .spike)
-    let summit = find(room, .summit)
+    let door = find(room, .exit)
     #expect(checkpoint.x < spike.x)
     #expect(checkpoint.y == spike.y)
-    #expect(summit.y > spike.y)
+    #expect(door.y > spike.y)
     #expect(pitWidth(room) >= 3)
 }
 
