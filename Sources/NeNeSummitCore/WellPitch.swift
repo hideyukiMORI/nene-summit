@@ -1,5 +1,7 @@
 public enum WellPitch {
     static let rows = [
+        "#....",
+        "##...",
         "#...#",
         "#SSS#",
         "#...#",
