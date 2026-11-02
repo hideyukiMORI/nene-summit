@@ -1,0 +1,12 @@
+public enum SpanPitch {
+    static let rows = [
+        "....R...........",
+        "................",
+        ".@........SSSS..",
+        "##^^^###########",
+    ]
+
+    public static func make() -> Room {
+        RoomSketch.room(named: "span-pitch", rows: rows, ascent: .span)
+    }
+}

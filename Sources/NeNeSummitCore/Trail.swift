@@ -32,6 +32,8 @@ public enum Trail {
         case .well:
             return SlotPitch.make()
         case .slot:
+            return SpanPitch.make()
+        case .span:
             return FallPitch.make()
         case .fall:
             return RiftPitch.make()

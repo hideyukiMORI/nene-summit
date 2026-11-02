@@ -6,6 +6,7 @@ enum Ascent: Equatable, Sendable {
     case lift
     case well
     case slot
+    case span
     case fall
     case rift
     case aside
