@@ -84,6 +84,8 @@ enum RoomSketch {
             return Mark(cell: .checkpoint, spawn: false)
         case "S":
             return Mark(cell: .summit, spawn: false)
+        case ">":
+            return Mark(cell: .exit, spawn: false)
         case "*":
             return Mark(cell: .spring, spawn: false)
         case "M", "V", "D":

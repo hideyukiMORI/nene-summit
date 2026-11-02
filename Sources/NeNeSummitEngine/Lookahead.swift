@@ -63,7 +63,7 @@ enum Lookahead {
             if stopped(outcome.events) {
                 return End(place: copy.portrait(), fell: true, summited: false)
             }
-            if copy.progress.expedition == .summited {
+            if copy.progress.expedition == .summited || outcome.events.contains(.departed) {
                 return End(place: copy.portrait(), fell: false, summited: true)
             }
             index += 1
@@ -72,12 +72,16 @@ enum Lookahead {
     }
 
     static func aim(_ room: Room) -> CellPoint? {
+        spot(room, .summit) ?? spot(room, .exit)
+    }
+
+    static func spot(_ room: Room, _ kind: CellKind) -> CellPoint? {
         var found: CellPoint?
         var y = 0
         while y < room.height {
             var x = 0
             while x < room.width {
-                if room.kind(x: x, y: y) == .summit {
+                if room.kind(x: x, y: y) == kind {
                     found = CellPoint(x: x, y: y)
                 }
                 x += 1

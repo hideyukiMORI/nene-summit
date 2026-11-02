@@ -70,7 +70,7 @@ enum FieldView {
 
     static func face(_ state: SummitState, x: Int, y: Int) -> CellStamp {
         switch state.room.kind(x: x, y: y) {
-        case .open, .solid, .spike, .checkpoint, .summit:
+        case .open, .solid, .spike, .checkpoint, .summit, .exit:
             return ground(state, x: x, y: y)
         case .spring, .gleam, .coin, .crumble, .refill:
             return prize(state, x: x, y: y)
@@ -87,6 +87,8 @@ enum FieldView {
             return CellStamp(text: CellMark.flag, tone: .flag)
         case .summit:
             return CellStamp(text: crest(state, x: x, y: y), tone: .crest)
+        case .exit:
+            return CellStamp(text: CellMark.exit, tone: .mist)
         default:
             return CellStamp(text: CellMark.sky, tone: .sky)
         }

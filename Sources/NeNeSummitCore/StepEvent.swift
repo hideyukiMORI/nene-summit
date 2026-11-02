@@ -7,5 +7,6 @@ public enum StepEvent: Equatable, Sendable {
     case fell
     case returned
     case summited
+    case departed
     case gathered
 }

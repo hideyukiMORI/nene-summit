@@ -3,6 +3,7 @@ enum Contact: Equatable, Sendable {
     case spike
     case checkpoint(CellPoint)
     case summit
+    case exit
     case spring
     case gleam(CellPoint)
     case coin(CellPoint)
