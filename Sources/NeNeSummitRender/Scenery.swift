@@ -106,12 +106,42 @@ enum Scenery {
 
     static func cloudText(viewY: Int, local: Int) -> String {
         if viewY == 1 {
-            return local == 1 ? ".-" : "-."
+            return cap(local)
         }
         if viewY == 2 {
-            return local == 0 ? " (" : ") "
+            return bellyText(local)
         }
-        return local == 1 ? "`-" : "-'"
+        return hem(local)
+    }
+
+    static func cap(_ local: Int) -> String {
+        if local == 2 {
+            return ".'"
+        }
+        return "- "
+    }
+
+    static func bellyText(_ local: Int) -> String {
+        if local == 1 {
+            return ", "
+        }
+        if local == 2 || local == 6 {
+            return "~~"
+        }
+        if local == 3 {
+            return "~ "
+        }
+        if local == 5 {
+            return " -"
+        }
+        return "' "
+    }
+
+    static func hem(_ local: Int) -> String {
+        if local == 2 {
+            return "_ "
+        }
+        return "_."
     }
 
     static func cloud(viewX: Int, viewY: Int, origin: CellPoint) -> Bool {
@@ -119,13 +149,24 @@ enum Scenery {
             return false
         }
         let local = positive(origin.x / 5 + viewX) % 12
+        return band(viewY, local: local)
+    }
+
+    static func band(_ viewY: Int, local: Int) -> Bool {
         if viewY == 1 {
-            return local == 1 || local == 2
+            return local == 2 || local == 3
         }
         if viewY == 2 {
-            return local == 0 || local == 3
+            return belly(local)
         }
-        return local == 1 || local == 2
+        return local == 2 || local == 6
+    }
+
+    static func belly(_ local: Int) -> Bool {
+        if local == 4 || local < 1 || local > 7 {
+            return false
+        }
+        return true
     }
 
     static func foot(viewX: Int, viewY: Int, origin: CellPoint) -> Bool {

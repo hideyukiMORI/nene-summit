@@ -5,7 +5,7 @@
 これは兄弟から採用した製品方針であり、商標法についての法的判断ではない。
 
 既存ゲームのスクリーンショット、スプライト、マップ、音楽、台詞を複製・トレースしない。
-手順と判定は取り込む。参照作品の絵、アスキーアート、絵文字は足さない。山の罫と拾うものは [ADR 0025](adr/0025-line-marks.md)。雪山の雲と稜線は [ADR 0026](adr/0026-ice-vista.md)。頂の旗一本は [ADR 0027](adr/0027-one-pennant.md)。落ちる塊と崩れる床と結晶は [ADR 0028](adr/0028-falling-traps.md)。画面の枠と奥行きは [ADR 0024](adr/0024-depth-and-gleam.md)。判断は [ADR 0019](adr/0019-logic-not-pictures.md)。
+手順と判定は取り込む。参照作品の絵、アスキーアート、絵文字は足さない。山の罫と拾うものは [ADR 0025](adr/0025-line-marks.md)。雪山の雲と稜線は [ADR 0026](adr/0026-ice-vista.md)。頂の旗一本は [ADR 0027](adr/0027-one-pennant.md)。雲の欠けは [ADR 0029](adr/0029-flat-cloud-wide-fall.md)。落ちる塊と崩れる床と結晶は [ADR 0028](adr/0028-falling-traps.md)。画面の枠と奥行きは [ADR 0024](adr/0024-depth-and-gleam.md)。判断は [ADR 0019](adr/0019-logic-not-pictures.md)。
 初期はコードによる独自のセル描画、無音。生成アセットを採用する場合も出自・利用条件・加工を記録する。
 
 兄弟の MIT コードを移植する場合は元リポジトリ・commit・対象ファイル・変更内容を

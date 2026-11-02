@@ -34,17 +34,22 @@ enum DeckPlan {
         let characters = Array(row)
         while x < characters.count {
             if characters[x] == "D" {
-                decks.append(fall(x: x, y: y))
+                let start = x
+                while x < characters.count && characters[x] == "D" {
+                    x += 1
+                }
+                decks.append(fall(x: start, y: y, width: x - start))
+            } else {
+                x += 1
             }
-            x += 1
         }
         return decks
     }
 
-    static func fall(x: Int, y: Int) -> Deck {
+    static func fall(x: Int, y: Int, width: Int) -> Deck {
         Deck(
             origin: CellPoint(x: x, y: y),
-            size: CellPoint(x: 1, y: 1),
+            size: CellPoint(x: width, y: 1),
             axis: .vertical,
             reach: -MotionPolicy.dropReach
         )

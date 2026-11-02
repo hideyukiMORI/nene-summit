@@ -130,6 +130,16 @@ import Testing
     #expect(Scenery.spark(viewX: 0, viewY: 0, origin: origin, tick: 16) == false)
 }
 
+@Test func theFallRoomSlidesAsTheClimberMoves() {
+    let room = FallPitch.make()
+    let start = Viewport.origin(width: room.width, height: room.height, portrait: CellPoint(x: 2, y: 1))
+    let later = Viewport.origin(
+        width: room.width, height: room.height, portrait: CellPoint(x: 33, y: 1))
+    #expect(room.width > Stage.fieldCellsX)
+    #expect(start.x == 0)
+    #expect(later.x > start.x)
+}
+
 @Test func onePennantStandsOnTheLip() {
     let state = SummitState.begin(in: FirstAscent.make())
     #expect(FieldView.mark(state, x: 28, y: 5).text == "--")

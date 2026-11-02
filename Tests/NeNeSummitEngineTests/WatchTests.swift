@@ -64,10 +64,10 @@ import Testing
     var tick = 0
     while tick < Watch.budget && watch.state.progress.expedition != .summited {
         watch = watch.advance(human: .idle)
-        if watch.state.portrait().x == 2 {
+        if watch.state.portrait().x >= 4 && watch.state.portrait().x <= 6 {
             crossed = true
         }
-        if watch.state.room.crushing(x: 2, y: 3, tick: watch.state.elapsed()) {
+        if watch.state.room.crushing(x: 5, y: 3, tick: watch.state.elapsed()) {
             dropped = true
         }
         tick += 1
