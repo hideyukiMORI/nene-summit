@@ -44,6 +44,7 @@
 | [0040](0040-falling-entry.md) | accepted | 落ちた次は上から空中に入り、落ち続ける |
 | [0041](0041-scrolling-summit.md) | accepted | 山はカメラとずれ、頂上は右上に開く。窓に収まる部屋の山は動かない |
 | [0042](0042-tall-flag-longer-road.md) | accepted | 旗は縦に立て、空は動き、段を足す |
+| [0043](0043-colored-pickups-left-spire.md) | accepted | 果実と硬貨は地の色で分け、尖塔は左から登る |
 
 [テンプレート](0000-template.md) を複製し、連番と内容を表す名前を付ける。
 状態: proposed / accepted / superseded。accepted は記録した技術判断の採用であり、施主の発言を意味しない。

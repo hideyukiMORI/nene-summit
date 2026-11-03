@@ -38,8 +38,26 @@ enum HudPane {
     }
 
     static func field(_ sheet: inout Sheet, row: Int, field: Field) {
-        sheet.stamp(row, Stage.hudColumn, pad(field.label), .quiet)
-        sheet.stamp(row, Stage.hudColumn + 7, field.value, .mark)
+        let tone = fieldTone(field.label)
+        sheet.stamp(row, Stage.hudColumn, pad(field.label), tone)
+        sheet.stamp(row, Stage.hudColumn + 7, field.value, valueTone(tone))
+    }
+
+    static func fieldTone(_ label: String) -> Glyph.Tone {
+        if label == "BERRY" {
+            return .gleam
+        }
+        if label == "COIN" {
+            return .coin
+        }
+        return .quiet
+    }
+
+    static func valueTone(_ tone: Glyph.Tone) -> Glyph.Tone {
+        if tone == .quiet {
+            return .mark
+        }
+        return tone
     }
 
     static func hold(_ sheet: inout Sheet, state: SummitState, row: Int) {

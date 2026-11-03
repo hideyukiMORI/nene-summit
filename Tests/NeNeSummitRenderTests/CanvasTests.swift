@@ -20,8 +20,8 @@ import Testing
     #expect(text.contains("GROUND"))
     #expect(text.contains("BERRY"))
     #expect(text.contains("COIN"))
-    #expect(text.contains("*'"))
-    #expect(text.contains("(o"))
+    #expect(text.contains("@@"))
+    #expect(text.contains("$$"))
     #expect(text.contains("~"))
     #expect(text.contains("/\\"))
     #expect(text.contains("o>"))
@@ -106,7 +106,9 @@ import Testing
 @Test func aFoundGleamLeavesTheSky() {
     let held = GleamBag.empty.taking(CellPoint(x: 4, y: 1))
     let state = SummitState.begin(in: FirstAscent.make(), gleams: held)
-    #expect(has(Canvas.draw(state), .gleam) == false)
+    let frame = Canvas.draw(state)
+    #expect(fieldHas(frame, .gleam) == false)
+    #expect(has(frame, .gleam))
     #expect(state.finds() == 1)
 }
 
@@ -177,6 +179,26 @@ private func letters(_ frame: Frame) -> String {
 
 private func has(_ frame: Frame, _ tone: Glyph.Tone) -> Bool {
     frame.lines.flatMap { $0 }.contains { $0.tone == tone }
+}
+
+private func fieldHas(_ frame: Frame, _ tone: Glyph.Tone) -> Bool {
+    let top = Stage.fieldRow
+    let bottom = top + Stage.fieldCellsY
+    let left = Stage.fieldColumn
+    let right = left + Stage.fieldWidth
+    var y = top
+    while y < bottom && y < frame.lines.count {
+        let line = frame.lines[y]
+        var x = left
+        while x < right && x < line.count {
+            if line[x].tone == tone {
+                return true
+            }
+            x += 1
+        }
+        y += 1
+    }
+    return false
 }
 
 private func wideRoom() -> Room {
