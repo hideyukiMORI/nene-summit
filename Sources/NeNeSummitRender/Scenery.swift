@@ -48,8 +48,10 @@ enum Scenery {
     }
 
     static func far(_ sight: Sight) -> Layer? {
-        if cloud(viewX: sight.viewX, viewY: sight.viewY, origin: sight.origin) {
-            return puff(sight)
+        let row = skyRow(sight.viewY, origin: sight.origin, pace: 5)
+        let local = drifted(sight.viewX, origin: sight.origin, drift: sight.state.elapsed() / 12)
+        if cloudAt(row, local: local) {
+            return puff(row, local: local)
         }
         if ridge(viewX: sight.viewX, viewY: sight.viewY, origin: sight.origin) {
             let far = sight.origin.x / 3 + sight.viewX
@@ -98,9 +100,7 @@ enum Scenery {
         }
     }
 
-    static func puff(_ sight: Sight) -> Layer {
-        let local = positive(sight.origin.x / 5 + sight.viewX) % 12
-        let row = skyRow(sight.viewY, origin: sight.origin, pace: 5)
+    static func puff(_ row: Int, local: Int) -> Layer {
         let text = cloudText(viewY: row, local: local)
         if row == 3 {
             return .hem(text)
@@ -149,11 +149,18 @@ enum Scenery {
     }
 
     static func cloud(viewX: Int, viewY: Int, origin: CellPoint) -> Bool {
-        let row = skyRow(viewY, origin: origin, pace: 5)
+        let local = drifted(viewX, origin: origin, drift: 0)
+        return cloudAt(skyRow(viewY, origin: origin, pace: 5), local: local)
+    }
+
+    static func drifted(_ viewX: Int, origin: CellPoint, drift: Int) -> Int {
+        positive(origin.x / 5 + viewX + drift) % 12
+    }
+
+    static func cloudAt(_ row: Int, local: Int) -> Bool {
         if row < 1 || row > 3 {
             return false
         }
-        let local = positive(origin.x / 5 + viewX) % 12
         return band(row, local: local)
     }
 

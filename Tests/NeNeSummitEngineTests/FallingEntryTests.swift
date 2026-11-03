@@ -29,3 +29,19 @@ import Testing
     let later = watch.advance(human: .idle, attendance: .manual)
     #expect(later.state.portrait().y < arrived.portrait().y)
 }
+
+@Test func theBloomLeavesByASpring() {
+    var watch = Watch.begin(in: LanePitch.make(10))
+    var sprung = false
+    var tick = 0
+    let home = watch.state.room.ascent
+    while tick < Watch.budget && watch.state.room.ascent == home {
+        watch = watch.advance(human: .idle)
+        if watch.notice.events.contains(.sprung) {
+            sprung = true
+        }
+        tick += 1
+    }
+    #expect(sprung)
+    #expect(watch.state.room.ascent == .lane(11))
+}
