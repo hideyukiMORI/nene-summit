@@ -41,6 +41,7 @@
 | [0037](0037-rebuilt-road.md) | accepted | 道を最初から組み直し、空中でもう一度跳ぶ。画面は帯で組む。欄の分割は 0038 |
 | [0038](0038-linked-rooms.md) | accepted | 右は一つの枠。出た側の反対から入る。右へ続く道は 0039 |
 | [0039](0039-folded-summit.md) | accepted | 道は上下左右に折れる。旗は下から登った先 |
+| [0040](0040-falling-entry.md) | accepted | 落ちた次は上から空中に入り、落ち続ける |
 
 [テンプレート](0000-template.md) を複製し、連番と内容を表す名前を付ける。
 状態: proposed / accepted / superseded。accepted は記録した技術判断の採用であり、施主の発言を意味しない。

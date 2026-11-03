@@ -65,7 +65,7 @@ public struct SummitState: Equatable, Sendable {
         SummitState(room: room, kinematics: kinematics.at(place), action: action, progress: progress)
     }
 
-    private static func arrival(_ room: Room, toward side: Direction) -> CellPoint {
+    private static func arrival(_ room: Room, toward side: Direction, column: Int) -> CellPoint {
         switch side {
         case .right:
             return CellPoint(x: firstOpen(room, y: room.spawn.y), y: room.spawn.y)
@@ -74,8 +74,46 @@ public struct SummitState: Equatable, Sendable {
         case .up:
             return CellPoint(x: room.spawn.x, y: lowOpen(room, x: room.spawn.x))
         case .down:
-            return CellPoint(x: room.spawn.x, y: highOpen(room, x: room.spawn.x))
+            let x = dropColumn(room, near: column)
+            return CellPoint(x: x, y: highOpen(room, x: x))
         }
+    }
+
+    private static func dropColumn(_ room: Room, near: Int) -> Int {
+        let x = min(max(near, 0), room.width - 1)
+        if drops(room, x: x) {
+            return x
+        }
+        var step = 1
+        while step < room.width {
+            if x - step >= 0 && drops(room, x: x - step) {
+                return x - step
+            }
+            if x + step < room.width && drops(room, x: x + step) {
+                return x + step
+            }
+            step += 1
+        }
+        return x
+    }
+
+    private static func drops(_ room: Room, x: Int) -> Bool {
+        let top = room.height - 2
+        if top < 1 || !clear(room, x: x, y: top) {
+            return false
+        }
+        var y = top
+        while y > 0 {
+            let below = room.kind(x: x, y: y - 1)
+            if below == .spike {
+                return false
+            }
+            if below == .solid || below == .crumble {
+                return true
+            }
+            y -= 1
+        }
+        return false
     }
 
     private static func firstOpen(_ room: Room, y: Int) -> Int {
@@ -144,12 +182,12 @@ public struct SummitState: Equatable, Sendable {
 
     public func carry(into next: Room, toward side: Direction) -> SummitState {
         let scale = MotionPolicy.scale
-        let cell = Self.arrival(next, toward: side)
+        let cell = Self.arrival(next, toward: side, column: foot.x)
         let place = Place(x: cell.x * scale, y: cell.y * scale)
-        let velocity = kinematics.velocity
+        let velocity = Self.fall(kinematics.velocity, toward: side)
         let matter = Matter(room: next, tick: 0)
         let standing = Probe.supported(place: place, matter: matter)
-        let phase: Phase = standing && velocity.y <= 0 ? .grounded : .air
+        let phase: Phase = side == .down || !standing || velocity.y > 0 ? .air : .grounded
         let action = Action(facing: action.facing, phase: phase, dashTicks: 0, charges: .full)
         let progress = Progress(
             checkpoint: cell,
@@ -159,6 +197,13 @@ public struct SummitState: Equatable, Sendable {
         )
         let kinematics = Kinematics(place: place, velocity: velocity)
         return SummitState(room: next, kinematics: kinematics, action: action, progress: progress)
+    }
+
+    private static func fall(_ velocity: Velocity, toward side: Direction) -> Velocity {
+        if side == .down && velocity.y >= 0 {
+            return Velocity(x: velocity.x, y: -MotionPolicy.gravity)
+        }
+        return velocity
     }
 
     public static func begin(in room: Room, gleams: GleamBag = .empty) -> SummitState {
