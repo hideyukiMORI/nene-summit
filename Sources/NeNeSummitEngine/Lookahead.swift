@@ -73,7 +73,7 @@ enum Lookahead {
                 return -1_000_000
             }
             if copy.progress.expedition == .summited || outcome.events.contains(.departed) {
-                if outcome.events.contains(.departed) && copy.crossing() == .left {
+                if outcome.events.contains(.departed) && copy.turningBack() {
                     return -1_000_000
                 }
                 return kicked ? 1_000_000 : -1_000_000
@@ -161,7 +161,7 @@ enum Lookahead {
                 return End(place: copy.portrait(), fell: false, summited: true)
             }
             if outcome.events.contains(.departed) {
-                if copy.crossing() == .left {
+                if copy.turningBack() {
                     return End(place: copy.portrait(), fell: true, summited: false)
                 }
                 return End(place: copy.portrait(), fell: false, summited: true)

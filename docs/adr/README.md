@@ -36,7 +36,8 @@
 | [0032](0032-crumble-bridge.md) | accepted | 崩れる床は二つの岸のあいだの橋 |
 | [0033](0033-screen-exits.md) | superseded | 途中の部屋の印は 0034 が置き換えた |
 | [0034](0034-edge-rooms.md) | accepted | 端の開口を越えると隣の画面へ入る。旗は最後だけ。井戸の上抜けは 0035 |
-| [0035](0035-required-gates.md) | accepted | 井戸は壁を蹴って右の端へ出る。道の上に崩れる橋を置く |
+| [0035](0035-required-gates.md) | accepted | 井戸は壁を蹴って右の端へ出る。道の上に崩れる橋を置く。橋のあとの右並びは 0036 |
+| [0036](0036-folded-road.md) | accepted | 橋のあと、道は上、左、下、昇る塊、空中のダッシュで折れる |
 
 [テンプレート](0000-template.md) を複製し、連番と内容を表す名前を付ける。
 状態: proposed / accepted / superseded。accepted は記録した技術判断の採用であり、施主の発言を意味しない。

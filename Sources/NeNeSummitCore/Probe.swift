@@ -21,7 +21,7 @@ enum Probe {
     }
 
     static func hitsSolid(place: Place, matter: Matter) -> Bool {
-        if place.y < 0 {
+        if place.y < 0 && !Border.leaks(matter.room, x: place.x / MotionPolicy.scale, y: -1) {
             return true
         }
         if place.x < 0 && !Border.leaks(matter.room, x: -1, y: place.y / MotionPolicy.scale) {
@@ -43,7 +43,10 @@ enum Probe {
     }
 
     static func supported(place: Place, matter: Matter) -> Bool {
-        hitsSolid(place: place.moved(x: 0, y: -1), matter: matter)
+        if hitsSolid(place: place.moved(x: 0, y: -1), matter: matter) {
+            return true
+        }
+        return DeckField.beside(matter.room, place: place, tick: matter.tick) != nil
     }
 
     static func contact(place: Place, matter: Matter) -> Contact {
