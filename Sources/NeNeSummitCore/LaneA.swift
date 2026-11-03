@@ -44,6 +44,9 @@ enum LaneA {
         if flag && y == 0 && x >= 2 && x <= 7 {
             return "."
         }
+        if y == 2 && x < 2 {
+            return "#"
+        }
         if y == 0 || climbStep(x: x, y: y) {
             return "#"
         }
@@ -53,6 +56,9 @@ enum LaneA {
     static func climbMark(x: Int, y: Int, flag: Bool) -> Character? {
         if y == 2 && x == 2 {
             return "@"
+        }
+        if y == 3 && x == 4 {
+            return "$"
         }
         if flag && y == 1 && x >= 2 && x <= 7 {
             return "f"
