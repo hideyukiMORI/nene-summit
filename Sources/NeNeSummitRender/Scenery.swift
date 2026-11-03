@@ -38,8 +38,11 @@ enum Scenery {
         if !open(sight.state, x: roomX, y: roomY) {
             return nil
         }
+        if let vista = far(sight) {
+            return vista
+        }
         if void(sight.state, x: roomX, y: roomY) {
-            return far(sight)
+            return nil
         }
         return near(sight)
     }
@@ -97,8 +100,9 @@ enum Scenery {
 
     static func puff(_ sight: Sight) -> Layer {
         let local = positive(sight.origin.x / 5 + sight.viewX) % 12
-        let text = cloudText(viewY: sight.viewY, local: local)
-        if sight.viewY == 3 {
+        let row = skyRow(sight.viewY, origin: sight.origin, pace: 5)
+        let text = cloudText(viewY: row, local: local)
+        if row == 3 {
             return .hem(text)
         }
         return .cloud(text)
@@ -145,11 +149,17 @@ enum Scenery {
     }
 
     static func cloud(viewX: Int, viewY: Int, origin: CellPoint) -> Bool {
-        if viewY < 1 || viewY > 3 {
+        let row = skyRow(viewY, origin: origin, pace: 5)
+        if row < 1 || row > 3 {
             return false
         }
         let local = positive(origin.x / 5 + viewX) % 12
-        return band(viewY, local: local)
+        return band(row, local: local)
+    }
+
+    static func skyRow(_ viewY: Int, origin: CellPoint, pace: Int) -> Int {
+        let fromBottom = Stage.fieldCellsY - 1 - viewY
+        return Stage.fieldCellsY - 1 - (fromBottom + origin.y / pace)
     }
 
     static func band(_ viewY: Int, local: Int) -> Bool {
@@ -170,7 +180,7 @@ enum Scenery {
     }
 
     static func foot(viewX: Int, viewY: Int, origin: CellPoint) -> Bool {
-        if viewY != 8 {
+        if skyRow(viewY, origin: origin, pace: 3) != 8 {
             return false
         }
         let far = origin.x / 3 + viewX
@@ -182,11 +192,11 @@ enum Scenery {
         let local = positive(far) % 8
         let rise = local <= 4 ? local : 8 - local
         let fromBottom = Stage.fieldCellsY - 1 - viewY
-        return fromBottom == 11 + rise
+        return fromBottom + origin.y / 3 == 11 + rise
     }
 
     static func drift(viewX: Int, viewY: Int, origin: CellPoint) -> Bool {
-        if viewY != 9 {
+        if skyRow(viewY, origin: origin, pace: 3) != 9 {
             return false
         }
         let far = origin.x / 3 + viewX

@@ -263,8 +263,8 @@ import Testing
         y += 1
     }
     #expect(span >= 4)
-    #expect(room.width <= 26)
-    #expect(room.height <= 20)
+    #expect(room.width > 26)
+    #expect(room.height > 20)
 }
 
 @Test func theOpeningSkyIsAPillarLine() {
