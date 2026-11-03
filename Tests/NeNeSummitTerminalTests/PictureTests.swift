@@ -29,3 +29,14 @@ import Testing
     let marks = text.split(separator: "0;48;5;16m").count - 1
     #expect(marks == 24)
 }
+
+@Test func aBerryAndACoinUseDifferentGrounds() {
+    let berry = Painter.style(.gleam)
+    let coin = Painter.style(.coin)
+    #expect(berry != coin)
+    #expect(berry != Painter.style(.sky))
+    #expect(coin != Painter.style(.sky))
+    #expect(berry != Painter.style(.spark))
+    #expect(berry.contains("201"))
+    #expect(coin.contains("226"))
+}

@@ -45,3 +45,33 @@ import Testing
     #expect(sprung)
     #expect(watch.state.room.ascent == .lane(11))
 }
+
+@Test func theSpireArrivesOnTheLeft() {
+    let room = LanePitch.make(9)
+    let next = SummitState.begin(in: LanePitch.make(8)).carry(into: room, toward: .right)
+    #expect(next.portrait().x <= 2)
+    #expect(room.width > 26)
+    #expect(room.height > 20)
+}
+
+@Test func theGulfIsCrossedByADash() {
+    let room = LanePitch.make(12)
+    var watch = Watch.begin(in: room)
+    var dashed = false
+    var tick = 0
+    let home = watch.state.room.ascent
+    while tick < Watch.budget && watch.state.room.ascent == home {
+        let before = watch.state.action.charges.remaining
+        watch = watch.advance(human: .idle)
+        if watch.state.room.ascent != home {
+            break
+        }
+        if watch.state.action.charges.remaining < before {
+            dashed = true
+        }
+        tick += 1
+    }
+    #expect(dashed)
+    #expect(room.width > 26)
+    #expect(watch.state.room.ascent == .lane(13))
+}

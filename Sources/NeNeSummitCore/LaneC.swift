@@ -8,7 +8,61 @@ enum LaneC {
         if index == 11 {
             return span()
         }
+        if index == 12 {
+            return gulf()
+        }
         return climb()
+    }
+
+    private static let gulfWidth = 48
+
+    private static func gulf() -> [String] {
+        [
+            String(repeating: ".", count: gulfWidth),
+            String(repeating: ".", count: gulfWidth),
+            gulfWalk(),
+            gulfFloor(),
+        ]
+    }
+
+    private static func gulfWalk() -> String {
+        var row = ""
+        var x = 0
+        while x < gulfWidth {
+            row.append(gulfMark(x))
+            x += 1
+        }
+        return row
+    }
+
+    private static func gulfMark(_ x: Int) -> Character {
+        if x == 0 {
+            return "o"
+        }
+        if x == 1 {
+            return "$"
+        }
+        if x == 2 {
+            return "@"
+        }
+        return "."
+    }
+
+    private static func gulfFloor() -> String {
+        var row = ""
+        var x = 0
+        while x < gulfWidth {
+            row.append(gulfGround(x))
+            x += 1
+        }
+        return row
+    }
+
+    private static func gulfGround(_ x: Int) -> Character {
+        if x >= 4 && x <= 7 {
+            return "^"
+        }
+        return "#"
     }
 
     private static func bloom() -> [String] {

@@ -55,9 +55,9 @@ enum Painter {
         case .spring:
             return ink(195, 16)
         case .gleam:
-            return ink(204, 16)
+            return ink(231, 201)
         case .coin:
-            return ink(220, 16)
+            return ink(16, 226)
         case .spark:
             return ink(231, 16)
         case .veil:
