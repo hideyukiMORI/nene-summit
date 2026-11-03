@@ -1,9 +1,12 @@
 public enum Trail {
     public static func opening() -> Room {
-        FirstAscent.make()
+        LanePitch.make(0)
     }
 
     public static func after(_ room: Room) -> Room {
+        if room.ascent == .rift {
+            return LanePitch.make(0)
+        }
         if let next = LanePitch.follow(room) {
             return next
         }

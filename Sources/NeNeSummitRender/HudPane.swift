@@ -7,55 +7,85 @@ enum HudPane {
         let line: String
     }
 
-    static func paint(_ sheet: inout Sheet, state: SummitState, attendance: Attendance, note: String) {
-        let top = Stage.fieldRow
-        sheet.stamp(top, Stage.hudColumn, "STATUS", .banner)
-        pair(&sheet, row: top + 2, label: "MODE", value: mode(attendance))
-        pair(&sheet, row: top + 3, label: "ROOM", value: state.room.title())
-        pair(&sheet, row: top + 4, label: "HOLD", value: hold(state.action.phase))
-        pair(&sheet, row: top + 5, label: "ALT", value: String(state.portrait().y))
-        dash(&sheet, state: state, row: top + 6)
-        pair(&sheet, row: top + 7, label: "BERRY", value: String(state.berries()))
-        pair(&sheet, row: top + 8, label: "COIN", value: String(state.coins()))
-        sheet.stamp(top + 10, Stage.hudColumn, "--------", .quiet)
-        sheet.stamp(top + 11, Stage.hudColumn, "COMMS", .banner)
-        speaker(&sheet, note: note, row: top + 12)
-        noteRows(&sheet, note: note, row: top + 13)
+    static func paint(_ sheet: inout Sheet, state: SummitState, note: String) {
+        ascent(&sheet, state: state)
+        hold(&sheet, state: state)
+        comms(&sheet, note: note)
     }
 
-    static func pair(_ sheet: inout Sheet, row: Int, label: String, value: String) {
-        sheet.stamp(row, Stage.hudColumn, pad(label), .quiet)
-        sheet.stamp(row, Stage.hudColumn + 6, value, .mark)
+    static func ascent(_ sheet: inout Sheet, state: SummitState) {
+        let top = Stage.fieldRow
+        sheet.stamp(top, Stage.hudColumn, "[ ASCENT ]", .banner)
+        var index = 0
+        while index <= LanePitch.count {
+            rung(&sheet, index: index, here: state.room.place())
+            index += 1
+        }
+    }
+
+    static func rung(_ sheet: inout Sheet, index: Int, here: Int) {
+        let tone: Glyph.Tone = index == here ? .mark : .quiet
+        let row = Stage.fieldRow + 1 + index
+        sheet.stamp(row, Stage.hudColumn, line(index, here: here), tone)
+    }
+
+    static func line(_ index: Int, here: Int) -> String {
+        let name = index < LanePitch.count ? LanePitch.name(index) : "CREST"
+        return mark(index, here: here) + " " + number(index + 1) + " " + name
+    }
+
+    static func mark(_ index: Int, here: Int) -> String {
+        if index == here {
+            return "<"
+        }
+        if here >= 0 && index < here {
+            return "+"
+        }
+        return "."
+    }
+
+    static func number(_ value: Int) -> String {
+        if value < 10 {
+            return "0" + String(value)
+        }
+        return String(value)
+    }
+
+    static func hold(_ sheet: inout Sheet, state: SummitState) {
+        let top = Stage.fieldRow + 11
+        sheet.stamp(top, Stage.hudColumn, "[ HOLD ]", .banner)
+        let phase = hold(state.action.phase)
+        sheet.stamp(top + 1, Stage.hudColumn, phase, .mark)
+        let pose = CellMark.climber(state.action.phase, dashing: state.dashing())
+        sheet.stamp(top + 1, Stage.hudColumn + phase.count + 1, pose, .climber)
+        dash(&sheet, state: state, row: top + 2)
+        let berry = "BERRY " + number(state.berries())
+        sheet.stamp(top + 3, Stage.hudColumn, berry, .mark)
+        sheet.stamp(top + 3, Stage.hudColumn + berry.count + 1, "COIN " + number(state.coins()), .mark)
     }
 
     static func dash(_ sheet: inout Sheet, state: SummitState, row: Int) {
         let ready = state.action.charges.remaining > 0
         let tone: Glyph.Tone = ready ? .crest : .stone
-        let column = Stage.hudColumn
-        sheet.stamp(row, column, pad("DASH"), .quiet)
-        sheet.stamp(row, column + 6, "++", tone)
-        sheet.stamp(row, column + 9, ready ? "READY" : "USED", ready ? .mark : .quiet)
+        sheet.stamp(row, Stage.hudColumn, "DASH ", .quiet)
+        sheet.stamp(row, Stage.hudColumn + 5, "++", tone)
+        sheet.stamp(row, Stage.hudColumn + 8, ready ? "READY" : "USED", ready ? .mark : .quiet)
     }
 
-    static func speaker(_ sheet: inout Sheet, note: String, row: Int) {
+    static func comms(_ sheet: inout Sheet, note: String) {
+        let top = Stage.fieldRow + 17
+        sheet.stamp(top, Stage.hudColumn, "[ COMMS ]", .banner)
         let heard = heard(note)
-        sheet.stamp(row, Stage.hudColumn, heard.name, .mark)
-        if heard.face.isEmpty {
+        sheet.stamp(top + 1, Stage.hudColumn, heard.name, .mark)
+        if !heard.face.isEmpty {
+            sheet.stamp(top + 1, Stage.hudColumn + heard.name.count + 1, heard.face, .banner)
+        }
+        let width = Stage.hudWidth - 1
+        let lines = Ink.wrap(heard.line, width: width)
+        if lines.isEmpty {
             return
         }
-        sheet.stamp(row, Stage.hudColumn + heard.name.count + 1, heard.face, .banner)
-    }
-
-    static func noteRows(_ sheet: inout Sheet, note: String, row: Int) {
-        let width = Stage.hudWidth - 1
-        var line = row
-        for text in Ink.wrap(heard(note).line, width: width) {
-            if line >= Stage.fieldRow + Stage.fieldCellsY {
-                return
-            }
-            sheet.stamp(line, Stage.hudColumn, text, .quiet)
-            line += 1
-        }
+        sheet.stamp(top + 2, Stage.hudColumn, lines[0], .quiet)
     }
 
     static func heard(_ note: String) -> Heard {
@@ -69,19 +99,6 @@ enum HudPane {
             return Heard(name: name, face: "", line: rest)
         }
         return Heard(name: name, face: String(parts[1]), line: String(parts[2]))
-    }
-
-    static func pad(_ label: String) -> String {
-        label + String(repeating: " ", count: max(6 - label.count, 0))
-    }
-
-    static func mode(_ attendance: Attendance) -> String {
-        switch attendance {
-        case .automatic:
-            return "AUTO"
-        case .manual:
-            return "PLAY"
-        }
     }
 
     static func hold(_ phase: Phase) -> String {

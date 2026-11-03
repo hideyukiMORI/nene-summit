@@ -16,10 +16,10 @@ import Testing
     }
     watch = watch.advance(human: .idle)
     #expect(watch.state.progress.expedition == .climbing)
-    #expect(watch.state.room.ascent == .first)
+    #expect(watch.state.room.ascent == .lane(0))
     watch = climb(watch)
     #expect(watch.state.progress.expedition == .climbing)
-    #expect(watch.state.room.ascent == .second)
+    #expect(watch.state.room.ascent == .lane(1))
 }
 
 @Test func aLaterRoomKeepsTheGleamsAlreadyFound() {
@@ -156,18 +156,56 @@ import Testing
     #expect(watch.state.room.ascent == .lane(1))
 }
 
-@Test func theWestLeavesLeft() {
-    let watch = climb(Watch.begin(in: LanePitch.make(1)))
+@Test func theRidgeLeavesByAWallKick() {
+    var watch = Watch.begin(in: LanePitch.make(1))
+    var along = false
+    var tick = 0
+    let home = watch.state.room.ascent
+    while tick < Watch.budget && watch.state.room.ascent == home {
+        watch = watch.advance(human: .idle)
+        if watch.state.room.ascent != home {
+            break
+        }
+        if case .wall = watch.state.action.phase {
+            along = true
+        }
+        tick += 1
+    }
+    #expect(along)
     #expect(watch.state.room.ascent == .lane(2))
 }
 
+@Test func theSecondWellLeavesByAWallKick() {
+    var watch = Watch.begin(in: LanePitch.make(5))
+    var along = false
+    var tick = 0
+    let home = watch.state.room.ascent
+    while tick < Watch.budget && watch.state.room.ascent == home {
+        watch = watch.advance(human: .idle)
+        if watch.state.room.ascent != home {
+            break
+        }
+        if case .wall = watch.state.action.phase {
+            along = true
+        }
+        tick += 1
+    }
+    #expect(along)
+    #expect(watch.state.room.ascent == .lane(6))
+}
+
+@Test func theWestLeavesLeft() {
+    let watch = climb(Watch.begin(in: LanePitch.make(3)))
+    #expect(watch.state.room.ascent == .lane(4))
+}
+
 @Test func theDropLeavesDownward() {
-    let watch = climb(Watch.begin(in: LanePitch.make(2)))
-    #expect(watch.state.room.ascent == .lane(3))
+    let watch = climb(Watch.begin(in: LanePitch.make(4)))
+    #expect(watch.state.room.ascent == .lane(5))
 }
 
 @Test func theVaultIsCrossedByADash() {
-    var watch = Watch.begin(in: LanePitch.make(4))
+    var watch = Watch.begin(in: LanePitch.make(6))
     var dashed = false
     var tick = 0
     let home = watch.state.room.ascent
@@ -186,9 +224,9 @@ import Testing
     #expect(watch.state.room.ascent == .rift)
 }
 
-@Test func theRiftReturnsToTheFirstRoom() {
+@Test func theRiftReturnsToTheRise() {
     let watch = rest(climb(Watch.begin(in: RiftPitch.make())))
-    #expect(watch.state.room.ascent == .first)
+    #expect(watch.state.room.ascent == .lane(0))
     #expect(watch.state.progress.expedition == .climbing)
 }
 

@@ -11,6 +11,10 @@ public struct SummitState: Equatable, Sendable {
         self.progress = progress
     }
 
+    public func dashing() -> Bool {
+        action.dashTicks > 0
+    }
+
     public func portrait() -> CellPoint {
         let place = kinematics.place
         let x = (place.x + MotionPolicy.bodyWidth / 2) / MotionPolicy.scale
@@ -62,6 +66,9 @@ public struct SummitState: Equatable, Sendable {
     }
 
     private static func arrival(_ room: Room, toward side: Direction) -> CellPoint {
+        if Border.mouth(room.ascent) != .right {
+            return room.spawn
+        }
         switch side {
         case .right:
             return CellPoint(x: entrance(room), y: room.spawn.y)

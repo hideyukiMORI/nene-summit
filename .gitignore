@@ -8,3 +8,6 @@ __pycache__/
 .env.*
 !.env.example
 *.log
+
+# 参照の地図。製品には入れない。
+design/ref/

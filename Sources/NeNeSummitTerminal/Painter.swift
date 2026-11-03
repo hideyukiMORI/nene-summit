@@ -20,7 +20,7 @@ enum Painter {
             return terrain(tone)
         case .crest, .climber, .spring, .gleam, .coin, .spark, .veil:
             return accent(tone)
-        case .banner, .mark, .quiet, .hint:
+        case .banner, .mark, .quiet, .hint, .ink:
             return script(tone)
         }
     }
@@ -77,6 +77,8 @@ enum Painter {
             return ink(152, 16)
         case .quiet:
             return ink(152, 16)
+        case .ink:
+            return "\u{001B}[0;38;5;16;48;5;252m"
         default:
             return ink(152, 16)
         }
