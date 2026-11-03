@@ -9,7 +9,8 @@ enum DeckField {
     }
 
     static func ride(_ place: Place, room: Room, from previous: Int, to tick: Int) -> Place {
-        guard let deck = under(room, place: place, tick: previous) else {
+        let deck = under(room, place: place, tick: previous) ?? beside(room, place: place, tick: previous)
+        guard let deck else {
             return place
         }
         let moved = deck.cellShift(at: tick) - deck.cellShift(at: previous)
@@ -31,6 +32,27 @@ enum DeckField {
                 }
             }
             x += 1
+        }
+        return nil
+    }
+
+    static func beside(_ room: Room, place: Place, tick: Int) -> Deck? {
+        let span = Probe.covering(place)
+        if let deck = touching(room, x: span.x0 - 1, span: span, tick: tick) {
+            return deck
+        }
+        return touching(room, x: span.x1 + 1, span: span, tick: tick)
+    }
+
+    static func touching(_ room: Room, x: Int, span: Probe.Span, tick: Int) -> Deck? {
+        var y = span.y0
+        while y <= span.y1 {
+            for deck in room.decks {
+                if deck.axis == .vertical && !deck.pace.harms() && deck.covers(x, y, tick: tick) {
+                    return deck
+                }
+            }
+            y += 1
         }
         return nil
     }

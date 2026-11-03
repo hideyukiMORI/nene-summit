@@ -21,7 +21,7 @@ public enum Trail {
             }
             return next
         }
-        if side == .left {
+        if side == Border.rear(room.ascent) {
             return earlier(room)
         }
         return nil

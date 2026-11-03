@@ -61,11 +61,26 @@ public struct SummitState: Equatable, Sendable {
         SummitState(room: room, kinematics: kinematics.at(place), action: action, progress: progress)
     }
 
+    private static func arrival(_ room: Room, toward side: Direction) -> CellPoint {
+        switch side {
+        case .right:
+            return CellPoint(x: entrance(room), y: room.spawn.y)
+        case .left:
+            return CellPoint(x: room.width - 1, y: room.spawn.y)
+        case .up, .down:
+            return room.spawn
+        }
+    }
+
     private static func entrance(_ room: Room) -> Int {
         if room.kind(x: 0, y: room.spawn.y) == .solid {
             return room.spawn.x
         }
         return 0
+    }
+
+    public func turningBack() -> Bool {
+        crossing() == Border.rear(room.ascent)
     }
 
     public func crossing() -> Direction? {
@@ -74,16 +89,15 @@ public struct SummitState: Equatable, Sendable {
 
     public func carry(into next: Room, toward side: Direction) -> SummitState {
         let scale = MotionPolicy.scale
-        let yCell = side == .left ? Border.goal(next)?.y ?? next.spawn.y : next.spawn.y
-        let xCell = side == .left ? next.width - 1 : Self.entrance(next)
-        let place = Place(x: xCell * scale, y: yCell * scale)
+        let cell = Self.arrival(next, toward: side)
+        let place = Place(x: cell.x * scale, y: cell.y * scale)
         let velocity = kinematics.velocity
         let matter = Matter(room: next, tick: 0)
         let standing = Probe.supported(place: place, matter: matter)
         let phase: Phase = standing && velocity.y <= 0 ? .grounded : .air
         let action = Action(facing: action.facing, phase: phase, dashTicks: 0, charges: .full)
         let progress = Progress(
-            checkpoint: CellPoint(x: xCell, y: yCell),
+            checkpoint: cell,
             expedition: .climbing,
             tick: .zero,
             gleams: progress.gleams.carried()

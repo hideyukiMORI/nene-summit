@@ -59,3 +59,23 @@ import Testing
     }
     #expect(state.portrait().y > start)
 }
+
+@Test func aBodyBesideARisingDeckIsCarried() {
+    let room = RoomSketch.room(
+        named: "cling",
+        rows: [
+            "....",
+            "@V..",
+            "####",
+        ],
+        ascent: .aside
+    )
+    var state = SummitState.begin(in: room)
+    let start = state.portrait().y
+    var tick = 0
+    while tick < MotionPolicy.deckTravel {
+        state = state.advance(input: .idle).state
+        tick += 1
+    }
+    #expect(state.portrait().y > start)
+}

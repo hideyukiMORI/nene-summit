@@ -3,30 +3,52 @@ public enum Border {
         guard opens(room.ascent) else {
             return nil
         }
-        return CellPoint(x: room.width - 1, y: along(room.ascent))
+        switch mouth(room.ascent) {
+        case .right:
+            return CellPoint(x: room.width - 1, y: along(room.ascent))
+        case .left:
+            return CellPoint(x: 0, y: along(room.ascent))
+        case .up:
+            return CellPoint(x: shaft(room.ascent), y: room.height - 1)
+        case .down:
+            return CellPoint(x: shaft(room.ascent), y: 0)
+        }
+    }
+
+    static func mouth(_ ascent: Ascent) -> Direction {
+        if case .lane(let index) = ascent {
+            return LanePitch.mouth(index)
+        }
+        return .right
+    }
+
+    static func rear(_ ascent: Ascent) -> Direction {
+        if case .lane(let index) = ascent {
+            return LanePitch.rear(index)
+        }
+        return .left
     }
 
     static func leaves(_ room: Room, toward side: Direction) -> Bool {
-        side == .right && opens(room.ascent)
+        opens(room.ascent) && side == mouth(room.ascent)
     }
 
     static func leaks(_ room: Room, x: Int, y: Int) -> Bool {
-        if opens(room.ascent) && x == room.width && clears(room.ascent, y) {
+        if opens(room.ascent) && outward(room, x: x, y: y, side: mouth(room.ascent)) {
             return true
         }
-        if x == -1 && returns(room.ascent) && entered(room, y) {
+        if returns(room.ascent) && rearEdge(room, x: x, y: y) && entered(room, x: x, y: y) {
             return true
         }
         return false
     }
 
     static func side(_ room: Room, _ place: Place) -> Direction? {
-        let scale = MotionPolicy.scale
-        if place.x < 0 {
-            return .left
+        if opens(room.ascent) && passed(room, place, mouth(room.ascent)) {
+            return mouth(room.ascent)
         }
-        if opens(room.ascent) && place.x + MotionPolicy.bodyWidth > room.width * scale {
-            return .right
+        if returns(room.ascent) && passed(room, place, rear(room.ascent)) {
+            return rear(room.ascent)
         }
         return nil
     }
@@ -44,16 +66,61 @@ public enum Border {
         ascent != .first && ascent != .aside
     }
 
-    private static func entered(_ room: Room, _ y: Int) -> Bool {
-        y == room.spawn.y || y == along(room.ascent)
+    private static func entered(_ room: Room, x: Int, y: Int) -> Bool {
+        switch rear(room.ascent) {
+        case .left, .right:
+            return y == room.spawn.y || y == along(room.ascent)
+        case .up, .down:
+            return x == room.spawn.x || x == shaft(room.ascent)
+        }
     }
 
-    private static func clears(_ ascent: Ascent, _ y: Int) -> Bool {
-        let lip = along(ascent)
-        return y >= lip && y <= lip + 1
+    private static func rearEdge(_ room: Room, x: Int, y: Int) -> Bool {
+        switch rear(room.ascent) {
+        case .left:
+            return x == -1
+        case .right:
+            return x == room.width
+        case .up:
+            return y == room.height
+        case .down:
+            return y == -1
+        }
+    }
+
+    private static func outward(_ room: Room, x: Int, y: Int, side: Direction) -> Bool {
+        let lip = along(room.ascent)
+        let column = shaft(room.ascent)
+        switch side {
+        case .right:
+            return x == room.width && y >= lip && y <= lip + 1
+        case .left:
+            return x == -1 && y >= lip && y <= lip + 1
+        case .up:
+            return y == room.height && x >= column && x <= column + 1
+        case .down:
+            return y == -1 && x >= column && x <= column + 1
+        }
+    }
+
+    private static func passed(_ room: Room, _ place: Place, _ side: Direction) -> Bool {
+        let scale = MotionPolicy.scale
+        switch side {
+        case .left:
+            return place.x < 0
+        case .right:
+            return place.x + MotionPolicy.bodyWidth > room.width * scale
+        case .up:
+            return place.y + MotionPolicy.bodyHeight > room.height * scale
+        case .down:
+            return place.y < 0
+        }
     }
 
     static func along(_ ascent: Ascent) -> Int {
+        if case .lane(let index) = ascent {
+            return LanePitch.row(index)
+        }
         switch ascent {
         case .first, .second:
             return 5
@@ -68,5 +135,12 @@ public enum Border {
         default:
             return 1
         }
+    }
+
+    static func shaft(_ ascent: Ascent) -> Int {
+        if case .lane(let index) = ascent {
+            return LanePitch.column(index)
+        }
+        return 1
     }
 }

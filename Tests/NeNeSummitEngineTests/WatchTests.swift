@@ -151,6 +151,41 @@ import Testing
     #expect(watch.state.coins() >= 1)
 }
 
+@Test func theRiseLeavesUpward() {
+    let watch = climb(Watch.begin(in: LanePitch.make(0)))
+    #expect(watch.state.room.ascent == .lane(1))
+}
+
+@Test func theWestLeavesLeft() {
+    let watch = climb(Watch.begin(in: LanePitch.make(1)))
+    #expect(watch.state.room.ascent == .lane(2))
+}
+
+@Test func theDropLeavesDownward() {
+    let watch = climb(Watch.begin(in: LanePitch.make(2)))
+    #expect(watch.state.room.ascent == .lane(3))
+}
+
+@Test func theVaultIsCrossedByADash() {
+    var watch = Watch.begin(in: LanePitch.make(4))
+    var dashed = false
+    var tick = 0
+    let home = watch.state.room.ascent
+    while tick < Watch.budget && watch.state.room.ascent == home {
+        let before = watch.state.action.charges.remaining
+        watch = watch.advance(human: .idle)
+        if watch.state.room.ascent != home {
+            break
+        }
+        if watch.state.action.charges.remaining < before {
+            dashed = true
+        }
+        tick += 1
+    }
+    #expect(dashed)
+    #expect(watch.state.room.ascent == .rift)
+}
+
 @Test func theRiftReturnsToTheFirstRoom() {
     let watch = rest(climb(Watch.begin(in: RiftPitch.make())))
     #expect(watch.state.room.ascent == .first)
