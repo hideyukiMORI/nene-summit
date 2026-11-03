@@ -119,25 +119,10 @@ enum FieldView {
     }
 
     static func crest(_ state: SummitState, x: Int, y: Int) -> String {
-        if pennant(state, x: x, y: y) {
-            return CellMark.crest
+        if summit(state, x: x, y: y + 1) {
+            return CellMark.pole
         }
-        return "--"
-    }
-
-    static func pennant(_ state: SummitState, x: Int, y: Int) -> Bool {
-        let start = bound(state, x: x, y: y, step: -1)
-        let end = bound(state, x: x, y: y, step: 1)
-        let count = end - start + 1
-        return x == start + count / 2
-    }
-
-    static func bound(_ state: SummitState, x: Int, y: Int, step: Int) -> Int {
-        var cursor = x
-        while summit(state, x: cursor + step, y: y) {
-            cursor += step
-        }
-        return cursor
+        return CellMark.crest
     }
 
     static func summit(_ state: SummitState, x: Int, y: Int) -> Bool {

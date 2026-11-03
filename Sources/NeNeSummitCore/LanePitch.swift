@@ -1,20 +1,21 @@
 public enum LanePitch {
-    public static let count = 10
+    public static let count = 13
 
     static let mouths: [Direction] = [
-        .up, .left, .down, .right, .right, .up, .right, .right, .right, .up,
+        .up, .left, .down, .right, .right, .up, .right, .right, .right, .up, .right, .right, .up,
     ]
 
     static let rears: [Direction] = [
-        .left, .down, .right, .up, .left, .left, .down, .left, .left, .left,
+        .left, .down, .right, .up, .left, .left, .down, .left, .left, .left, .left, .left, .left,
     ]
 
-    static let lips: [Int] = [1, 4, 1, 1, 4, 1, 20, 1, 1, 1]
+    static let lips: [Int] = [1, 4, 1, 1, 4, 1, 20, 1, 1, 1, 9, 1, 1]
 
-    static let shafts: [Int] = [58, 24, 8, 1, 1, 1, 2, 1, 24, 24]
+    static let shafts: [Int] = [58, 24, 8, 1, 1, 1, 2, 1, 24, 24, 1, 1, 58]
 
     static let titles = [
         "RISE", "LEDGE", "PIT", "CROSS", "WELL", "SHAFT", "LIFT", "VAULT", "FERRY", "SPIRE",
+        "BLOOM", "SPAN", "RIDGE",
     ]
 
     public static func make(_ index: Int) -> Room {
@@ -107,7 +108,10 @@ public enum LanePitch {
         if index < 5 {
             return LaneA.rows(index)
         }
-        return LaneB.rows(index)
+        if index < 10 {
+            return LaneB.rows(index)
+        }
+        return LaneC.rows(index)
     }
 
     private static func pick(_ sides: [Direction], _ index: Int, fallback: Direction) -> Direction {

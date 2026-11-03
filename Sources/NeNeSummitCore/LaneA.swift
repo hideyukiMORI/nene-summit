@@ -57,7 +57,7 @@ enum LaneA {
         if flag && y == 1 && x >= 2 && x <= 7 {
             return "f"
         }
-        if flag && y == 30 && x >= 56 && x <= 59 {
+        if flag && x == 58 && y >= 30 && y <= 31 {
             return "S"
         }
         return nil

@@ -5,6 +5,7 @@ enum CellMark {
     static let spike = "/\\"
     static let flag = "|+"
     static let crest = "|>"
+    static let pole = "||"
     static let exit = ">>"
     static let spring = "\\/"
     static let berry = "*'"
@@ -13,7 +14,7 @@ enum CellMark {
     static let crumble = ".:"
     static let refill = "<>"
     static let cloud = "~~"
-    static let spark = ". "
+    static let spark = "* "
 
     static func stone(capped: Bool) -> String {
         if capped {

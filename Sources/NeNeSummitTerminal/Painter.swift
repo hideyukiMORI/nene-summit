@@ -49,7 +49,7 @@ enum Painter {
     static func accent(_ tone: Glyph.Tone) -> String {
         switch tone {
         case .crest:
-            return ink(229, 16)
+            return ink(196, 16)
         case .climber:
             return ink(203, 16)
         case .spring:
@@ -59,7 +59,7 @@ enum Painter {
         case .coin:
             return ink(220, 16)
         case .spark:
-            return ink(24, 16)
+            return ink(231, 16)
         case .veil:
             return fill(16)
         default:
