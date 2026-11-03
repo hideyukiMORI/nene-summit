@@ -6,22 +6,48 @@ enum Board {
         Chrome.bands(&sheet)
         FieldView.paint(&sheet, state: state)
         Chrome.frame(&sheet)
-        header(&sheet, state: state)
-        HudPane.paint(&sheet, state: state, attendance: attendance, note: note)
+        header(&sheet, state: state, attendance: attendance)
+        HudPane.paint(&sheet, state: state, note: note)
         footer(&sheet)
         return sheet.lines
     }
 
-    static func header(_ sheet: inout Sheet, state: SummitState) {
+    static func header(_ sheet: inout Sheet, state: SummitState, attendance: Attendance) {
         let title = state.progress.expedition == .summited ? "CREST" : "NENE SUMMIT"
-        sheet.stamp(0, 1, Chrome.post, .hint)
+        let mode = attendance == .automatic ? "AUTO" : "PLAY"
+        let rest = " \u{2502} " + mode + " \u{2502} " + state.room.title()
+        let order = " \u{2502} " + state.room.order()
+        sheet.stamp(0, 1, "\u{258C}", .banner)
         sheet.stamp(0, 3, title, .banner)
-        let room = state.room.title()
-        sheet.stamp(0, Stage.columns - room.count - 2, room, .hint)
+        sheet.stamp(0, 3 + title.count, rest, .hint)
+        sheet.stamp(0, 3 + title.count + rest.count, order, .mark)
     }
 
     static func footer(_ sheet: inout Sheet) {
-        let keys = "q QUIT   m MODE   a d MOVE   space JUMP   k DASH"
-        sheet.stamp(Stage.rows - 1, 1, keys, .hint)
+        let row = Stage.rows - 1
+        var column = 1
+        sheet.stamp(row, column, "q", .ink)
+        column += 1
+        sheet.stamp(row, column, " QUIT  ", .hint)
+        column += 7
+        sheet.stamp(row, column, "m", .ink)
+        column += 1
+        sheet.stamp(row, column, " MODE  ", .hint)
+        column += 7
+        sheet.stamp(row, column, "a", .ink)
+        column += 1
+        sheet.stamp(row, column, " ", .hint)
+        column += 1
+        sheet.stamp(row, column, "d", .ink)
+        column += 1
+        sheet.stamp(row, column, " MOVE  ", .hint)
+        column += 7
+        sheet.stamp(row, column, "space", .ink)
+        column += 5
+        sheet.stamp(row, column, " JUMP  ", .hint)
+        column += 7
+        sheet.stamp(row, column, "k", .ink)
+        column += 1
+        sheet.stamp(row, column, " DASH", .hint)
     }
 }

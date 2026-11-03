@@ -22,7 +22,10 @@ enum CellMark {
         return "││"
     }
 
-    static func climber(_ phase: Phase) -> String {
+    static func climber(_ phase: Phase, dashing: Bool) -> String {
+        if dashing {
+            return "o-"
+        }
         switch phase {
         case .wall(.left):
             return "/o"

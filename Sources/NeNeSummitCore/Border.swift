@@ -63,7 +63,13 @@ public enum Border {
     }
 
     private static func returns(_ ascent: Ascent) -> Bool {
-        ascent != .first && ascent != .aside
+        if ascent == .first || ascent == .aside {
+            return false
+        }
+        if case .lane(0) = ascent {
+            return false
+        }
+        return true
     }
 
     private static func entered(_ room: Room, x: Int, y: Int) -> Bool {

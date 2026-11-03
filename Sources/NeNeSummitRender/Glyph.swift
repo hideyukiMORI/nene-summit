@@ -18,6 +18,7 @@ public struct Glyph: Equatable, Sendable {
         case banner
         case hint
         case quiet
+        case ink
     }
 
     public let symbol: Character

@@ -31,8 +31,8 @@ enum Wish {
         facing: Direction,
         events: [StepEvent]
     ) -> WishResult {
-        if let jumped = jump(state.action.phase, velocity: state.kinematics.velocity, input: input) {
-            let draft = Draft(facing: facing, velocity: jumped, dashTicks: 0, charges: state.action.charges)
+        if let jumped = jump(state.action, velocity: state.kinematics.velocity, input: input) {
+            let draft = Draft(facing: facing, velocity: jumped, dashTicks: 0, charges: spentHop(state.action))
             return packed(state, draft: draft, events: events + [.jumped])
         }
         if dashRequested(input, charges: state.action.charges, dashTicks: state.action.dashTicks) {
@@ -80,20 +80,40 @@ enum Wish {
         }
     }
 
-    static func jump(_ phase: Phase, velocity: Velocity, input: Input) -> Velocity? {
+    static func spentHop(_ action: Action) -> DashCharges {
+        if action.phase == .air {
+            return action.charges.hopped()
+        }
+        return action.charges
+    }
+
+    static func jump(_ action: Action, velocity: Velocity, input: Input) -> Velocity? {
         if input.jump != .pressed {
             return nil
         }
-        switch phase {
+        return risen(action, velocity: velocity, input: input)
+    }
+
+    static func risen(_ action: Action, velocity: Velocity, input: Input) -> Velocity? {
+        switch action.phase {
         case .grounded:
             return Velocity(x: leapX(velocity.x, horizontal: input.horizontal), y: MotionPolicy.jumpSpeed)
         case .wall(.left):
             return Velocity(x: MotionPolicy.wallJumpX, y: MotionPolicy.jumpSpeed)
         case .wall(.right):
             return Velocity(x: -MotionPolicy.wallJumpX, y: MotionPolicy.jumpSpeed)
-        case .air, .wall(.up), .wall(.down):
+        case .air:
+            return airJump(action, velocity: velocity, input: input)
+        case .wall(.up), .wall(.down):
             return nil
         }
+    }
+
+    static func airJump(_ action: Action, velocity: Velocity, input: Input) -> Velocity? {
+        if action.charges.hops == 0 {
+            return nil
+        }
+        return Velocity(x: leapX(velocity.x, horizontal: input.horizontal), y: MotionPolicy.jumpSpeed)
     }
 
     static func leapX(_ vx: Int, horizontal: Horizontal) -> Int {

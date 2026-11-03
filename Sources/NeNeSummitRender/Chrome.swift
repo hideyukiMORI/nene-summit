@@ -20,7 +20,9 @@ enum Chrome {
 
     static func frame(_ sheet: inout Sheet) {
         box(&sheet, fieldEdge())
-        box(&sheet, paneEdge())
+        box(&sheet, ascentEdge())
+        box(&sheet, holdEdge())
+        box(&sheet, commsEdge())
     }
 
     static func band(_ sheet: inout Sheet, row: Int) {
@@ -64,11 +66,29 @@ enum Chrome {
         )
     }
 
-    static func paneEdge() -> Edge {
+    static func ascentEdge() -> Edge {
         Edge(
             left: Stage.hudColumn - 1,
             right: Stage.columns - 1,
             top: Stage.fieldRow - 1,
+            bottom: Stage.fieldRow + 9
+        )
+    }
+
+    static func holdEdge() -> Edge {
+        Edge(
+            left: Stage.hudColumn - 1,
+            right: Stage.columns - 1,
+            top: Stage.fieldRow + 10,
+            bottom: Stage.fieldRow + 15
+        )
+    }
+
+    static func commsEdge() -> Edge {
+        Edge(
+            left: Stage.hudColumn - 1,
+            right: Stage.columns - 1,
+            top: Stage.fieldRow + 16,
             bottom: Stage.fieldRow + Stage.fieldCellsY
         )
     }

@@ -60,7 +60,7 @@ enum FieldView {
         }
         let here = state.portrait()
         if here.x == x && here.y == y {
-            return CellStamp(text: CellMark.climber(state.action.phase), tone: .climber)
+            return CellStamp(text: CellMark.climber(state.action.phase, dashing: state.dashing()), tone: .climber)
         }
         if state.gathered(x: x, y: y) {
             return CellStamp(text: CellMark.sky, tone: .sky)

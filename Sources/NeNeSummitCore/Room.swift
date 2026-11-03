@@ -44,6 +44,14 @@ public struct Room: Equatable, Sendable {
         return .success(Room(spec: spec))
     }
 
+    public func order() -> String {
+        LanePitch.order(ascent)
+    }
+
+    public func place() -> Int {
+        LanePitch.place(ascent)
+    }
+
     public func title() -> String {
         if ascent == .bridge {
             return "ARCH"
@@ -85,7 +93,7 @@ public struct Room: Equatable, Sendable {
         case .fall:
             return "FALL"
         case .rift:
-            return "BRIDGE"
+            return "CREST"
         case .aside:
             return "PITCH"
         default:

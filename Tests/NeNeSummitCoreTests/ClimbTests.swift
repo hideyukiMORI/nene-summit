@@ -39,7 +39,8 @@ import Testing
     var state = SummitState.begin(in: room)
     let dash = Input(horizontal: .none, vertical: .up, jump: .off, dash: .pressed)
     state = state.advance(input: dash).state
-    #expect(state.action.charges == .empty)
+    #expect(state.action.charges.remaining == 0)
+    #expect(state.action.charges.hops == MotionPolicy.maxHops)
     var tick = 0
     while tick < 80 && state.action.phase != .grounded {
         state = state.advance(input: .idle).state
@@ -146,9 +147,25 @@ import Testing
     #expect(rise <= MotionPolicy.bodyHeight * 4)
 }
 
+@Test func anAirJumpRisesAgain() {
+    let room = chamber(width: 8, height: 8, spawn: CellPoint(x: 2, y: 1), cells: floorCells(width: 8, height: 8))
+    var state = SummitState.begin(in: room).advance(input: .hopping(.right)).state
+    var tick = 0
+    while tick < 8 && state.paceY() > MotionPolicy.jumpSpeed / 2 {
+        state = state.advance(input: .moving(.right)).state
+        tick += 1
+    }
+    #expect(state.action.phase == .air)
+    let before = state.paceY()
+    state = state.advance(input: .hopping(.right)).state
+    #expect(state.paceY() > before)
+    #expect(state.action.charges.hops == 0)
+}
+
 @Test func theTrailContinuesAndAsideStays() {
-    let first = Trail.opening()
+    let first = FirstAscent.make()
     #expect(first.ascent == .first)
+    #expect(Trail.opening().ascent == .lane(0))
     let second = Trail.after(first)
     #expect(second.ascent == .second)
     let spring = Trail.after(second)
@@ -178,7 +195,7 @@ import Testing
     }
     let rift = Trail.after(step)
     #expect(rift.ascent == .rift)
-    #expect(Trail.after(rift).ascent == .first)
+    #expect(Trail.after(rift).ascent == .lane(0))
     let aside = chamber(
         width: 4,
         height: 3,

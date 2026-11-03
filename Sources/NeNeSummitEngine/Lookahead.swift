@@ -118,7 +118,11 @@ enum Lookahead {
     }
 
     static func extras(_ state: SummitState) -> [Input] {
-        var options = [Input.idle, Input.hopping(.right), Input.moving(.left), Input.hopping(.left)]
+        var options = [Input.idle, Input.moving(.left)]
+        if state.action.phase != .air {
+            options.append(Input.hopping(.right))
+            options.append(Input.hopping(.left))
+        }
         if state.action.charges.remaining > 0 {
             options.append(dash)
         }
@@ -130,7 +134,23 @@ enum Lookahead {
         default:
             break
         }
-        return options
+        return options + aerial(state)
+    }
+
+    static func aerial(_ state: SummitState) -> [Input] {
+        if state.room.place() < 0 || state.room.place() >= LanePitch.count {
+            return []
+        }
+        if state.action.phase != .air || state.action.charges.hops == 0 {
+            return []
+        }
+        guard let goal = aim(state.room) else {
+            return []
+        }
+        if goal.y <= state.portrait().y + 1 {
+            return []
+        }
+        return [Input.hopping(.right), Input.hopping(.left)]
     }
 
     static func mark(_ state: SummitState, opening: Input, goal: CellPoint?, wait: Int) -> Int {
