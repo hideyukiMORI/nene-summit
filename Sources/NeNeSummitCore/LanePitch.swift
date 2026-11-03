@@ -1,71 +1,53 @@
 public enum LanePitch {
-    public static let count = 7
+    public static let count = 10
+
+    static let mouths: [Direction] = [
+        .up, .left, .down, .right, .right, .up, .right, .right, .right, .up,
+    ]
+
+    static let rears: [Direction] = [
+        .left, .down, .right, .up, .left, .left, .down, .left, .left, .left,
+    ]
+
+    static let lips: [Int] = [1, 4, 1, 1, 4, 1, 9, 1, 1, 1]
+
+    static let shafts: [Int] = [1, 24, 8, 1, 1, 1, 2, 1, 24, 24]
+
+    static let titles = [
+        "RISE", "LEDGE", "PIT", "CROSS", "WELL", "SHAFT", "LIFT", "VAULT", "FERRY", "SPIRE",
+    ]
 
     public static func make(_ index: Int) -> Room {
         RoomSketch.room(named: "lane-\(index)", rows: rows(index), ascent: .lane(index))
     }
 
     public static func name(_ index: Int) -> String {
-        switch index {
-        case 0:
-            return "RISE"
-        case 1:
-            return "RIDGE"
-        case 2:
-            return "DROP"
-        case 3:
-            return "WEST"
-        case 4:
-            return "WELL"
-        case 5:
-            return "LIFT"
-        default:
-            return "VAULT"
+        if index < 0 || index >= titles.count {
+            return "BEND"
         }
+        return titles[index]
     }
 
     static func mouth(_ index: Int) -> Direction {
-        switch index {
-        case 0:
-            return .up
-        case 2:
-            return .down
-        default:
-            return .right
-        }
+        pick(mouths, index, fallback: .right)
     }
 
     static func rear(_ index: Int) -> Direction {
-        switch index {
-        case 1:
-            return .down
-        case 3:
-            return .up
-        default:
-            return .left
-        }
+        pick(rears, index, fallback: .left)
     }
 
     static func row(_ index: Int) -> Int {
-        switch index {
-        case 1, 4:
-            return 4
-        case 5:
-            return 9
-        default:
+        if index < 0 || index >= lips.count {
             return 1
         }
+        return lips[index]
     }
 
     static func column(_ index: Int) -> Int {
-        switch index {
-        case 0:
-            return 1
-        case 2:
-            return 16
-        default:
+        if index < 0 || index >= shafts.count {
             return 1
         }
+        return shafts[index]
     }
 
     static func order(_ ascent: Ascent) -> String {
@@ -121,112 +103,24 @@ public enum LanePitch {
         }
     }
 
+    private static func rows(_ index: Int) -> [String] {
+        if index < 5 {
+            return LaneA.rows(index)
+        }
+        return LaneB.rows(index)
+    }
+
+    private static func pick(_ sides: [Direction], _ index: Int, fallback: Direction) -> Direction {
+        if index < 0 || index >= sides.count {
+            return fallback
+        }
+        return sides[index]
+    }
+
     private static func digit(_ value: Int) -> String {
         if value < 10 {
             return "0" + String(value)
         }
         return String(value)
-    }
-
-    private static func rows(_ index: Int) -> [String] {
-        switch index {
-        case 0:
-            return rise()
-        case 1:
-            return ridge()
-        case 2:
-            return drop()
-        case 3:
-            return west()
-        case 4:
-            return well()
-        case 5:
-            return lift()
-        default:
-            return vault()
-        }
-    }
-
-    private static func rise() -> [String] {
-        [
-            "#..#######################",
-            "#..#######################",
-            "#.^#######################",
-            "#@..######################",
-            "##########################",
-        ]
-    }
-
-    private static func ridge() -> [String] {
-        [
-            "..........................",
-            "#.........................",
-            "#.........................",
-            "#.......^^................",
-            "#..fff####################",
-            "#..#######################",
-            "#@.#######################",
-            "##########################",
-        ]
-    }
-
-    private static func lift() -> [String] {
-        [
-            "..........................",
-            "..........................",
-            "..........................",
-            "...#######################",
-            "#.........................",
-            "#.........................",
-            "#.........................",
-            "#.........................",
-            "#.........................",
-            "#.........................",
-            "#@V.......................",
-            "###^^^^^^^^^^^^^^^^^^^^^^^",
-        ]
-    }
-
-    private static func west() -> [String] {
-        [
-            "@.........................",
-            "..........................",
-            "..........................",
-            "..........................",
-            "$o........^^..............",
-            "##########################",
-        ]
-    }
-
-    private static func drop() -> [String] {
-        [
-            "..........................",
-            "..........................",
-            "..........................",
-            "..@.......^^..............",
-            "################..########",
-        ]
-    }
-
-    private static func well() -> [String] {
-        [
-            "..........................",
-            "#.........................",
-            "#.........................",
-            "#.......^^................",
-            "#...fff###################",
-            "#...######################",
-            "#@..######################",
-            "##########################",
-        ]
-    }
-
-    private static func vault() -> [String] {
-        [
-            "..........................",
-            "..........................",
-            "$.@.......................",
-            "####^^^^########^^########",
-        ]
     }
 }
