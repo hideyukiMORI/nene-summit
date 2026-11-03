@@ -7,6 +7,7 @@ public struct Banter: Equatable, Sendable {
     private var tally: Tally
     private var voice: Int
     private var rooms: Int
+    private var spoken: [String]
 
     static let gap = 48
 
@@ -28,6 +29,14 @@ public struct Banter: Equatable, Sendable {
         tally = Tally()
         voice = 0
         rooms = 0
+        spoken = []
+    }
+
+    public func script() -> String {
+        if spoken.isEmpty {
+            return line
+        }
+        return spoken.joined(separator: "\n")
     }
 
     public mutating func listen(_ events: [StepEvent], at tick: Int, opened: Bool) {
@@ -46,6 +55,10 @@ public struct Banter: Equatable, Sendable {
             return
         }
         line = Cast.say(voice, cue: cue, index: tally.take(cue))
+        spoken.append(line)
+        if spoken.count > 4 {
+            spoken.removeFirst()
+        }
         quietUntil = tick + Banter.gap
     }
 }

@@ -176,7 +176,7 @@ import Testing
 }
 
 @Test func theSecondWellLeavesByAWallKick() {
-    var watch = Watch.begin(in: LanePitch.make(5))
+    var watch = Watch.begin(in: LanePitch.make(4))
     var along = false
     var tick = 0
     let home = watch.state.room.ascent
@@ -191,17 +191,33 @@ import Testing
         tick += 1
     }
     #expect(along)
-    #expect(watch.state.room.ascent == .lane(6))
+    #expect(watch.state.room.ascent == .lane(5))
 }
 
-@Test func theWestLeavesLeft() {
+@Test func theWestLeavesRight() {
     let watch = climb(Watch.begin(in: LanePitch.make(3)))
     #expect(watch.state.room.ascent == .lane(4))
 }
 
 @Test func theDropLeavesDownward() {
-    let watch = climb(Watch.begin(in: LanePitch.make(4)))
-    #expect(watch.state.room.ascent == .lane(5))
+    let watch = climb(Watch.begin(in: LanePitch.make(2)))
+    #expect(watch.state.room.ascent == .lane(3))
+}
+
+@Test func leavingToTheRightArrivesOnTheLeft() {
+    let next = SummitState.begin(in: LanePitch.make(1)).carry(into: LanePitch.make(2), toward: .right)
+    #expect(next.portrait().x <= 2)
+}
+
+@Test func leavingToTheLeftArrivesOnTheRight() {
+    let room = LanePitch.make(3)
+    let next = SummitState.begin(in: LanePitch.make(2)).carry(into: room, toward: .left)
+    #expect(next.portrait().x >= room.width - 3)
+}
+
+@Test func leavingUpwardArrivesAtTheBottom() {
+    let next = SummitState.begin(in: LanePitch.make(0)).carry(into: LanePitch.make(1), toward: .up)
+    #expect(next.portrait().y <= 2)
 }
 
 @Test func theVaultIsCrossedByADash() {

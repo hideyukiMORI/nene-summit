@@ -66,24 +66,72 @@ public struct SummitState: Equatable, Sendable {
     }
 
     private static func arrival(_ room: Room, toward side: Direction) -> CellPoint {
-        if Border.mouth(room.ascent) != .right {
-            return room.spawn
-        }
         switch side {
         case .right:
-            return CellPoint(x: entrance(room), y: room.spawn.y)
+            return CellPoint(x: firstOpen(room, y: room.spawn.y), y: room.spawn.y)
         case .left:
-            return CellPoint(x: room.width - 1, y: room.spawn.y)
-        case .up, .down:
-            return room.spawn
+            return CellPoint(x: lastOpen(room, y: room.spawn.y), y: room.spawn.y)
+        case .up:
+            return CellPoint(x: room.spawn.x, y: lowOpen(room, x: room.spawn.x))
+        case .down:
+            return CellPoint(x: room.spawn.x, y: highOpen(room, x: room.spawn.x))
         }
     }
 
-    private static func entrance(_ room: Room) -> Int {
-        if room.kind(x: 0, y: room.spawn.y) == .solid {
-            return room.spawn.x
+    private static func firstOpen(_ room: Room, y: Int) -> Int {
+        var x = 0
+        while x < room.width {
+            if clear(room, x: x, y: y) {
+                return x
+            }
+            x += 1
         }
-        return 0
+        return room.spawn.x
+    }
+
+    private static func lastOpen(_ room: Room, y: Int) -> Int {
+        var x = room.width - 1
+        while x >= 0 {
+            if clear(room, x: x, y: y) {
+                return x
+            }
+            x -= 1
+        }
+        return room.spawn.x
+    }
+
+    private static func lowOpen(_ room: Room, x: Int) -> Int {
+        var y = 1
+        while y < room.height {
+            if clear(room, x: x, y: y) {
+                return y
+            }
+            y += 1
+        }
+        return room.spawn.y
+    }
+
+    private static func highOpen(_ room: Room, x: Int) -> Int {
+        var y = room.height - 2
+        if y < 1 {
+            return room.spawn.y
+        }
+        while y > 0 {
+            if clear(room, x: x, y: y) {
+                return y
+            }
+            y -= 1
+        }
+        return room.spawn.y
+    }
+
+    private static func clear(_ room: Room, x: Int, y: Int) -> Bool {
+        switch room.kind(x: x, y: y) {
+        case .solid, .spike:
+            return false
+        default:
+            return true
+        }
     }
 
     public func turningBack() -> Bool {

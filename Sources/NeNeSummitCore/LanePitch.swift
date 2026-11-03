@@ -12,13 +12,13 @@ public enum LanePitch {
         case 1:
             return "RIDGE"
         case 2:
-            return "LIFT"
+            return "DROP"
         case 3:
             return "WEST"
         case 4:
-            return "DROP"
-        case 5:
             return "WELL"
+        case 5:
+            return "LIFT"
         default:
             return "VAULT"
         }
@@ -28,9 +28,7 @@ public enum LanePitch {
         switch index {
         case 0:
             return .up
-        case 3:
-            return .left
-        case 4:
+        case 2:
             return .down
         default:
             return .right
@@ -39,10 +37,10 @@ public enum LanePitch {
 
     static func rear(_ index: Int) -> Direction {
         switch index {
+        case 1:
+            return .down
         case 3:
-            return .right
-        case 4:
-            return .right
+            return .up
         default:
             return .left
         }
@@ -50,9 +48,9 @@ public enum LanePitch {
 
     static func row(_ index: Int) -> Int {
         switch index {
-        case 1, 5:
+        case 1, 4:
             return 4
-        case 2:
+        case 5:
             return 9
         default:
             return 1
@@ -60,10 +58,14 @@ public enum LanePitch {
     }
 
     static func column(_ index: Int) -> Int {
-        if index == 4 {
-            return 2
+        switch index {
+        case 0:
+            return 1
+        case 2:
+            return 16
+        default:
+            return 1
         }
-        return 1
     }
 
     static func order(_ ascent: Ascent) -> String {
@@ -133,13 +135,13 @@ public enum LanePitch {
         case 1:
             return ridge()
         case 2:
-            return lift()
+            return drop()
         case 3:
             return west()
         case 4:
-            return drop()
-        case 5:
             return well()
+        case 5:
+            return lift()
         default:
             return vault()
         }
@@ -149,7 +151,7 @@ public enum LanePitch {
         [
             "#..#######################",
             "#..#######################",
-            "#..#######################",
+            "#.^#######################",
             "#@..######################",
             "##########################",
         ]
@@ -157,7 +159,10 @@ public enum LanePitch {
 
     private static func ridge() -> [String] {
         [
+            "..........................",
             "#.........................",
+            "#.........................",
+            "#.......^^................",
             "#..fff####################",
             "#..#######################",
             "#@.#######################",
@@ -184,8 +189,11 @@ public enum LanePitch {
 
     private static func west() -> [String] {
         [
-            "##########################",
-            "....................$o@...",
+            "@.........................",
+            "..........................",
+            "..........................",
+            "..........................",
+            "$o........^^..............",
             "##########################",
         ]
     }
@@ -194,14 +202,18 @@ public enum LanePitch {
         [
             "..........................",
             "..........................",
-            "......................@...",
-            "##..######################",
+            "..........................",
+            "..@.......^^..............",
+            "################..########",
         ]
     }
 
     private static func well() -> [String] {
         [
+            "..........................",
             "#.........................",
+            "#.........................",
+            "#.......^^................",
             "#...fff###################",
             "#...######################",
             "#@..######################",
@@ -212,9 +224,9 @@ public enum LanePitch {
     private static func vault() -> [String] {
         [
             "..........................",
-            "................######....",
-            "..@..$....................",
-            "####^^^^##################",
+            "..........................",
+            "$.@.......................",
+            "####^^^^########^^########",
         ]
     }
 }
