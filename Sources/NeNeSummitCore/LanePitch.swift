@@ -9,9 +9,9 @@ public enum LanePitch {
         .left, .down, .right, .up, .left, .left, .down, .left, .left, .left,
     ]
 
-    static let lips: [Int] = [1, 4, 1, 1, 4, 1, 9, 1, 1, 1]
+    static let lips: [Int] = [1, 4, 1, 1, 4, 1, 20, 1, 1, 1]
 
-    static let shafts: [Int] = [1, 24, 8, 1, 1, 1, 2, 1, 24, 24]
+    static let shafts: [Int] = [58, 24, 8, 1, 1, 1, 2, 1, 24, 24]
 
     static let titles = [
         "RISE", "LEDGE", "PIT", "CROSS", "WELL", "SHAFT", "LIFT", "VAULT", "FERRY", "SPIRE",

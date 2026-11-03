@@ -126,6 +126,9 @@ enum Lookahead {
         if state.action.charges.remaining > 0 {
             options.append(dash)
         }
+        if let jump = lift(state) {
+            options.append(jump)
+        }
         switch state.action.phase {
         case .wall(.left):
             options.append(kick(.right))
@@ -135,6 +138,19 @@ enum Lookahead {
             break
         }
         return options + aerial(state)
+    }
+
+    static func lift(_ state: SummitState) -> Input? {
+        if state.action.phase != .grounded {
+            return nil
+        }
+        guard let goal = aim(state.room) else {
+            return nil
+        }
+        if goal.y <= state.portrait().y {
+            return nil
+        }
+        return Input(horizontal: .none, vertical: .none, jump: .pressed, dash: .off)
     }
 
     static func aerial(_ state: SummitState) -> [Input] {

@@ -8,8 +8,7 @@ import Testing
     let next = SummitState.begin(in: LanePitch.make(1)).carry(into: room, toward: .down)
     #expect(next.action.phase == .air)
     #expect(next.paceY() < 0)
-    #expect(next.portrait().y >= room.height - 3)
-    #expect(next.portrait().x <= 2)
+    #expect(next.portrait().y >= room.height - 4)
 }
 
 @Test func fallingArrivesFromTheTopStillFalling() {

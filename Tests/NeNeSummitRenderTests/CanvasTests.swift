@@ -129,6 +129,9 @@ import Testing
     #expect(Scenery.spark(viewX: 0, viewY: 0, origin: CellPoint(x: 1, y: 0), tick: 0))
     #expect(Scenery.spark(viewX: 0, viewY: 0, origin: CellPoint(x: 2, y: 0), tick: 0) == false)
     #expect(Scenery.spark(viewX: 0, viewY: 0, origin: origin, tick: 16) == false)
+    let climbed = CellPoint(x: 0, y: 3)
+    #expect(Scenery.ridge(viewX: 4, viewY: 4, origin: climbed) == false)
+    #expect(Scenery.ridge(viewX: 4, viewY: 5, origin: climbed))
 }
 
 @Test func theFallRoomSlidesAsTheClimberMoves() {
@@ -156,10 +159,10 @@ import Testing
 
 @Test func onePennantStandsOnTheLip() {
     let state = SummitState.begin(in: RiftPitch.make())
-    #expect(FieldView.mark(state, x: 1, y: 6).text == "--")
-    #expect(FieldView.mark(state, x: 3, y: 6).text == "|>")
-    #expect(FieldView.mark(state, x: 4, y: 6).text == "--")
-    #expect(FieldView.mark(state, x: 3, y: 6).tone == .crest)
+    #expect(FieldView.mark(state, x: 56, y: 30).text == "--")
+    #expect(FieldView.mark(state, x: 58, y: 30).text == "|>")
+    #expect(FieldView.mark(state, x: 59, y: 30).text == "--")
+    #expect(FieldView.mark(state, x: 58, y: 30).tone == .crest)
     let opening = SummitState.begin(in: FirstAscent.make())
     #expect(FieldView.mark(opening, x: 30, y: 5).text == "  ")
     #expect(FieldView.mark(opening, x: 30, y: 5).tone != .crest)
