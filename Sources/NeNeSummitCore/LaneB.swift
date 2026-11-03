@@ -2,26 +2,16 @@ enum LaneB {
     static func rows(_ index: Int) -> [String] {
         switch index {
         case 5:
-            return shaft()
+            return LaneGate.shaft()
         case 6:
             return lift()
         case 7:
-            return vault()
+            return LaneGate.vault()
         case 8:
-            return ferry()
+            return LaneRide.ferry()
         default:
-            return spire()
+            return LaneRide.spire()
         }
-    }
-
-    private static func shaft() -> [String] {
-        [
-            "#..#######################",
-            "#..#######################",
-            "#.^#######################",
-            "#@..######################",
-            "##########################",
-        ]
     }
 
     private static func lift() -> [String] {
@@ -104,72 +94,5 @@ enum LaneB {
             return false
         }
         return y >= 1 && y <= 10
-    }
-
-    private static func vault() -> [String] {
-        [
-            "..........................",
-            "..........................",
-            "$.@.......................",
-            "####^^^^########^^########",
-        ]
-    }
-
-    private static func ferry() -> [String] {
-        [
-            "......................#..#",
-            "......................#..#",
-            "..........................",
-            "..@.......................",
-            "####MMM^^^^^^^############",
-        ]
-    }
-
-    private static let spireWidth = 42
-    private static let spireHeight = 22
-
-    private static func spire() -> [String] {
-        var rows: [String] = []
-        var y = spireHeight - 1
-        while y >= 0 {
-            rows.append(spireLine(y))
-            y -= 1
-        }
-        return rows
-    }
-
-    private static func spireLine(_ y: Int) -> String {
-        var row = ""
-        var x = 0
-        while x < spireWidth {
-            row.append(spireCell(x: x, y: y))
-            x += 1
-        }
-        return row
-    }
-
-    private static func spireCell(x: Int, y: Int) -> Character {
-        if y == 2 && x == 2 {
-            return "@"
-        }
-        if spireSolid(x: x, y: y) {
-            return "#"
-        }
-        return "."
-    }
-
-    private static func spireSolid(x: Int, y: Int) -> Bool {
-        if y == 0 {
-            return true
-        }
-        return spireStep(x: x, y: y)
-    }
-
-    private static func spireStep(x: Int, y: Int) -> Bool {
-        if x < 2 || x > 41 {
-            return false
-        }
-        let level = 1 + (x - 2) / 2
-        return y == level && level <= 20
     }
 }

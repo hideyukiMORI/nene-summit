@@ -11,7 +11,7 @@ public enum LanePitch {
         .left,
     ]
 
-    static let lips: [Int] = [1, 4, 1, 1, 4, 1, 20, 1, 1, 1, 9, 1, 1, 1]
+    static let lips: [Int] = [1, 4, 1, 1, 4, 1, 20, 1, 8, 1, 9, 1, 1, 1]
 
     static let shafts: [Int] = [58, 24, 8, 1, 1, 1, 2, 1, 24, 40, 1, 1, 1, 58]
 
