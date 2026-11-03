@@ -48,14 +48,19 @@ enum LaneA {
     }
 
     private static func cross() -> [String] {
-        [
-            "@.........................",
-            "..........................",
-            "................DDD.......",
-            "..........................",
-            "o$........................",
-            "fff####^^#################",
-        ]
+        var rows: [String] = []
+        var above = 0
+        while above < 14 {
+            rows.append(String(repeating: ".", count: 26))
+            above += 1
+        }
+        rows.append("@.........................")
+        rows.append("..........................")
+        rows.append("................DDD.......")
+        rows.append("..........................")
+        rows.append("o$........................")
+        rows.append("fff####^##################")
+        return rows
     }
 
     private static func well() -> [String] {
