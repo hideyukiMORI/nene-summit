@@ -221,7 +221,7 @@ import Testing
 }
 
 @Test func theVaultIsCrossedByADash() {
-    var watch = Watch.begin(in: LanePitch.make(6))
+    var watch = Watch.begin(in: LanePitch.make(7))
     var dashed = false
     var tick = 0
     let home = watch.state.room.ascent
@@ -237,7 +237,7 @@ import Testing
         tick += 1
     }
     #expect(dashed)
-    #expect(watch.state.room.ascent == .rift)
+    #expect(watch.state.room.ascent == .lane(8))
 }
 
 @Test func theRiftReturnsToTheRise() {

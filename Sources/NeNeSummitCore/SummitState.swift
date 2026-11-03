@@ -127,7 +127,7 @@ public struct SummitState: Equatable, Sendable {
 
     private static func clear(_ room: Room, x: Int, y: Int) -> Bool {
         switch room.kind(x: x, y: y) {
-        case .solid, .spike:
+        case .solid, .spike, .crumble:
             return false
         default:
             return true

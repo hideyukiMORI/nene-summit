@@ -156,10 +156,10 @@ import Testing
 
 @Test func onePennantStandsOnTheLip() {
     let state = SummitState.begin(in: RiftPitch.make())
-    #expect(FieldView.mark(state, x: 9, y: 4).text == "--")
-    #expect(FieldView.mark(state, x: 11, y: 4).text == "|>")
-    #expect(FieldView.mark(state, x: 12, y: 4).text == "--")
-    #expect(FieldView.mark(state, x: 11, y: 4).tone == .crest)
+    #expect(FieldView.mark(state, x: 1, y: 6).text == "--")
+    #expect(FieldView.mark(state, x: 3, y: 6).text == "|>")
+    #expect(FieldView.mark(state, x: 4, y: 6).text == "--")
+    #expect(FieldView.mark(state, x: 3, y: 6).tone == .crest)
     let opening = SummitState.begin(in: FirstAscent.make())
     #expect(FieldView.mark(opening, x: 30, y: 5).text == "  ")
     #expect(FieldView.mark(opening, x: 30, y: 5).tone != .crest)
