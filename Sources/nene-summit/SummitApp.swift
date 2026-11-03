@@ -55,7 +55,7 @@ struct SummitApp {
             if arrival.strokes.contains(where: quits) {
                 break
             }
-            session.present(Canvas.draw(watch.state, attendance: attendance, note: banter.line))
+            session.present(Canvas.draw(watch.state, attendance: attendance, note: banter.script()))
             let left = FramePace.remaining(started: started, now: moment.milliseconds())
             if left > 0 {
                 session.wait(milliseconds: left)
